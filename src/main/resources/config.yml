@@ -1,1 +1,5 @@
+# Auto update
 auto-update: true
+# Enable trades (Set this to true to enable the trades)
+# This option is to make sure you read through the config options.
+enable-trades: false

@@ -7,8 +7,8 @@ body:
   - type: markdown
     attributes:
       value: |
-        ## Welcome to Bug Tracker
-        Please take a look at [How to report bugs](https://github.com/Slimefun/Slimefun4/wiki/How-to-report-bugs) and [existing Issues](https://github.com/ybw0014/GuizhanSlimefunAddon/issues).
+        ## Welcome to VillagerTrade Bug Tracker
+        Please take a look at [How to report bugs](https://github.com/Slimefun/Slimefun4/wiki/How-to-report-bugs) and [existing Issues](https://github.com/ybw0014/VillagerTrade/issues).
 
         <strong><i>Fields marked with an asterisk (*) are required.</i></strong>
 
@@ -21,8 +21,6 @@ body:
         - label: You are using official version downloaded from Guizhan Builds (https://builds.guizhanss.net)
           required: true
         - label: You did not modify the jar file
-          required: true
-        - label: You do not have CS-CoreLib installed
           required: true
         - label: You searched existing issues, and could not find any existing bug report on this
           required: true
@@ -104,25 +102,13 @@ body:
       label: Minecraft Version
       description: Please select your Minecraft Version
       options:
+        - 1.19.x
         - 1.18.x
         - 1.17.x
         - 1.16.x
-        - 1.15.x
-        - 1.14.x
         - Older versions are not supported
     validations:
       required: true
-
-  - type: checkboxes
-    id: cscorelib-version
-    attributes:
-      label: CS-CoreLib Version
-      description: |
-        As of Jan 30 2021，Slimefun and addons don't need CS-CoreLib any more.
-        Keep CS-CoreLib in your server could cause problems.
-      options:
-        - label: I don't have CS-CoreLib installed
-          required: true
 
   - type: textarea
     id: slimefun-version
@@ -139,8 +125,6 @@ body:
     attributes:
       label: Plugin version
       description: |
-        Please specify the plugin version
-        For files download from Guizhan Builds, only the number after `Build` in version string is needed.
-        (Type `7` if the version is `Build 7 zh-CN(ybw0014) (git 9ef7fee)`)
+        Please specify the plugin version (like `DEV - 1 (git XXXXXX)`)
     validations:
       required: true
