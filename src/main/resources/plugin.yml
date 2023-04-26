@@ -2,7 +2,8 @@ name: VillagerTrade
 version: '${project.version}'
 main: net.guizhanss.villagertrade.VillagerTrade
 api-version: 1.16
-depend: [ Slimefun ]
+depend:
+  - Slimefun
 softdepend:
   - GuizhanLibPlugin
   - ColoredEnderChests
@@ -77,4 +78,13 @@ softdepend:
   - SlimeSec
   - EMCTech
 authors: [ ybw0014 ]
-description: A Slimefun addon that allow slimefun items to be added to villager trades.
+description: A Slimefun addon that allow Slimefun items to be added to villager trades.
+commands:
+  villagertrade:
+    description: VillagerTrade commands
+    usage: /villagertrade <subcommand>
+    aliases: [vt, sfvt, sfvillagertrade]
+permissions:
+  villagertrade.admin:
+    description: Admin access
+    default: op

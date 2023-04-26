@@ -2,36 +2,80 @@ package net.guizhanss.villagertrade;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.util.logging.Level;
+
+import javax.annotation.Nonnull;
 
 import org.bukkit.plugin.Plugin;
 
 import io.github.thebusybiscuit.slimefun4.libraries.dough.updater.GitHubBuildsUpdater;
 
 import net.guizhanss.guizhanlib.slimefun.addon.AbstractAddon;
-import net.guizhanss.guizhanlib.slimefun.addon.AddonConfig;
 import net.guizhanss.guizhanlib.updater.GuizhanBuildsUpdater;
+import net.guizhanss.villagertrade.core.Registry;
+import net.guizhanss.villagertrade.implementation.managers.CommandManager;
+import net.guizhanss.villagertrade.implementation.managers.ConfigManager;
+import net.guizhanss.villagertrade.implementation.managers.ListenerManager;
 
 import org.bstats.bukkit.Metrics;
 
 public final class VillagerTrade extends AbstractAddon {
 
+    private ConfigManager configManager;
+    private Registry registry;
+    private CommandManager commandManager;
+    private ListenerManager listenerManager;
+
     public VillagerTrade() {
         super("ybw0014", "VillagerTrade", "master", "auto-update");
     }
 
+    @Nonnull
+    public static ConfigManager getConfigManager() {
+        return inst().configManager;
+    }
+
+    @Nonnull
+    public static Registry getRegistry() {
+        return inst().registry;
+    }
+
+    @Nonnull
+    public static CommandManager getCommandManager() {
+        return inst().commandManager;
+    }
+
+    @Nonnull
+    public static ListenerManager getListenerManager() {
+        return inst().listenerManager;
+    }
+
+    @Nonnull
     private static VillagerTrade inst() {
         return getInstance();
     }
 
     @Override
     public void enable() {
-        setupMetrics();
+        log(Level.INFO, "====================");
+        log(Level.INFO, "   VillagerTrade    ");
+        log(Level.INFO, "     by ybw0014     ");
+        log(Level.INFO, "====================");
 
-        AddonConfig config = getAddonConfig();
+        configManager = new ConfigManager();
+        registry = new Registry();
+
+        commandManager = new CommandManager();
+        listenerManager = new ListenerManager();
+
+        setupMetrics();
     }
 
     @Override
     public void disable() {
+        registry = null;
+        configManager = null;
+        listenerManager = null;
     }
 
     private void setupMetrics() {
@@ -40,10 +84,10 @@ public final class VillagerTrade extends AbstractAddon {
 
     @Override
     protected void autoUpdate() {
-        if (getDescription().getVersion().startsWith("DEV")) {
+        if (getPluginVersion().startsWith("DEV")) {
             String path = getGithubUser() + "/" + getGithubRepo() + "/" + getGithubBranch();
             new GitHubBuildsUpdater(this, getFile(), path).start();
-        } else if (getDescription().getVersion().startsWith("Build")) {
+        } else if (getPluginVersion().startsWith("Build")) {
             try {
                 // use updater in lib plugin
                 Class<?> clazz = Class.forName("net.guizhanss.guizhanlibplugin.updater.GuizhanUpdater");
