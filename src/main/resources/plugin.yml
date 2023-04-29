@@ -32,7 +32,6 @@ softdepend:
   - Liquid
   - SFCalc
   - SlimefunWarfare
-  - Slimy-Power-Suits
   - FluffyMachines
   - SlimyRepair
   - InfinityExpansion
@@ -41,9 +40,6 @@ softdepend:
   - DynaTech
   - GeneticChickengineering
   - HeadLimiter
-  - SlimeXpansion
-  - Barrels
-  - ClayTech
   - FNAmplifications
   - SMG
   - EMC2
@@ -77,6 +73,11 @@ softdepend:
   - NotEnoughAddons
   - SlimeSec
   - EMCTech
+  - Supreme
+  - SpiritsUnchained
+  - Gastronomicon
+  - Cultivation
+  - SmallSpace
 authors: [ ybw0014 ]
 description: A Slimefun addon that allow Slimefun items to be added to villager trades.
 commands:
