@@ -2,6 +2,8 @@ package net.guizhanss.villagertrade.implementation.managers;
 
 import java.util.logging.Level;
 
+import lombok.experimental.Accessors;
+
 import org.bukkit.configuration.Configuration;
 
 import net.guizhanss.guizhanlib.slimefun.addon.AddonConfig;
@@ -20,9 +22,13 @@ public final class ConfigManager {
     @Getter
     private final AddonConfig trades;
 
-    public ConfigManager() {
-        config = new AddonConfig(FILENAME_CONFIG);
-        trades = new AddonConfig(FILENAME_TRADES);
+    @Getter
+    @Accessors(fluent = true)
+    private boolean isDebug;
+
+    public ConfigManager(VillagerTrade plugin) {
+        config = new AddonConfig(plugin, FILENAME_CONFIG);
+        trades = new AddonConfig(plugin, FILENAME_TRADES);
 
         afterReload();
     }
@@ -36,11 +42,9 @@ public final class ConfigManager {
     private void afterReload() {
         updateConfig(config);
 
-        loadTrades();
-    }
+        isDebug = config.getBoolean("debug", false);
 
-    public boolean isDebug() {
-        return config.getBoolean("debug", false);
+        loadTrades();
     }
 
     private void updateConfig(AddonConfig config) {
@@ -62,6 +66,7 @@ public final class ConfigManager {
 
         for (String key : trades.getKeys(false)) {
             TradeConfiguration tradeConfig = trades.getSerializable(key, TradeConfiguration.class);
+            continue;
         }
     }
 }

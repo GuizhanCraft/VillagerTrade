@@ -6,6 +6,9 @@ import java.util.logging.Level;
 
 import javax.annotation.Nonnull;
 
+import net.guizhanss.villagertrade.api.TradeConfiguration;
+
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.Plugin;
 
 import io.github.thebusybiscuit.slimefun4.libraries.dough.updater.GitHubBuildsUpdater;
@@ -62,7 +65,7 @@ public final class VillagerTrade extends AbstractAddon {
         log(Level.INFO, "     by ybw0014     ");
         log(Level.INFO, "====================");
 
-        configManager = new ConfigManager();
+        configManager = new ConfigManager(this);
         registry = new Registry();
 
         commandManager = new CommandManager();
