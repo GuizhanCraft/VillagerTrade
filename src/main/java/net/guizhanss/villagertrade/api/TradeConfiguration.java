@@ -27,11 +27,6 @@ import lombok.Data;
 @Data
 @Builder
 public class TradeConfiguration implements ConfigurationSerializable {
-
-    static {
-        ConfigurationSerialization.registerClass(TradeConfiguration.class);
-    }
-
     private final List<TraderType> traderTypes;
     private final ItemStack output;
     private final ItemStack input1;
@@ -51,13 +46,19 @@ public class TradeConfiguration implements ConfigurationSerializable {
 
         return TradeConfiguration.builder()
             .traderTypes(traderTypes)
+            .output((ItemStack) map.get("output"))
+            .input1((ItemStack) map.get("input1"))
+            .input2((ItemStack) map.get("input2"))
             .build();
     }
 
     @Override
     public Map<String, Object> serialize() {
         return ImmutableMap.of(
-            "traders", traderTypes
+            "traders", traderTypes,
+            "output", output,
+            "input1", input1,
+            "input2", input2
         );
     }
 }

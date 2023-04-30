@@ -2,13 +2,19 @@ package net.guizhanss.villagertrade;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.logging.Level;
 
 import javax.annotation.Nonnull;
 
 import net.guizhanss.villagertrade.api.TradeConfiguration;
 
+import net.guizhanss.villagertrade.api.configurations.TraderType;
+
+import org.bukkit.Material;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
+import org.bukkit.entity.Villager;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
 import io.github.thebusybiscuit.slimefun4.libraries.dough.updater.GitHubBuildsUpdater;
@@ -65,11 +71,23 @@ public final class VillagerTrade extends AbstractAddon {
         log(Level.INFO, "     by ybw0014     ");
         log(Level.INFO, "====================");
 
+        setupClassRegistrations();
+
         configManager = new ConfigManager(this);
         registry = new Registry();
 
         commandManager = new CommandManager();
         listenerManager = new ListenerManager();
+
+        TradeConfiguration tradeConfiguration = TradeConfiguration.builder()
+            .traderTypes(List.of(TraderType.valueOf(Villager.Profession.ARMORER)))
+            .input1(new ItemStack(Material.COAL, 2))
+            .input2(new ItemStack(Material.COAL, 2))
+            .output(new ItemStack(Material.DIAMOND))
+            .build();
+
+        configManager.getTrades().set("test", tradeConfiguration);
+        configManager.getTrades().save();
 
         setupMetrics();
     }
@@ -83,6 +101,10 @@ public final class VillagerTrade extends AbstractAddon {
 
     private void setupMetrics() {
         new Metrics(this, 18292);
+    }
+
+    private void setupClassRegistrations() {
+        ConfigurationSerialization.registerClass(TradeConfiguration.class);
     }
 
     @Override
