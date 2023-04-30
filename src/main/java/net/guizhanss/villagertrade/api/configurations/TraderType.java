@@ -54,4 +54,9 @@ public final class TraderType {
             return new TraderType();
         }
     }
+
+    public static TraderType valueOf(@Nonnull Profession profession) {
+        Preconditions.checkArgument(profession != null, "The string cannot be null");
+        return new TraderType(profession);
+    }
 }
