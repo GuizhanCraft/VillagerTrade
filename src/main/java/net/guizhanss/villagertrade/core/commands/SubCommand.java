@@ -1,5 +1,7 @@
 package net.guizhanss.villagertrade.core.commands;
 
+import java.util.List;
+
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -31,4 +33,8 @@ public abstract class SubCommand {
 
     @ParametersAreNonnullByDefault
     public abstract void onCommand(CommandSender sender, String[] args);
+
+    public List<String> onTabComplete(CommandSender sender, String[] args) {
+        return List.of();
+    }
 }

@@ -1,12 +1,13 @@
 package net.guizhanss.villagertrade.core;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import net.guizhanss.villagertrade.api.TradeConfiguration;
+import net.guizhanss.villagertrade.api.trades.TradeConfiguration;
 
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 public final class Registry {
-    public List<TradeConfiguration> configurations;
+    public List<TradeConfiguration> configurations = new ArrayList<>();
 }

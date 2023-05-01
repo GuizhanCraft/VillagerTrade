@@ -1,9 +1,12 @@
-package net.guizhanss.villagertrade.api.configurations;
+package net.guizhanss.villagertrade.api.trades;
+
+import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
 import com.google.common.base.Preconditions;
 
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.Villager.Profession;
 import org.bukkit.entity.WanderingTrader;
@@ -11,13 +14,13 @@ import org.bukkit.entity.WanderingTrader;
 import lombok.Getter;
 
 /**
- * {@link TraderType} contains the information of the trader.
+ * {@link TraderType} contains the information of an acceptable trader.
  *
  * @author ybw0014
  */
 public final class TraderType {
     @Getter
-    private final Class<?> traderClass;
+    private final EntityType type;
     @Getter
     private final Villager.Profession profession;
 
@@ -25,7 +28,7 @@ public final class TraderType {
      * The trader is a {@link WanderingTrader}
      */
     public TraderType() {
-        traderClass = WanderingTrader.class;
+        type = EntityType.WANDERING_TRADER;
         profession = null;
     }
 
@@ -40,7 +43,7 @@ public final class TraderType {
         Preconditions.checkArgument(profession != Profession.NONE, "The villager profession cannot be NONE");
         Preconditions.checkArgument(profession != Profession.NITWIT, "The villager profession cannot be NITWIT");
 
-        this.traderClass = Villager.class;
+        this.type = EntityType.VILLAGER;
         this.profession = profession;
     }
 
@@ -53,5 +56,29 @@ public final class TraderType {
         } catch (IllegalArgumentException ex) {
             return new TraderType();
         }
+    }
+
+    @Override
+    @Nonnull
+    public String toString() {
+        if (type == EntityType.WANDERING_TRADER) {
+            return "WANDERING_TRADER";
+        } else {
+            return profession.toString();
+        }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || !obj.getClass().equals(this.getClass())) {
+            return false;
+        }
+        TraderType other = (TraderType) obj;
+        return this.type == other.type && this.profession == other.profession;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(type, profession);
     }
 }

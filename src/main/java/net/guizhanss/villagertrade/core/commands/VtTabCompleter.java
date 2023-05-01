@@ -22,6 +22,13 @@ public class VtTabCompleter implements TabCompleter {
             return this.command.getSubCommands().stream()
                 .map(SubCommand::getName)
                 .toList();
+        } else if (args.length == 1) {
+            for (SubCommand subCommand : this.command.getSubCommands()) {
+                if (subCommand.isSubCommand(args[0])) {
+                    return subCommand.onTabComplete(sender, args);
+                }
+            }
+            return List.of();
         } else {
             return List.of();
         }

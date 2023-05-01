@@ -2,19 +2,18 @@ package net.guizhanss.villagertrade.implementation.managers;
 
 import java.util.logging.Level;
 
-import lombok.experimental.Accessors;
-
 import org.bukkit.configuration.Configuration;
 
 import net.guizhanss.guizhanlib.slimefun.addon.AddonConfig;
 import net.guizhanss.villagertrade.VillagerTrade;
-import net.guizhanss.villagertrade.api.TradeConfiguration;
+import net.guizhanss.villagertrade.api.trades.TradeConfiguration;
+import net.guizhanss.villagertrade.utils.Debug;
 
 import lombok.Getter;
+import lombok.experimental.Accessors;
 
 public final class ConfigManager {
 
-    private static final String FILENAME_CONFIG = "config.yml";
     private static final String FILENAME_TRADES = "trades.yml";
 
     @Getter
@@ -27,7 +26,7 @@ public final class ConfigManager {
     private boolean isDebug;
 
     public ConfigManager(VillagerTrade plugin) {
-        config = new AddonConfig(plugin, FILENAME_CONFIG);
+        config = (AddonConfig) plugin.getConfig();
         trades = new AddonConfig(plugin, FILENAME_TRADES);
 
         afterReload();
@@ -44,7 +43,7 @@ public final class ConfigManager {
 
         isDebug = config.getBoolean("debug", false);
 
-        loadTrades();
+        VillagerTrade.getScheduler().run(this::loadTrades);
     }
 
     private void updateConfig(AddonConfig config) {
@@ -64,9 +63,17 @@ public final class ConfigManager {
             return;
         }
 
+        VillagerTrade.log(Level.INFO, "Trades are enabled! Loading...");
+
         for (String key : trades.getKeys(false)) {
-            TradeConfiguration tradeConfig = trades.getSerializable(key, TradeConfiguration.class);
-            continue;
+            Debug.log("Loading trade: " + key);
+            try {
+                TradeConfiguration tradeConfig = TradeConfiguration.loadFromConfig(trades.getConfigurationSection(key));
+                tradeConfig.register();
+                Debug.log("Successfully registered trade: " + key);
+            } catch (Exception ex) {
+                VillagerTrade.log(Level.SEVERE, ex, "Failed to load trade: " + key);
+            }
         }
     }
 }
