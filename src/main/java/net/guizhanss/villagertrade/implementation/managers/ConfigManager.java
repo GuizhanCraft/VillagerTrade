@@ -18,6 +18,7 @@ public final class ConfigManager {
 
     private static final String FILENAME_TRADES = "trades.yml";
 
+    private final VillagerTrade plugin;
     private final AddonConfig config;
     private final AddonConfig trades;
 
@@ -25,6 +26,8 @@ public final class ConfigManager {
     private boolean isDebug;
 
     public ConfigManager(@Nonnull VillagerTrade plugin) {
+        this.plugin = plugin;
+
         config = (AddonConfig) plugin.getConfig();
         trades = new AddonConfig(plugin, FILENAME_TRADES);
 
@@ -59,7 +62,7 @@ public final class ConfigManager {
             Debug.log("Loading trade: " + key);
             try {
                 TradeConfiguration tradeConfig = TradeConfiguration.loadFromConfig(trades.getConfigurationSection(key));
-                tradeConfig.register();
+                tradeConfig.register(plugin);
                 Debug.log("Successfully registered trade: " + key);
             } catch (Exception ex) {
                 VillagerTrade.log(Level.SEVERE, ex, "Failed to load trade: " + key);

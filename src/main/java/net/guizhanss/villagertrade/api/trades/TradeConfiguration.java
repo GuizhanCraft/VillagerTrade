@@ -7,9 +7,10 @@ import javax.annotation.Nullable;
 
 import com.google.common.base.Preconditions;
 
-import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
-
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.inventory.MerchantRecipe;
+
+import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
 
 import net.guizhanss.villagertrade.VillagerTrade;
 import net.guizhanss.villagertrade.utils.constants.Keys;
@@ -31,8 +32,11 @@ public final class TradeConfiguration {
     private final TradeItem input1;
     private final TradeItem input2;
     private final int maxUses;
-    private final int expReward;
+    private final boolean expReward;
     private final int expVillager;
+    private final float priceMultiplier;
+    private final int demand;
+    private final int specialPrice;
 
     private SlimefunAddon addon;
 
@@ -55,8 +59,11 @@ public final class TradeConfiguration {
                 .input1(TradeItem.loadFromConfig(section.getConfigurationSection(Keys.TRADES_INPUT_1)))
                 .input2(TradeItem.loadFromConfig(section.getConfigurationSection(Keys.TRADES_INPUT_2)))
                 .maxUses(section.getInt(Keys.TRADES_MAX_USES))
-                .expReward(section.getInt(Keys.TRADES_EXP_REWARD))
+                .expReward(section.getBoolean(Keys.TRADES_EXP_REWARD))
                 .expVillager(section.getInt(Keys.TRADES_EXP_VILLAGER))
+                .priceMultiplier((float) section.getDouble(Keys.TRADES_PRICE_MULTIPLIER))
+                .demand(section.getInt(Keys.TRADES_DEMAND))
+                .specialPrice(section.getInt(Keys.TRADES_SPECIAL_PRICE))
                 .build();
         } catch (IllegalArgumentException | NullPointerException ex) {
             VillagerTrade.log(Level.SEVERE, ex, "An error has occurred while loading trade configuration");
@@ -108,13 +115,26 @@ public final class TradeConfiguration {
     }
 
     @Nonnull
+    public MerchantRecipe getMerchantRecipe() {
+        MerchantRecipe recipe = new MerchantRecipe(
+            output.getItem(), 0, maxUses, expReward,
+            expVillager, priceMultiplier, demand, specialPrice
+        );
+        recipe.addIngredient(input1.getItem());
+        if (input2.getType() != TradeItem.TraderItemType.NONE) {
+            recipe.addIngredient(input2.getItem());
+        }
+        return recipe;
+    }
+
+    @Nonnull
     public String toString() {
         return "TradeConfiguration(traderTypes=" + this.getTraderTypes()
             + ", output=" + this.getOutput()
             + ", input1=" + this.getInput1()
             + ", input2=" + this.getInput2()
             + ", maxUses=" + this.getMaxUses()
-            + ", expReward=" + this.getExpReward()
+            + ", expReward=" + this.isExpReward()
             + ", expVillager=" + this.getExpVillager()
             + ")";
     }

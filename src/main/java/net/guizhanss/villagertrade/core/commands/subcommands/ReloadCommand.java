@@ -17,6 +17,7 @@ public final class ReloadCommand extends SubCommand {
     @Override
     public void onCommand(CommandSender sender, String[] args) {
         VillagerTrade.getRegistry().reset();
+        VillagerTrade.getLocalizationService().reloadAll();
         VillagerTrade.getConfigManager().reloadAll();
         VillagerTrade.getLocalizationService().sendKeyedMessage(sender, "commands.reload.success");
     }

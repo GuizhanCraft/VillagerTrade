@@ -12,8 +12,11 @@ example_trade:
       amount: 64
     2:
       type: NONE
-  max-uses: 11
-  exp-reward: 45
-  exp-villager: 14
+  max-uses: 4
+  exp-reward: true
+  exp-villager: 0
+  price-multiplier: 0.0
+  demand: 0
+  special-price: 0
 
 

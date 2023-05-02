@@ -11,4 +11,7 @@ public class Keys {
     public static final String TRADES_MAX_USES = "max-uses";
     public static final String TRADES_EXP_REWARD = "exp-reward";
     public static final String TRADES_EXP_VILLAGER = "exp-villager";
+    public static final String TRADES_PRICE_MULTIPLIER = "price-multiplier";
+    public static final String TRADES_DEMAND = "demand";
+    public static final String TRADES_SPECIAL_PRICE = "special-price";
 }
