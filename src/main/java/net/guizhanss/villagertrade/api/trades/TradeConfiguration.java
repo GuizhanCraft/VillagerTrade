@@ -7,6 +7,8 @@ import javax.annotation.Nullable;
 
 import com.google.common.base.Preconditions;
 
+import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
+
 import org.bukkit.configuration.ConfigurationSection;
 
 import net.guizhanss.villagertrade.VillagerTrade;
@@ -31,6 +33,8 @@ public final class TradeConfiguration {
     private final int maxUses;
     private final int expReward;
     private final int expVillager;
+
+    private SlimefunAddon addon;
 
     /**
      * Loads the config options from the {@link ConfigurationSection} into a {@link TradeConfiguration}.
@@ -72,8 +76,17 @@ public final class TradeConfiguration {
         section.set(Keys.TRADES_EXP_VILLAGER, expVillager);
     }
 
-    public void register() {
+    public void register(@Nonnull SlimefunAddon addon) {
         // check if the trade is valid
+        if (this.addon != null) {
+            VillagerTrade.log(Level.SEVERE, "This TradeConfiguration is already registered! "
+                + "Make sure you do not set 'addon' before registering it.");
+            return;
+        }
+        if (addon == null || addon.getJavaPlugin() == null) {
+            VillagerTrade.log(Level.SEVERE, "SlimefunAddon is invalid! Skipping...");
+            return;
+        }
         if (output.getType() == TradeItem.TraderItemType.NONE) {
             VillagerTrade.log(Level.SEVERE, "Trade output is not set or invalid, skipping...");
             return;
@@ -84,6 +97,7 @@ public final class TradeConfiguration {
         }
 
         // registration
+        this.addon = addon;
         VillagerTrade.getRegistry().getTradeConfigurations().add(this);
         if (traderTypes.hasWanderingTrader()) {
             VillagerTrade.getRegistry().getWanderingTraderConfigurations().add(this);

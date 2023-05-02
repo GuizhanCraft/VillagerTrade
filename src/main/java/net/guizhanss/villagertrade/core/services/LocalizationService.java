@@ -8,6 +8,7 @@ import net.guizhanss.villagertrade.VillagerTrade;
 
 import org.bukkit.command.CommandSender;
 
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import java.util.function.UnaryOperator;
@@ -35,6 +36,11 @@ public final class LocalizationService {
 
     private void afterReload() {
         prefix = messages.getString("prefix", DEFAULT_PREFIX);
+    }
+
+    @Nonnull
+    public String getCommandDescription(@Nonnull String command) {
+        return messages.getString("commands." + command + ".description", "");
     }
 
     @ParametersAreNonnullByDefault

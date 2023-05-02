@@ -1,3 +1,10 @@
 prefix: "&b[&aVillagerTrade&b]&7 "
+no-permission: "&cYou don't have permission to do that!"
 commands:
-  reload: "&aConfiguration has been reloaded!"
+  list:
+    description: "List loaded trades"
+  edit:
+    description: "Open the menu to edit trades"
+  reload:
+    description: "Reload the configuration"
+    success: "&aConfiguration has been reloaded!"

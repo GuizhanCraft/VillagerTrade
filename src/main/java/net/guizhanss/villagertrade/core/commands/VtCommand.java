@@ -6,6 +6,9 @@ import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import net.guizhanss.villagertrade.core.commands.subcommands.EditCommand;
+import net.guizhanss.villagertrade.core.commands.subcommands.ListCommand;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -21,6 +24,8 @@ public final class VtCommand implements CommandExecutor {
     private final Set<SubCommand> subCommands = new HashSet<>();
 
     public VtCommand() {
+        subCommands.add(new ListCommand());
+        subCommands.add(new EditCommand());
         subCommands.add(new ReloadCommand());
     }
 
