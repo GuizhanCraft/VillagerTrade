@@ -1,1 +1,3 @@
-prefix: "&6[VillagerTrade]&7"
+prefix: "&b[&aVillagerTrade&b]&7 "
+commands:
+  reload: "&aConfiguration has been reloaded!"

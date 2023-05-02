@@ -2,30 +2,29 @@ package net.guizhanss.villagertrade.implementation.managers;
 
 import java.util.logging.Level;
 
-import org.bukkit.configuration.Configuration;
-
 import net.guizhanss.guizhanlib.slimefun.addon.AddonConfig;
 import net.guizhanss.villagertrade.VillagerTrade;
 import net.guizhanss.villagertrade.api.trades.TradeConfiguration;
+import net.guizhanss.villagertrade.utils.ConfigUtils;
 import net.guizhanss.villagertrade.utils.Debug;
 
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
+import javax.annotation.Nonnull;
+
+@Getter
 public final class ConfigManager {
 
     private static final String FILENAME_TRADES = "trades.yml";
 
-    @Getter
     private final AddonConfig config;
-    @Getter
     private final AddonConfig trades;
 
-    @Getter
     @Accessors(fluent = true)
     private boolean isDebug;
 
-    public ConfigManager(VillagerTrade plugin) {
+    public ConfigManager(@Nonnull VillagerTrade plugin) {
         config = (AddonConfig) plugin.getConfig();
         trades = new AddonConfig(plugin, FILENAME_TRADES);
 
@@ -39,20 +38,11 @@ public final class ConfigManager {
     }
 
     private void afterReload() {
-        updateConfig(config);
+        ConfigUtils.addMissingOptions(config);
 
         isDebug = config.getBoolean("debug", false);
 
         VillagerTrade.getScheduler().run(this::loadTrades);
-    }
-
-    private void updateConfig(AddonConfig config) {
-        Configuration defaultConfig = config.getDefaults();
-        for (String key : defaultConfig.getKeys(true)) {
-            if (!config.contains(key)) {
-                config.set(key, defaultConfig.get(key));
-            }
-        }
     }
 
     private void loadTrades() {

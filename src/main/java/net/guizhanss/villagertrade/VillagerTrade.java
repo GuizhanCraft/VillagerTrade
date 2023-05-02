@@ -6,6 +6,11 @@ import java.util.logging.Level;
 
 import javax.annotation.Nonnull;
 
+import net.guizhanss.guizhanlib.minecraft.utils.ChatUtil;
+
+import net.guizhanss.villagertrade.core.services.LocalizationService;
+
+import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 
 import io.github.thebusybiscuit.slimefun4.libraries.dough.updater.GitHubBuildsUpdater;
@@ -25,6 +30,7 @@ public final class VillagerTrade extends AbstractAddon {
     private Registry registry;
     private CommandManager commandManager;
     private ListenerManager listenerManager;
+    private LocalizationService localizationService;
 
     public VillagerTrade() {
         super("ybw0014", "VillagerTrade", "master", "auto-update");
@@ -51,6 +57,11 @@ public final class VillagerTrade extends AbstractAddon {
     }
 
     @Nonnull
+    public static LocalizationService getLocalizationService() {
+        return inst().localizationService;
+    }
+
+    @Nonnull
     private static VillagerTrade inst() {
         return getInstance();
     }
@@ -63,9 +74,10 @@ public final class VillagerTrade extends AbstractAddon {
         log(Level.INFO, "====================");
 
         registry = new Registry();
+        localizationService = new LocalizationService(this);
         configManager = new ConfigManager(this);
-        commandManager = new CommandManager();
-        listenerManager = new ListenerManager();
+        commandManager = new CommandManager(this);
+        listenerManager = new ListenerManager(this);
 
         setupMetrics();
     }

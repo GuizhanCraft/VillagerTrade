@@ -9,11 +9,15 @@ import net.guizhanss.villagertrade.VillagerTrade;
 import net.guizhanss.villagertrade.implementation.listeners.VillagerListener;
 
 public final class ListenerManager {
-    public ListenerManager() {
+    private final VillagerTrade plugin;
+
+    public ListenerManager(@Nonnull VillagerTrade plugin) {
+        this.plugin = plugin;
+
         register(new VillagerListener());
     }
 
     private void register(@Nonnull Listener listener) {
-        Bukkit.getPluginManager().registerEvents(listener, VillagerTrade.getInstance());
+        Bukkit.getPluginManager().registerEvents(listener, plugin);
     }
 }

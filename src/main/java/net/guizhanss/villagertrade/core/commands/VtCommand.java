@@ -16,6 +16,7 @@ import net.guizhanss.villagertrade.core.commands.subcommands.ReloadCommand;
 import lombok.Getter;
 
 public final class VtCommand implements CommandExecutor {
+
     @Getter
     private final Set<SubCommand> subCommands = new HashSet<>();
 

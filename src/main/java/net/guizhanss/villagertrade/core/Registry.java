@@ -9,5 +9,13 @@ import lombok.Getter;
 
 @Getter
 public final class Registry {
-    public List<TradeConfiguration> configurations = new ArrayList<>();
+    public List<TradeConfiguration> tradeConfigurations = new ArrayList<>();
+    public List<TradeConfiguration> wanderingTraderConfigurations = new ArrayList<>();
+    public List<TradeConfiguration> villagerConfigurations = new ArrayList<>();
+
+    public void reset() {
+        tradeConfigurations.clear();
+        wanderingTraderConfigurations.clear();
+        villagerConfigurations.clear();
+    }
 }

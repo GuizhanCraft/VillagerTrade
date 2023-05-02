@@ -7,11 +7,10 @@ import javax.annotation.Nullable;
 
 import com.google.common.base.Preconditions;
 
-import net.guizhanss.villagertrade.api.ConfigurationSerializable;
-
 import org.bukkit.configuration.ConfigurationSection;
 
 import net.guizhanss.villagertrade.VillagerTrade;
+import net.guizhanss.villagertrade.utils.constants.Keys;
 
 import lombok.Builder;
 import lombok.Data;
@@ -23,15 +22,7 @@ import lombok.Data;
  */
 @Data
 @Builder
-public final class TradeConfiguration implements ConfigurationSerializable {
-
-    private static final String KEY_TRADER_TYPES = "traders";
-    private static final String KEY_OUTPUT = "output";
-    private static final String KEY_INPUT_1 = "input.1";
-    private static final String KEY_INPUT_2 = "input.2";
-    private static final String KEY_MAX_USES = "max-uses";
-    private static final String KEY_EXP_REWARD = "exp-reward";
-    private static final String KEY_EXP_VILLAGER = "exp-villager";
+public final class TradeConfiguration {
 
     private final TraderTypes traderTypes;
     private final TradeItem output;
@@ -55,13 +46,13 @@ public final class TradeConfiguration implements ConfigurationSerializable {
 
         try {
             return TradeConfiguration.builder()
-                .traderTypes(TraderTypes.loadFromConfig(section.getStringList(KEY_TRADER_TYPES)))
-                .output(TradeItem.loadFromConfig(section.getConfigurationSection(KEY_OUTPUT)))
-                .input1(TradeItem.loadFromConfig(section.getConfigurationSection(KEY_INPUT_1)))
-                .input2(TradeItem.loadFromConfig(section.getConfigurationSection(KEY_INPUT_2)))
-                .maxUses(section.getInt(KEY_MAX_USES))
-                .expReward(section.getInt(KEY_EXP_REWARD))
-                .expVillager(section.getInt(KEY_EXP_VILLAGER))
+                .traderTypes(TraderTypes.loadFromConfig(section.getStringList(Keys.TRADES_TRADER_TYPES)))
+                .output(TradeItem.loadFromConfig(section.getConfigurationSection(Keys.TRADES_OUTPUT)))
+                .input1(TradeItem.loadFromConfig(section.getConfigurationSection(Keys.TRADES_INPUT_1)))
+                .input2(TradeItem.loadFromConfig(section.getConfigurationSection(Keys.TRADES_INPUT_2)))
+                .maxUses(section.getInt(Keys.TRADES_MAX_USES))
+                .expReward(section.getInt(Keys.TRADES_EXP_REWARD))
+                .expVillager(section.getInt(Keys.TRADES_EXP_VILLAGER))
                 .build();
         } catch (IllegalArgumentException | NullPointerException ex) {
             VillagerTrade.log(Level.SEVERE, ex, "An error has occurred while loading trade configuration");
@@ -69,21 +60,37 @@ public final class TradeConfiguration implements ConfigurationSerializable {
         }
     }
 
-    @Override
     public void saveToConfig(@Nonnull ConfigurationSection section) {
         Preconditions.checkArgument(section != null, "ConfigurationSection should not be null");
 
-        traderTypes.saveToConfig(section.getConfigurationSection(KEY_TRADER_TYPES));
-        output.saveToConfig(section.getConfigurationSection(KEY_OUTPUT));
-        input1.saveToConfig(section.getConfigurationSection(KEY_INPUT_1));
-        input2.saveToConfig(section.getConfigurationSection(KEY_INPUT_2));
-        section.set(KEY_MAX_USES, maxUses);
-        section.set(KEY_EXP_REWARD, expReward);
-        section.set(KEY_EXP_VILLAGER, expVillager);
+        section.set(Keys.TRADES_TRADER_TYPES, traderTypes.toStringList());
+        output.saveToConfig(section.getConfigurationSection(Keys.TRADES_OUTPUT));
+        input1.saveToConfig(section.getConfigurationSection(Keys.TRADES_INPUT_1));
+        input2.saveToConfig(section.getConfigurationSection(Keys.TRADES_INPUT_2));
+        section.set(Keys.TRADES_MAX_USES, maxUses);
+        section.set(Keys.TRADES_EXP_REWARD, expReward);
+        section.set(Keys.TRADES_EXP_VILLAGER, expVillager);
     }
 
     public void register() {
-        VillagerTrade.getRegistry().getConfigurations().add(this);
+        // check if the trade is valid
+        if (output.getType() == TradeItem.TraderItemType.NONE) {
+            VillagerTrade.log(Level.SEVERE, "Trade output is not set or invalid, skipping...");
+            return;
+        }
+        if (input1.getType() == TradeItem.TraderItemType.NONE) {
+            VillagerTrade.log(Level.SEVERE, "Trade input 1 is not set or invalid, skipping...");
+            return;
+        }
+
+        // registration
+        VillagerTrade.getRegistry().getTradeConfigurations().add(this);
+        if (traderTypes.hasWanderingTrader()) {
+            VillagerTrade.getRegistry().getWanderingTraderConfigurations().add(this);
+        }
+        if (traderTypes.hasVillager()) {
+            VillagerTrade.getRegistry().getVillagerConfigurations().add(this);
+        }
     }
 
     @Nonnull

@@ -12,6 +12,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 public abstract class SubCommand {
+
     @Getter
     private final String name;
     @Getter

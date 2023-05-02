@@ -10,14 +10,10 @@ import net.guizhanss.villagertrade.core.commands.VtCommand;
 import net.guizhanss.villagertrade.core.commands.VtTabCompleter;
 
 public final class CommandManager {
-    public CommandManager() {
-        VtCommand vtCommand = new VtCommand();
-        getCommand("villagertrade").setExecutor(vtCommand);
-        getCommand("villagertrade").setTabCompleter(new VtTabCompleter(vtCommand));
-    }
 
-    @Nullable
-    private PluginCommand getCommand(@Nonnull String cmd) {
-        return VillagerTrade.getInstance().getCommand(cmd);
+    public CommandManager(@Nonnull VillagerTrade plugin) {
+        VtCommand vtCommand = new VtCommand();
+        plugin.getCommand("villagertrade").setExecutor(vtCommand);
+        plugin.getCommand("villagertrade").setTabCompleter(new VtTabCompleter(vtCommand));
     }
 }

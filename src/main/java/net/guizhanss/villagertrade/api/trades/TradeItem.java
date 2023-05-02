@@ -8,8 +8,6 @@ import javax.annotation.Nullable;
 
 import com.google.common.base.Preconditions;
 
-import net.guizhanss.villagertrade.api.ConfigurationSerializable;
-
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
@@ -27,7 +25,8 @@ import lombok.Getter;
  * @author ybw0014
  */
 @Getter
-public final class TradeItem implements ConfigurationSerializable {
+public final class TradeItem {
+
     private static final String KEY_TYPE = "type";
     private static final String KEY_ID = "id";
     private static final String KEY_AMOUNT = "amount";
@@ -69,7 +68,7 @@ public final class TradeItem implements ConfigurationSerializable {
         TraderItemType tempType = TraderItemType.NONE;
         ItemStack tempItem = null;
 
-        switch (type) {
+        switch (type.toUpperCase()) {
             case "VANILLA" -> {
                 try {
                     Material mat = Material.getMaterial(id.toUpperCase());
@@ -87,7 +86,16 @@ public final class TradeItem implements ConfigurationSerializable {
                     VillagerTrade.log(Level.SEVERE, "The id " + id + " is not a valid Slimefun item");
                 }
             }
-            default -> VillagerTrade.log(Level.SEVERE, "The type " + type + " is not a valid item type");
+            case "NONE" -> {}
+            default -> VillagerTrade.log(Level.SEVERE, "The type " + type + " is not a valid item type, setting to " +
+                "NONE");
+        }
+
+        // amount check
+        if (tempItem != null && (amount < 1 || amount > tempItem.getMaxStackSize())) {
+            VillagerTrade.log(Level.SEVERE, "The amount " + amount + " is not a valid amount for " + id);
+            tempType = TraderItemType.NONE;
+            tempItem = null;
         }
 
         this.type = tempType;
@@ -133,7 +141,6 @@ public final class TradeItem implements ConfigurationSerializable {
         }
     }
 
-    @Override
     public void saveToConfig(@Nonnull ConfigurationSection section) {
         Preconditions.checkArgument(section != null, "The ConfigurationSection cannot be null");
 

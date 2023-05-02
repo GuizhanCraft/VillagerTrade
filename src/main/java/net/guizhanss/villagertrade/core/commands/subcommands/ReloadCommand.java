@@ -4,6 +4,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import org.bukkit.command.CommandSender;
 
+import net.guizhanss.villagertrade.VillagerTrade;
 import net.guizhanss.villagertrade.core.commands.SubCommand;
 
 public final class ReloadCommand extends SubCommand {
@@ -15,6 +16,8 @@ public final class ReloadCommand extends SubCommand {
     @ParametersAreNonnullByDefault
     @Override
     public void onCommand(CommandSender sender, String[] args) {
-
+        VillagerTrade.getRegistry().reset();
+        VillagerTrade.getConfigManager().reloadAll();
+        VillagerTrade.getLocalizationService().sendKeyedMessage(sender, "commands.reload");
     }
 }

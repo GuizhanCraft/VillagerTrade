@@ -1,33 +1,21 @@
 package net.guizhanss.villagertrade.utils;
 
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.inventory.ItemStack;
+import net.guizhanss.guizhanlib.slimefun.addon.AddonConfig;
+
+import org.bukkit.configuration.Configuration;
 
 import lombok.experimental.UtilityClass;
 
+import javax.annotation.Nonnull;
+
 @UtilityClass
 public final class ConfigUtils {
-    /**
-     * Get the {@link ItemStack} from config section.
-     *
-     * @param section
-     *     The {@link ConfigurationSection} for the item.
-     *
-     * @return The {@link ItemStack} if the section is valid, or null.
-     */
-//    @Nullable
-//    public static ItemStack readItemSection(@Nonnull ConfigurationSection section) {
-//        String type = section.getString("type");
-//        if (type == null) {
-//            return null;
-//        }
-//        switch (type) {
-//            case "VANILLA" -> {
-//
-//            }
-//            case "SLIMEFUN" -> {
-//
-//            }
-//        }
-//    }
+    public static void addMissingOptions(@Nonnull AddonConfig config) {
+        Configuration defaultConfig = config.getDefaults();
+        for (String key : defaultConfig.getKeys(true)) {
+            if (!config.contains(key)) {
+                config.set(key, defaultConfig.get(key));
+            }
+        }
+    }
 }
