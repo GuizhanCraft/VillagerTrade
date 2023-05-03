@@ -6,11 +6,6 @@ import java.util.logging.Level;
 
 import javax.annotation.Nonnull;
 
-import net.guizhanss.guizhanlib.minecraft.utils.ChatUtil;
-
-import net.guizhanss.villagertrade.core.services.LocalizationService;
-
-import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 
 import io.github.thebusybiscuit.slimefun4.libraries.dough.updater.GitHubBuildsUpdater;
@@ -18,6 +13,7 @@ import io.github.thebusybiscuit.slimefun4.libraries.dough.updater.GitHubBuildsUp
 import net.guizhanss.guizhanlib.slimefun.addon.AbstractAddon;
 import net.guizhanss.guizhanlib.updater.GuizhanBuildsUpdater;
 import net.guizhanss.villagertrade.core.Registry;
+import net.guizhanss.villagertrade.core.services.LocalizationService;
 import net.guizhanss.villagertrade.implementation.managers.CommandManager;
 import net.guizhanss.villagertrade.implementation.managers.ConfigManager;
 import net.guizhanss.villagertrade.implementation.managers.ListenerManager;

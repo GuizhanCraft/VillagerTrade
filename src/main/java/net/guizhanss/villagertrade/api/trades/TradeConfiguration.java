@@ -15,8 +15,10 @@ import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
 import net.guizhanss.villagertrade.VillagerTrade;
 import net.guizhanss.villagertrade.utils.constants.Keys;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Setter;
 
 /**
  * The mapping of a whole section.
@@ -25,6 +27,7 @@ import lombok.Data;
  */
 @Data
 @Builder
+@SuppressWarnings("ConstantConditions")
 public final class TradeConfiguration {
 
     private final TraderTypes traderTypes;
@@ -38,7 +41,10 @@ public final class TradeConfiguration {
     private final int demand;
     private final int specialPrice;
 
+    @Setter(AccessLevel.NONE)
     private SlimefunAddon addon;
+    @Setter(AccessLevel.NONE)
+    private RegistrationState state = RegistrationState.UNREGISTERED;
 
     /**
      * Loads the config options from the {@link ConfigurationSection} into a {@link TradeConfiguration}.
@@ -71,6 +77,12 @@ public final class TradeConfiguration {
         }
     }
 
+    /**
+     * Save the {@link TradeConfiguration} to the {@link ConfigurationSection}.
+     *
+     * @param section
+     *     The {@link ConfigurationSection} to save to.
+     */
     public void saveToConfig(@Nonnull ConfigurationSection section) {
         Preconditions.checkArgument(section != null, "ConfigurationSection should not be null");
 
@@ -81,9 +93,24 @@ public final class TradeConfiguration {
         section.set(Keys.TRADES_MAX_USES, maxUses);
         section.set(Keys.TRADES_EXP_REWARD, expReward);
         section.set(Keys.TRADES_EXP_VILLAGER, expVillager);
+        section.set(Keys.TRADES_PRICE_MULTIPLIER, priceMultiplier);
+        section.set(Keys.TRADES_DEMAND, demand);
+        section.set(Keys.TRADES_SPECIAL_PRICE, specialPrice);
     }
 
+    /**
+     * Register this {@link TradeConfiguration}.
+     *
+     * @param addon
+     *     The {@link SlimefunAddon} that register this {@link TradeConfiguration}.
+     */
     public void register(@Nonnull SlimefunAddon addon) {
+        if (state != RegistrationState.UNREGISTERED) {
+            VillagerTrade.log(Level.SEVERE, "This TradeConfiguration is already registered!");
+            return;
+        }
+        state = RegistrationState.INVALID;
+
         // check if the trade is valid
         if (this.addon != null) {
             VillagerTrade.log(Level.SEVERE, "This TradeConfiguration is already registered! "
@@ -104,6 +131,7 @@ public final class TradeConfiguration {
         }
 
         // registration
+        state = RegistrationState.REGISTERED;
         this.addon = addon;
         VillagerTrade.getRegistry().getTradeConfigurations().add(this);
         if (traderTypes.hasWanderingTrader()) {
@@ -114,8 +142,15 @@ public final class TradeConfiguration {
         }
     }
 
+    /**
+     * Get the {@link MerchantRecipe} of this {@link TradeConfiguration}.
+     *
+     * @return The {@link MerchantRecipe}.
+     */
     @Nonnull
     public MerchantRecipe getMerchantRecipe() {
+        Preconditions.checkArgument(state == RegistrationState.REGISTERED,
+            "TradeConfiguration should be registered before getting the MerchantRecipe");
         MerchantRecipe recipe = new MerchantRecipe(
             output.getItem(), 0, maxUses, expReward,
             expVillager, priceMultiplier, demand, specialPrice
@@ -137,5 +172,11 @@ public final class TradeConfiguration {
             + ", expReward=" + this.isExpReward()
             + ", expVillager=" + this.getExpVillager()
             + ")";
+    }
+
+    public enum RegistrationState {
+        UNREGISTERED,
+        INVALID,
+        REGISTERED
     }
 }

@@ -1,12 +1,12 @@
 package net.guizhanss.villagertrade.utils;
 
-import net.guizhanss.guizhanlib.slimefun.addon.AddonConfig;
+import javax.annotation.Nonnull;
 
 import org.bukkit.configuration.Configuration;
 
-import lombok.experimental.UtilityClass;
+import net.guizhanss.guizhanlib.slimefun.addon.AddonConfig;
 
-import javax.annotation.Nonnull;
+import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public final class ConfigUtils {

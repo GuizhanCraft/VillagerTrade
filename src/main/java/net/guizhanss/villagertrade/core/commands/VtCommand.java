@@ -6,14 +6,13 @@ import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import net.guizhanss.villagertrade.core.commands.subcommands.EditCommand;
-import net.guizhanss.villagertrade.core.commands.subcommands.ListCommand;
-
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import net.guizhanss.villagertrade.VillagerTrade;
+import net.guizhanss.villagertrade.core.commands.subcommands.EditCommand;
+import net.guizhanss.villagertrade.core.commands.subcommands.ListCommand;
 import net.guizhanss.villagertrade.core.commands.subcommands.ReloadCommand;
 
 import lombok.Getter;

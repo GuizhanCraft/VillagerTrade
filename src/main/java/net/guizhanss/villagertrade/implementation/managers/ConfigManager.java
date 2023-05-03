@@ -2,6 +2,8 @@ package net.guizhanss.villagertrade.implementation.managers;
 
 import java.util.logging.Level;
 
+import javax.annotation.Nonnull;
+
 import net.guizhanss.guizhanlib.slimefun.addon.AddonConfig;
 import net.guizhanss.villagertrade.VillagerTrade;
 import net.guizhanss.villagertrade.api.trades.TradeConfiguration;
@@ -10,8 +12,6 @@ import net.guizhanss.villagertrade.utils.Debug;
 
 import lombok.Getter;
 import lombok.experimental.Accessors;
-
-import javax.annotation.Nonnull;
 
 @Getter
 public final class ConfigManager {
@@ -63,7 +63,11 @@ public final class ConfigManager {
             try {
                 TradeConfiguration tradeConfig = TradeConfiguration.loadFromConfig(trades.getConfigurationSection(key));
                 tradeConfig.register(plugin);
-                Debug.log("Successfully registered trade: " + key);
+                if (tradeConfig.getState() == TradeConfiguration.RegistrationState.REGISTERED) {
+                    Debug.log("Successfully registered trade: " + key);
+                }
+            } catch (NullPointerException ex) {
+                VillagerTrade.log(Level.SEVERE, "Failed to load trade: " + key + ", invalid config has been provided!");
             } catch (Exception ex) {
                 VillagerTrade.log(Level.SEVERE, ex, "Failed to load trade: " + key);
             }

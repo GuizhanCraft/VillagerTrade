@@ -1,17 +1,15 @@
 package net.guizhanss.villagertrade.core.services;
 
-import net.guizhanss.guizhanlib.minecraft.utils.ChatUtil;
-
-import net.guizhanss.guizhanlib.slimefun.addon.AddonConfig;
-
-import net.guizhanss.villagertrade.VillagerTrade;
-
-import org.bukkit.command.CommandSender;
+import java.util.function.UnaryOperator;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import java.util.function.UnaryOperator;
+import org.bukkit.command.CommandSender;
+
+import net.guizhanss.guizhanlib.minecraft.utils.ChatUtil;
+import net.guizhanss.guizhanlib.slimefun.addon.AddonConfig;
+import net.guizhanss.villagertrade.VillagerTrade;
 
 public final class LocalizationService {
 

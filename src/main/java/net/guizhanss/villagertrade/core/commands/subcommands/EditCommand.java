@@ -1,11 +1,10 @@
 package net.guizhanss.villagertrade.core.commands.subcommands;
 
-import net.guizhanss.villagertrade.VillagerTrade;
-import net.guizhanss.villagertrade.core.commands.SubCommand;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 import org.bukkit.command.CommandSender;
 
-import javax.annotation.ParametersAreNonnullByDefault;
+import net.guizhanss.villagertrade.core.commands.SubCommand;
 
 public final class EditCommand extends SubCommand {
 

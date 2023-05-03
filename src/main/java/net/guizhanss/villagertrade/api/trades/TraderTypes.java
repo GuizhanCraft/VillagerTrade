@@ -22,9 +22,11 @@ import lombok.experimental.Accessors;
 /**
  * Represents the list of valid types of traders.<br>
  * Available traders: {@link Villager} and {@link WanderingTrader}.
+ *
+ * @author ybw0014
  */
-
 @Getter
+@SuppressWarnings("ConstantConditions")
 public final class TraderTypes {
 
     private static final String WANDERING_TRADER = "WANDERING_TRADER";
@@ -102,6 +104,14 @@ public final class TraderTypes {
         return !villagerProfessions.isEmpty();
     }
 
+    /**
+     * Check if the given {@link Entity} is a valid trader.
+     *
+     * @param entity
+     *     The {@link Entity} to check.
+     *
+     * @return Whether the given {@link Entity} is a valid trader.
+     */
     public boolean isValid(@Nonnull Entity entity) {
         Preconditions.checkArgument(entity != null, "The entity cannot be null");
 

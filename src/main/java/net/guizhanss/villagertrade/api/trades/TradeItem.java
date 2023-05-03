@@ -25,6 +25,7 @@ import lombok.Getter;
  * @author ybw0014
  */
 @Getter
+@SuppressWarnings("ConstantConditions")
 public final class TradeItem {
 
     private static final String KEY_TYPE = "type";
@@ -60,7 +61,6 @@ public final class TradeItem {
      */
     public TradeItem(@Nonnull String type, @Nullable String id, int amount) {
         Preconditions.checkArgument(type != null, "TraderItemType cannot be null");
-        Preconditions.checkArgument(id != null, "id cannot be null");
 
         this.id = id;
         this.amount = amount;
@@ -74,7 +74,7 @@ public final class TradeItem {
                     Material mat = Material.getMaterial(id.toUpperCase());
                     tempItem = new ItemStack(mat, amount);
                     tempType = TraderItemType.VANILLA;
-                } catch (IllegalArgumentException ex) {
+                } catch (Exception ex) {
                     VillagerTrade.log(Level.SEVERE, "The material " + id + " is not a valid vanilla material");
                 }
             }
@@ -82,11 +82,12 @@ public final class TradeItem {
                 try {
                     tempItem = new CustomItemStack(SlimefunItem.getById(id).getItem(), amount);
                     tempType = TraderItemType.SLIMEFUN;
-                } catch (IllegalArgumentException ex) {
+                } catch (Exception ex) {
                     VillagerTrade.log(Level.SEVERE, "The id " + id + " is not a valid Slimefun item");
                 }
             }
-            case "NONE" -> {}
+            case "NONE" -> {
+            }
             default -> VillagerTrade.log(Level.SEVERE, "The type " + type + " is not a valid item type, setting to " +
                 "NONE");
         }
@@ -114,7 +115,7 @@ public final class TradeItem {
     public static TradeItem loadFromConfig(@Nonnull ConfigurationSection section) {
         Preconditions.checkArgument(section != null, "The ConfigurationSection cannot be null");
 
-        String type = section.getString(KEY_TYPE);
+        String type = section.getString(KEY_TYPE, "NONE");
         String id = section.getString(KEY_ID);
         int amount = section.getInt(KEY_AMOUNT, 1);
 
@@ -141,6 +142,12 @@ public final class TradeItem {
         }
     }
 
+    /**
+     * Save the {@link TradeItem} to a {@link ConfigurationSection}.
+     *
+     * @param section
+     *     The {@link ConfigurationSection} to save to.
+     */
     public void saveToConfig(@Nonnull ConfigurationSection section) {
         Preconditions.checkArgument(section != null, "The ConfigurationSection cannot be null");
 
