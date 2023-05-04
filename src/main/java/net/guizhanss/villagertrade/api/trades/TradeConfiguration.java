@@ -14,6 +14,7 @@ import org.bukkit.inventory.MerchantRecipe;
 import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
 
 import net.guizhanss.villagertrade.VillagerTrade;
+import net.guizhanss.villagertrade.core.Registry;
 import net.guizhanss.villagertrade.utils.constants.Keys;
 
 import lombok.AccessLevel;
@@ -138,14 +139,23 @@ public final class TradeConfiguration {
         }
 
         // registration
+        final Registry registry = VillagerTrade.getRegistry();
         state = RegistrationState.REGISTERED;
         this.addon = addon;
-        VillagerTrade.getRegistry().getTradeConfigurations().add(this);
+        registry.getTradeConfigurations().add(this);
         if (traderTypes.hasWanderingTrader()) {
-            VillagerTrade.getRegistry().getWanderingTraderConfigurations().add(this);
+            registry.getWanderingTraderConfigurations().add(this);
         }
         if (traderTypes.hasVillager()) {
-            VillagerTrade.getRegistry().getVillagerConfigurations().add(this);
+            registry.getVillagerConfigurations().add(this);
+        }
+
+        // slimefun input items
+        if (this.input1.getType() == TradeItem.TraderItemType.SLIMEFUN) {
+            registry.getSlimefunTradeInputs().add(this.input1);
+        }
+        if (this.input2.getType() == TradeItem.TraderItemType.SLIMEFUN) {
+            registry.getSlimefunTradeInputs().add(this.input2);
         }
     }
 

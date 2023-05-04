@@ -10,15 +10,15 @@ import lombok.Getter;
 
 @Getter
 public final class Registry {
-    public List<TradeConfiguration> tradeConfigurations = new ArrayList<>();
-    public List<TradeConfiguration> wanderingTraderConfigurations = new ArrayList<>();
-    public List<TradeConfiguration> villagerConfigurations = new ArrayList<>();
-    public List<TradeItem> slimefunTradeItems = new ArrayList<>();
+    private final List<TradeConfiguration> tradeConfigurations = new ArrayList<>();
+    private final List<TradeConfiguration> wanderingTraderConfigurations = new ArrayList<>();
+    private final List<TradeConfiguration> villagerConfigurations = new ArrayList<>();
+    private final List<TradeItem> slimefunTradeInputs = new ArrayList<>();
 
     public void reset() {
         tradeConfigurations.clear();
         wanderingTraderConfigurations.clear();
         villagerConfigurations.clear();
-        slimefunTradeItems.clear();
+        slimefunTradeInputs.clear();
     }
 }
