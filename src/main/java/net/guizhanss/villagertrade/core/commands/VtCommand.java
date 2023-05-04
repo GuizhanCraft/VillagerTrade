@@ -10,6 +10,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
+import net.guizhanss.guizhanlib.minecraft.utils.ChatUtil;
 import net.guizhanss.villagertrade.VillagerTrade;
 import net.guizhanss.villagertrade.core.commands.subcommands.EditCommand;
 import net.guizhanss.villagertrade.core.commands.subcommands.ListCommand;
@@ -46,12 +47,12 @@ public final class VtCommand implements CommandExecutor {
     }
 
     public void sendHelp(@Nonnull CommandSender sender) {
-        sender.sendMessage("&e&lVillagerTrade &6v" + VillagerTrade.getInstance().getPluginVersion());
+        sender.sendMessage(ChatUtil.color("&e&lVillagerTrade &6v" + VillagerTrade.getInstance().getPluginVersion()));
         for (SubCommand subCommand : subCommands) {
             if (subCommand.isHidden()) {
                 continue;
             }
-            sender.sendMessage("&e/sfvt " + subCommand.getName() + " &7" + subCommand.getDescription());
+            sender.sendMessage(ChatUtil.color("&e/sfvt " + subCommand.getName() + " &7" + subCommand.getDescription()));
         }
     }
 }

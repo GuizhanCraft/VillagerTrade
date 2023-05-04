@@ -170,10 +170,10 @@ public final class TradeItem {
         return Objects.hash(type, id, amount);
     }
 
+    @Nonnull
     @Override
     public String toString() {
-        return "TradeItem("
-            + ", type=" + type
+        return "TradeItem(type=" + type
             + ", id=" + id
             + ", amount=" + amount
             + ")";

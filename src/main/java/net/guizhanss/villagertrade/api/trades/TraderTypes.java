@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -88,16 +89,12 @@ public final class TraderTypes {
     }
 
     @Nonnull
+    @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("TraderTypes(");
-        builder.append("hasWanderingTrader=").append(hasWanderingTrader).append(", ");
-        builder.append("villagerProfessions={");
-        for (Villager.Profession profession : this.villagerProfessions) {
-            builder.append(profession.toString()).append(", ");
-        }
-        builder.append("})");
-        return builder.toString();
+        return "TraderTypes(wanderingTrader = " + hasWanderingTrader
+            + ", villagerProfessions = "
+            + villagerProfessions.stream().map(Enum::toString).collect(Collectors.joining(", "))
+            + ")";
     }
 
     public boolean hasVillager() {

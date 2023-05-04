@@ -13,6 +13,7 @@ import org.bukkit.inventory.MerchantRecipe;
 
 import net.guizhanss.villagertrade.VillagerTrade;
 import net.guizhanss.villagertrade.api.trades.TradeConfiguration;
+import net.guizhanss.villagertrade.utils.Debug;
 
 public final class WanderingTraderListener implements Listener {
 
@@ -26,7 +27,7 @@ public final class WanderingTraderListener implements Listener {
         for (TradeConfiguration tradeConfig : VillagerTrade.getRegistry().getWanderingTraderConfigurations()) {
             if (tradeConfig.getTraderTypes().isValid(trader)) {
                 recipes.add(tradeConfig.getMerchantRecipe());
-
+                Debug.log("Added MerchantRecipe to WanderingTrader: " + tradeConfig.getKey());
             }
         }
         trader.setRecipes(recipes);

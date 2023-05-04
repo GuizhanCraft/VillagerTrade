@@ -13,6 +13,7 @@ import org.bukkit.inventory.MerchantRecipe;
 
 import net.guizhanss.villagertrade.VillagerTrade;
 import net.guizhanss.villagertrade.api.trades.TradeConfiguration;
+import net.guizhanss.villagertrade.utils.Debug;
 
 public final class VillagerListener implements Listener {
 
@@ -22,7 +23,10 @@ public final class VillagerListener implements Listener {
         List<MerchantRecipe> recipes = new ArrayList<>(trader.getRecipes());
         for (TradeConfiguration tradeConfig : VillagerTrade.getRegistry().getVillagerConfigurations()) {
             if (tradeConfig.getTraderTypes().isValid(trader)) {
-                recipes.add(tradeConfig.getMerchantRecipe());
+                VillagerTrade.getScheduler().run(() -> {
+                    recipes.add(tradeConfig.getMerchantRecipe());
+                    Debug.log("Added MerchantRecipe to Villager: " + tradeConfig.getKey());
+                });
             }
         }
         trader.setRecipes(recipes);

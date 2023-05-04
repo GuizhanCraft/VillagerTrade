@@ -7,4 +7,4 @@ commands:
     description: "Open the menu to edit trades"
   reload:
     description: "Reload the configuration"
-    success: "&aConfiguration has been reloaded!"
+    success: "&aReloading configuration..."

@@ -58,13 +58,18 @@ public final class ConfigManager {
 
         VillagerTrade.log(Level.INFO, "Trades are enabled! Loading...");
 
+        int count = 0;
         for (String key : trades.getKeys(false)) {
             Debug.log("Loading trade: " + key);
             try {
-                TradeConfiguration tradeConfig = TradeConfiguration.loadFromConfig(trades.getConfigurationSection(key));
+                TradeConfiguration tradeConfig =
+                    TradeConfiguration.loadFromConfig(key, trades.getConfigurationSection(key));
+                Debug.log("Trade config of " + key + ":");
+                Debug.logRaw(tradeConfig.toString());
                 tradeConfig.register(plugin);
                 if (tradeConfig.getState() == TradeConfiguration.RegistrationState.REGISTERED) {
                     Debug.log("Successfully registered trade: " + key);
+                    count++;
                 }
             } catch (NullPointerException ex) {
                 VillagerTrade.log(Level.SEVERE, "Failed to load trade: " + key + ", invalid config has been provided!");
@@ -72,5 +77,7 @@ public final class ConfigManager {
                 VillagerTrade.log(Level.SEVERE, ex, "Failed to load trade: " + key);
             }
         }
+
+        VillagerTrade.log(Level.INFO, "Successfully loaded " + count + " trades!");
     }
 }

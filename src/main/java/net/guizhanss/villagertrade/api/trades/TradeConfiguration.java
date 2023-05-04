@@ -4,6 +4,7 @@ import java.util.logging.Level;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.google.common.base.Preconditions;
 
@@ -17,7 +18,8 @@ import net.guizhanss.villagertrade.utils.constants.Keys;
 
 import lombok.AccessLevel;
 import lombok.Builder;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.Setter;
 
 /**
@@ -25,11 +27,13 @@ import lombok.Setter;
  *
  * @author ybw0014
  */
-@Data
+@Getter
+@EqualsAndHashCode
 @Builder
 @SuppressWarnings("ConstantConditions")
 public final class TradeConfiguration {
 
+    private final String key;
     private final TraderTypes traderTypes;
     private final TradeItem output;
     private final TradeItem input1;
@@ -44,7 +48,7 @@ public final class TradeConfiguration {
     @Setter(AccessLevel.NONE)
     private SlimefunAddon addon;
     @Setter(AccessLevel.NONE)
-    private RegistrationState state = RegistrationState.UNREGISTERED;
+    private RegistrationState state;
 
     /**
      * Loads the config options from the {@link ConfigurationSection} into a {@link TradeConfiguration}.
@@ -54,12 +58,14 @@ public final class TradeConfiguration {
      *
      * @return The {@link TradeConfiguration} loaded, or null if the section is invalid.
      */
+    @ParametersAreNonnullByDefault
     @Nullable
-    public static TradeConfiguration loadFromConfig(@Nonnull ConfigurationSection section) {
+    public static TradeConfiguration loadFromConfig(String key, ConfigurationSection section) {
         Preconditions.checkArgument(section != null, "ConfigurationSection should not be null");
 
         try {
             return TradeConfiguration.builder()
+                .key(key)
                 .traderTypes(TraderTypes.loadFromConfig(section.getStringList(Keys.TRADES_TRADER_TYPES)))
                 .output(TradeItem.loadFromConfig(section.getConfigurationSection(Keys.TRADES_OUTPUT)))
                 .input1(TradeItem.loadFromConfig(section.getConfigurationSection(Keys.TRADES_INPUT_1)))
@@ -70,6 +76,7 @@ public final class TradeConfiguration {
                 .priceMultiplier((float) section.getDouble(Keys.TRADES_PRICE_MULTIPLIER))
                 .demand(section.getInt(Keys.TRADES_DEMAND))
                 .specialPrice(section.getInt(Keys.TRADES_SPECIAL_PRICE))
+                .state(RegistrationState.UNREGISTERED)
                 .build();
         } catch (IllegalArgumentException | NullPointerException ex) {
             VillagerTrade.log(Level.SEVERE, ex, "An error has occurred while loading trade configuration");
@@ -105,7 +112,7 @@ public final class TradeConfiguration {
      *     The {@link SlimefunAddon} that register this {@link TradeConfiguration}.
      */
     public void register(@Nonnull SlimefunAddon addon) {
-        if (state != RegistrationState.UNREGISTERED) {
+        if (state == RegistrationState.REGISTERED) {
             VillagerTrade.log(Level.SEVERE, "This TradeConfiguration is already registered!");
             return;
         }
@@ -145,9 +152,9 @@ public final class TradeConfiguration {
     /**
      * Get the {@link MerchantRecipe} of this {@link TradeConfiguration}.
      *
-     * @return The {@link MerchantRecipe}.
+     * @return The {@link MerchantRecipe}, null if the recipe is not registered.
      */
-    @Nonnull
+    @Nullable
     public MerchantRecipe getMerchantRecipe() {
         Preconditions.checkArgument(state == RegistrationState.REGISTERED,
             "TradeConfiguration should be registered before getting the MerchantRecipe");
@@ -163,14 +170,18 @@ public final class TradeConfiguration {
     }
 
     @Nonnull
+    @Override
     public String toString() {
-        return "TradeConfiguration(traderTypes=" + this.getTraderTypes()
-            + ", output=" + this.getOutput()
-            + ", input1=" + this.getInput1()
-            + ", input2=" + this.getInput2()
-            + ", maxUses=" + this.getMaxUses()
-            + ", expReward=" + this.isExpReward()
-            + ", expVillager=" + this.getExpVillager()
+        return "TradeConfiguration(traderTypes = " + this.getTraderTypes().toString()
+            + ", output = " + this.getOutput().toString()
+            + ", input1 = " + this.getInput1().toString()
+            + ", input2 = " + this.getInput2().toString()
+            + ", maxUses = " + this.getMaxUses()
+            + ", expReward = " + this.isExpReward()
+            + ", expVillager = " + this.getExpVillager()
+            + ", priceMultiplier = " + this.getPriceMultiplier()
+            + ", demand = " + this.getDemand()
+            + ", specialPrice = " + this.getSpecialPrice()
             + ")";
     }
 

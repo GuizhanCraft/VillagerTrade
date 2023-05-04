@@ -6,22 +6,28 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import net.guizhanss.villagertrade.VillagerTrade;
 
+@SuppressWarnings("ConstantConditions")
 public final class Debug {
-    @ParametersAreNonnullByDefault
-    public static void log(String message, Object... args) {
+
+    public static boolean isEnabled() {
         if (VillagerTrade.getConfigManager() == null) {
-            if (VillagerTrade.getInstance().getConfig().getBoolean("debug")) {
-                logMsg(message, args);
-            }
+            return VillagerTrade.getInstance().getConfig().getBoolean("debug");
         } else {
-            if (VillagerTrade.getConfigManager().isDebug()) {
-                logMsg(message, args);
-            }
+            return VillagerTrade.getConfigManager().isDebug();
         }
     }
 
     @ParametersAreNonnullByDefault
-    private static void logMsg(String message, Object... args) {
-        VillagerTrade.log(Level.INFO, "[DEBUG] " + message, args);
+    public static void log(String message, Object... args) {
+        if (isEnabled()) {
+            VillagerTrade.log(Level.INFO, "[DEBUG] " + message, args);
+        }
+    }
+
+    @ParametersAreNonnullByDefault
+    public static void logRaw(Object obj) {
+        if (isEnabled()) {
+            VillagerTrade.getInstance().getLogger().log(Level.INFO, "[DEBUG] " + obj);
+        }
     }
 }
