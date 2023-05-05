@@ -14,6 +14,15 @@ messages:
 menu:
   list:
     title: "&d&lVillagerTrade &8- &0List"
+    info:
+      name: "&eList of trades"
+      lore:
+        - "&7This page lists all loaded trades."
+        - "&7Click on a trade to edit it."
+        - ""
+        - "&7These trades are only added"
+        - "&7when villagers change profession,"
+        - "&7or when wandering traders spawn."
     key: "&b{0}"
     traders: "&eTrader types: &7{0}"
     input:

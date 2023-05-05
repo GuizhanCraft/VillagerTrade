@@ -1,6 +1,8 @@
 package net.guizhanss.villagertrade.implementation.menu;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -29,11 +31,14 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public final class TradeListMenu {
     // slots
-    private static final int[] HEADER = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
+    private static final int[] HEADER = { 0, 1, 2, 3, 5, 6, 7, 8 };
     private static final int[] FOOTER = { 45, 47, 48, 49, 50, 51, 53 };
+    private static final int INFO_SLOT = 4;
     private static final int PAGE_SIZE = 36;
     private static final int PAGE_PREVIOUS = 46;
     private static final int PAGE_NEXT = 52;
+
+    private static final Map<Player, Boolean> OPEN_MAP = new HashMap<>();
 
     public static void show(@Nonnull Player p) {
         final ChestMenu menu = new ChestMenu(VillagerTrade.getLocalization().getLang("menu.list.title"));
@@ -63,9 +68,14 @@ public final class TradeListMenu {
 
         final List<TradeConfiguration> subList = trades.subList(start, end);
 
+        // info
+        menu.replaceExistingItem(INFO_SLOT, getInfoItem());
+        menu.addMenuClickHandler(INFO_SLOT, ChestMenuUtils.getEmptyClickHandler());
+
+        // footer
         setupFooter(player, menu, page, totalPages);
 
-        // Sound
+        // sound
         player.playSound(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 1.0F, 1.0F);
 
         for (int i = 0; i < PAGE_SIZE; i++) {
@@ -121,13 +131,17 @@ public final class TradeListMenu {
             getLine(Keys.TRADES_EXP_VILLAGER, tradeConfig.getExpVillager()),
             getLine(Keys.TRADES_PRICE_MULTIPLIER, tradeConfig.getPriceMultiplier()),
             "",
-            getLine("click-info")
+            VillagerTrade.getLocalization().getLang("click-info")
         );
     }
 
     @Nonnull
-    private static String getLine(String key) {
-        return ChatUtil.color(VillagerTrade.getLocalization().getLang("menu.list." + key));
+    private static ItemStack getInfoItem() {
+        return new CustomItemStack(
+            Material.ENCHANTED_BOOK,
+            VillagerTrade.getLocalization().getLang("menu.list.info.name"),
+            VillagerTrade.getLocalization().getLangList("menu.list.info.lore")
+        );
     }
 
     @Nonnull

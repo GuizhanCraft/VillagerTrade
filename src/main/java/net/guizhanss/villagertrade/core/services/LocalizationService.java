@@ -1,5 +1,6 @@
 package net.guizhanss.villagertrade.core.services;
 
+import java.util.List;
 import java.util.function.UnaryOperator;
 
 import javax.annotation.Nonnull;
@@ -45,6 +46,12 @@ public final class LocalizationService {
     @ParametersAreNonnullByDefault
     public String getLang(String key, String def) {
         return languages.getString(key, def);
+    }
+
+
+    @Nonnull
+    public List<String> getLangList(@Nonnull String key) {
+        return languages.getStringList(key);
     }
 
     @Nonnull
