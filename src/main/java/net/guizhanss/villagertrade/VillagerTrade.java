@@ -53,7 +53,7 @@ public final class VillagerTrade extends AbstractAddon {
     }
 
     @Nonnull
-    public static LocalizationService getLocalizationService() {
+    public static LocalizationService getLocalization() {
         return inst().localizationService;
     }
 

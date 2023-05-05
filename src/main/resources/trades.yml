@@ -16,7 +16,5 @@ example_trade:
   exp-reward: true
   exp-villager: 0
   price-multiplier: 0.0
-  demand: 0
-  special-price: 0
 
 

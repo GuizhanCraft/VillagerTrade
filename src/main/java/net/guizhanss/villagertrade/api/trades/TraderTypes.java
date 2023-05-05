@@ -115,9 +115,23 @@ public final class TraderTypes {
         if (hasWanderingTrader && entity instanceof WanderingTrader) {
             return true;
         } else if (entity instanceof Villager villager) {
-            return villagerProfessions.contains(villager.getProfession());
+            return isValid(villager.getProfession());
         }
 
         return false;
+    }
+
+    /**
+     * Check if the given {@link Villager.Profession} is a valid trader profession.
+     *
+     * @param profession
+     *     The {@link Villager.Profession} to check.
+     *
+     * @return Whether the given {@link Villager.Profession} is a valid trader profession.
+     */
+    public boolean isValid(@Nonnull Villager.Profession profession) {
+        Preconditions.checkArgument(profession != null, "The profession cannot be null");
+
+        return villagerProfessions.contains(profession);
     }
 }

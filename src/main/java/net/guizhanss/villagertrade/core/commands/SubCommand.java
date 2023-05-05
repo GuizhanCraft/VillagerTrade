@@ -3,6 +3,7 @@ package net.guizhanss.villagertrade.core.commands;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import org.bukkit.command.CommandSender;
@@ -28,7 +29,7 @@ public abstract class SubCommand {
     public SubCommand(@Nonnull String name, boolean hidden) {
         this.name = name;
         this.isHidden = hidden;
-        this.description = VillagerTrade.getLocalizationService().getCommandDescription(name);
+        this.description = VillagerTrade.getLocalization().getCommandDescription(name);
     }
 
     public boolean isSubCommand(@Nonnull String cmd) {
@@ -38,6 +39,7 @@ public abstract class SubCommand {
     @ParametersAreNonnullByDefault
     public abstract void onCommand(CommandSender sender, String[] args);
 
+    @Nullable
     @ParametersAreNonnullByDefault
     public List<String> onTabComplete(CommandSender sender, String[] args) {
         return List.of();

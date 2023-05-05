@@ -43,8 +43,6 @@ public final class TradeConfiguration {
     private final boolean expReward;
     private final int expVillager;
     private final float priceMultiplier;
-    private final int demand;
-    private final int specialPrice;
 
     @Setter(AccessLevel.NONE)
     private SlimefunAddon addon;
@@ -75,8 +73,6 @@ public final class TradeConfiguration {
                 .expReward(section.getBoolean(Keys.TRADES_EXP_REWARD))
                 .expVillager(section.getInt(Keys.TRADES_EXP_VILLAGER))
                 .priceMultiplier((float) section.getDouble(Keys.TRADES_PRICE_MULTIPLIER))
-                .demand(section.getInt(Keys.TRADES_DEMAND))
-                .specialPrice(section.getInt(Keys.TRADES_SPECIAL_PRICE))
                 .state(RegistrationState.UNREGISTERED)
                 .build();
         } catch (IllegalArgumentException | NullPointerException ex) {
@@ -102,8 +98,6 @@ public final class TradeConfiguration {
         section.set(Keys.TRADES_EXP_REWARD, expReward);
         section.set(Keys.TRADES_EXP_VILLAGER, expVillager);
         section.set(Keys.TRADES_PRICE_MULTIPLIER, priceMultiplier);
-        section.set(Keys.TRADES_DEMAND, demand);
-        section.set(Keys.TRADES_SPECIAL_PRICE, specialPrice);
     }
 
     /**
@@ -143,6 +137,7 @@ public final class TradeConfiguration {
         state = RegistrationState.REGISTERED;
         this.addon = addon;
         registry.getTradeConfigurations().add(this);
+        registry.getTradeConfigurationMap().put(key, this);
         if (traderTypes.hasWanderingTrader()) {
             registry.getWanderingTraderConfigurations().add(this);
         }
@@ -151,11 +146,11 @@ public final class TradeConfiguration {
         }
 
         // slimefun input items
-        if (this.input1.getType() == TradeItem.TraderItemType.SLIMEFUN) {
-            registry.getSlimefunTradeInputs().add(this.input1);
+        if (input1.getType() == TradeItem.TraderItemType.SLIMEFUN) {
+            registry.getSlimefunTradeInputs().add(input1);
         }
-        if (this.input2.getType() == TradeItem.TraderItemType.SLIMEFUN) {
-            registry.getSlimefunTradeInputs().add(this.input2);
+        if (input2.getType() == TradeItem.TraderItemType.SLIMEFUN) {
+            registry.getSlimefunTradeInputs().add(input2);
         }
     }
 
@@ -170,7 +165,7 @@ public final class TradeConfiguration {
             "TradeConfiguration should be registered before getting the MerchantRecipe");
         MerchantRecipe recipe = new MerchantRecipe(
             output.getItem(), 0, maxUses, expReward,
-            expVillager, priceMultiplier, demand, specialPrice
+            expVillager, priceMultiplier
         );
         recipe.addIngredient(input1.getItem());
         if (input2.getType() != TradeItem.TraderItemType.NONE) {
@@ -190,8 +185,6 @@ public final class TradeConfiguration {
             + ", expReward = " + this.isExpReward()
             + ", expVillager = " + this.getExpVillager()
             + ", priceMultiplier = " + this.getPriceMultiplier()
-            + ", demand = " + this.getDemand()
-            + ", specialPrice = " + this.getSpecialPrice()
             + ")";
     }
 

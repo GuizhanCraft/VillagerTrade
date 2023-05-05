@@ -1,0 +1,27 @@
+messages:
+  prefix: "&b[&aVillagerTrade&b]&7 "
+  no-console: "&cOnly players can use this command!"
+  no-permission: "&cYou don't have permission to do that!"
+  usage: "&eUsage: &7{0}"
+  commands:
+    list:
+      description: "Open a menu that lists all loaded trades."
+    edit:
+      description: "Open the menu to edit a trade directly by its key."
+    reload:
+      description: "Reload the configuration file."
+      success: "&aReloading configuration..."
+menu:
+  list:
+    title: "&d&lVillagerTrade &8- &0List"
+    key: "&b{0}"
+    traders: "&eTrader types: &7{0}"
+    input:
+      1: "&eIngredient 1: &7{0}"
+      2: "&eIngredient 2: &7{0}"
+    output: "&eResult: &7{0}"
+    max-uses: "&eMax uses: &7{0}"
+    exp-reward: "&eExp reward: &7{0}"
+    exp-villager: "&eVillager experience: &7{0}"
+    price-multiplier: "&ePrice multiplier: &7{0}"
+    click-info: "&eClick to edit this trade."

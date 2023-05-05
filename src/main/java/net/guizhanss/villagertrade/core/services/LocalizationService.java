@@ -14,31 +14,42 @@ import net.guizhanss.villagertrade.VillagerTrade;
 public final class LocalizationService {
 
     private static final String DEFAULT_PREFIX = "&f[&aVillagerTrade&f]&7 ";
-    private static final String FILENAME_MESSAGES = "messages.yml";
+    private static final String FILENAME_LANGUAGE = "lang.yml";
 
-    private final AddonConfig messages;
+    private final AddonConfig languages;
 
     private String prefix;
 
     public LocalizationService(VillagerTrade plugin) {
-        messages = new AddonConfig(plugin, FILENAME_MESSAGES);
+        languages = new AddonConfig(plugin, FILENAME_LANGUAGE);
 
         afterReload();
     }
 
     public void reloadAll() {
-        messages.reload();
+        languages.reload();
 
         afterReload();
     }
 
     private void afterReload() {
-        prefix = messages.getString("prefix", DEFAULT_PREFIX);
+        prefix = getLang("prefix", DEFAULT_PREFIX);
+    }
+
+    @Nonnull
+    public String getLang(@Nonnull String key) {
+        return getLang(key, "");
+    }
+
+    @Nonnull
+    @ParametersAreNonnullByDefault
+    public String getLang(String key, String def) {
+        return languages.getString(key, def);
     }
 
     @Nonnull
     public String getCommandDescription(@Nonnull String command) {
-        return messages.getString("commands." + command + ".description", "");
+        return getLang("messages.commands." + command + ".description", "");
     }
 
     @ParametersAreNonnullByDefault
@@ -53,6 +64,6 @@ public final class LocalizationService {
 
     @ParametersAreNonnullByDefault
     public void sendKeyedMessage(CommandSender sender, String key, UnaryOperator<String> function) {
-        sendMessage(sender, function.apply(messages.getString(key)));
+        sendMessage(sender, function.apply(getLang("messages." + key)));
     }
 }

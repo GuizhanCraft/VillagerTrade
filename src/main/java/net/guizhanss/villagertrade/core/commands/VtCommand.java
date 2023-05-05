@@ -52,7 +52,7 @@ public final class VtCommand implements CommandExecutor {
             if (subCommand.isHidden()) {
                 continue;
             }
-            sender.sendMessage(ChatUtil.color("&e/sfvt " + subCommand.getName() + " &7" + subCommand.getDescription()));
+            sender.sendMessage(ChatUtil.color("&e/sfvt " + subCommand.getName() + "&7 - " + subCommand.getDescription()));
         }
     }
 }

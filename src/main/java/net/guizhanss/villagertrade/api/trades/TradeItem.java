@@ -179,6 +179,15 @@ public final class TradeItem {
             + ")";
     }
 
+    @Nonnull
+    public String toShortString() {
+        if (type == TraderItemType.NONE) {
+            return "NONE";
+        } else {
+            return type.toString() + ", " + id + " x" + amount;
+        }
+    }
+
     /**
      * Represents the type of item.
      */

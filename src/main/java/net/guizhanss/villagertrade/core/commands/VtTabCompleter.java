@@ -2,6 +2,7 @@ package net.guizhanss.villagertrade.core.commands;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import org.bukkit.command.Command;
@@ -16,21 +17,24 @@ public class VtTabCompleter implements TabCompleter {
         this.command = command;
     }
 
-    @ParametersAreNonnullByDefault
+    @Nullable
     @Override
+    @ParametersAreNonnullByDefault
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length == 0) {
+        if (args.length == 1) {
             return this.command.getSubCommands().stream()
                 .filter(subCommand -> !subCommand.isHidden())
                 .map(SubCommand::getName)
                 .toList();
-        } else {
+        } else if (args.length > 1) {
             for (SubCommand subCommand : this.command.getSubCommands()) {
                 if (subCommand.isSubCommand(args[0])) {
                     return subCommand.onTabComplete(sender, args);
                 }
             }
             return List.of();
+        } else {
+            return null;
         }
     }
 }

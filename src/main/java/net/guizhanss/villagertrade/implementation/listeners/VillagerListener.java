@@ -19,16 +19,16 @@ public final class VillagerListener implements Listener {
 
     @EventHandler
     public void onCareerChange(@Nonnull VillagerCareerChangeEvent e) {
-        Villager trader = e.getEntity();
-        List<MerchantRecipe> recipes = new ArrayList<>(trader.getRecipes());
-        for (TradeConfiguration tradeConfig : VillagerTrade.getRegistry().getVillagerConfigurations()) {
-            if (tradeConfig.getTraderTypes().isValid(trader)) {
-                VillagerTrade.getScheduler().run(() -> {
+        final Villager trader = e.getEntity();
+        VillagerTrade.getScheduler().run(() -> {
+            List<MerchantRecipe> recipes = new ArrayList<>(trader.getRecipes());
+            for (TradeConfiguration tradeConfig : VillagerTrade.getRegistry().getVillagerConfigurations()) {
+                if (tradeConfig.getTraderTypes().isValid(e.getProfession())) {
                     recipes.add(tradeConfig.getMerchantRecipe());
                     Debug.log("Added MerchantRecipe to Villager: " + tradeConfig.getKey());
-                });
+                }
             }
-        }
-        trader.setRecipes(recipes);
+            trader.setRecipes(recipes);
+        });
     }
 }

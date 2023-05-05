@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 
 import net.guizhanss.villagertrade.VillagerTrade;
 import net.guizhanss.villagertrade.core.commands.SubCommand;
+import net.guizhanss.villagertrade.utils.constants.Permissions;
 
 public final class ReloadCommand extends SubCommand {
 
@@ -16,9 +17,13 @@ public final class ReloadCommand extends SubCommand {
     @ParametersAreNonnullByDefault
     @Override
     public void onCommand(CommandSender sender, String[] args) {
+        if (!sender.hasPermission(Permissions.ADMIN)) {
+            VillagerTrade.getLocalization().sendKeyedMessage(sender, "no-permission");
+            return;
+        }
         VillagerTrade.getRegistry().reset();
-        VillagerTrade.getLocalizationService().reloadAll();
+        VillagerTrade.getLocalization().reloadAll();
         VillagerTrade.getConfigManager().reloadAll();
-        VillagerTrade.getLocalizationService().sendKeyedMessage(sender, "commands.reload.success");
+        VillagerTrade.getLocalization().sendKeyedMessage(sender, "commands.reload.success");
     }
 }
