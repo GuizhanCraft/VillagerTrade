@@ -123,11 +123,11 @@ public final class TradeConfiguration {
             VillagerTrade.log(Level.SEVERE, "SlimefunAddon is invalid! Skipping...");
             return;
         }
-        if (output.getType() == TradeItem.TraderItemType.NONE) {
+        if (output.getType() == TradeItem.TradeItemType.NONE) {
             VillagerTrade.log(Level.SEVERE, "Trade output is not set or invalid, skipping...");
             return;
         }
-        if (input1.getType() == TradeItem.TraderItemType.NONE) {
+        if (input1.getType() == TradeItem.TradeItemType.NONE) {
             VillagerTrade.log(Level.SEVERE, "Trade input 1 is not set or invalid, skipping...");
             return;
         }
@@ -136,8 +136,7 @@ public final class TradeConfiguration {
         final Registry registry = VillagerTrade.getRegistry();
         state = RegistrationState.REGISTERED;
         this.addon = addon;
-        registry.getTradeConfigurations().add(this);
-        registry.getTradeConfigurationMap().put(key, this);
+        registry.getTradeConfigurations().put(key, this);
         if (traderTypes.hasWanderingTrader()) {
             registry.getWanderingTraderConfigurations().add(this);
         }
@@ -146,10 +145,10 @@ public final class TradeConfiguration {
         }
 
         // slimefun input items
-        if (input1.getType() == TradeItem.TraderItemType.SLIMEFUN) {
+        if (input1.getType() == TradeItem.TradeItemType.SLIMEFUN) {
             registry.getSlimefunTradeInputs().add(input1);
         }
-        if (input2.getType() == TradeItem.TraderItemType.SLIMEFUN) {
+        if (input2.getType() == TradeItem.TradeItemType.SLIMEFUN) {
             registry.getSlimefunTradeInputs().add(input2);
         }
     }
@@ -168,7 +167,7 @@ public final class TradeConfiguration {
             expVillager, priceMultiplier
         );
         recipe.addIngredient(input1.getItem());
-        if (input2.getType() != TradeItem.TraderItemType.NONE) {
+        if (input2.getType() != TradeItem.TradeItemType.NONE) {
             recipe.addIngredient(input2.getItem());
         }
         return recipe;

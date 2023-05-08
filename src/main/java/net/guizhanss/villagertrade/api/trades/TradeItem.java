@@ -33,7 +33,7 @@ public final class TradeItem {
     private static final String KEY_AMOUNT = "amount";
 
     private final ItemStack item;
-    private final TraderItemType type;
+    private final TradeItemType type;
     private final String id;
     private final int amount;
 
@@ -41,7 +41,7 @@ public final class TradeItem {
      * Construct a {@link TradeItem}, with default amount 1.
      *
      * @param type
-     *     The {@link String} representation of {@link TraderItemType}.
+     *     The {@link String} representation of {@link TradeItemType}.
      * @param id
      *     The id of item, it can be a vanilla material name or a Slimefun item id.
      */
@@ -53,7 +53,7 @@ public final class TradeItem {
      * Construct a {@link TradeItem}.
      *
      * @param type
-     *     The {@link String} representation of {@link TraderItemType}.
+     *     The {@link String} representation of {@link TradeItemType}.
      * @param id
      *     The id of item, it can be a vanilla material name or a Slimefun item id.
      * @param amount
@@ -65,7 +65,7 @@ public final class TradeItem {
         this.id = id;
         this.amount = amount;
 
-        TraderItemType tempType = TraderItemType.NONE;
+        TradeItemType tempType = TradeItemType.NONE;
         ItemStack tempItem = null;
 
         switch (type.toUpperCase()) {
@@ -73,7 +73,7 @@ public final class TradeItem {
                 try {
                     Material mat = Material.getMaterial(id.toUpperCase());
                     tempItem = new ItemStack(mat, amount);
-                    tempType = TraderItemType.VANILLA;
+                    tempType = TradeItemType.VANILLA;
                 } catch (Exception ex) {
                     VillagerTrade.log(Level.SEVERE, "The material " + id + " is not a valid vanilla material");
                 }
@@ -81,7 +81,7 @@ public final class TradeItem {
             case "SLIMEFUN" -> {
                 try {
                     tempItem = new CustomItemStack(SlimefunItem.getById(id).getItem(), amount);
-                    tempType = TraderItemType.SLIMEFUN;
+                    tempType = TradeItemType.SLIMEFUN;
                 } catch (Exception ex) {
                     VillagerTrade.log(Level.SEVERE, "The id " + id + " is not a valid Slimefun item");
                 }
@@ -95,7 +95,7 @@ public final class TradeItem {
         // amount check
         if (tempItem != null && (amount < 1 || amount > tempItem.getMaxStackSize())) {
             VillagerTrade.log(Level.SEVERE, "The amount " + amount + " is not a valid amount for " + id);
-            tempType = TraderItemType.NONE;
+            tempType = TradeItemType.NONE;
             tempItem = null;
         }
 
@@ -134,11 +134,28 @@ public final class TradeItem {
     public static TradeItem loadFromItem(@Nonnull ItemStack item) {
         Preconditions.checkArgument(item != null, "The ItemStack cannot be null");
 
+        return loadFromItem(item, item.getAmount());
+    }
+
+    /**
+     * Load a {@link TradeItem} from an {@link ItemStack}.
+     *
+     * @param item
+     *     The {@link ItemStack} to load from.
+     * @param amount
+     *     The amount of item.
+     *
+     * @return The {@link TradeItem} generated from the given {@link ItemStack}.
+     */
+    @Nonnull
+    public static TradeItem loadFromItem(@Nonnull ItemStack item, int amount) {
+        Preconditions.checkArgument(item != null, "The ItemStack cannot be null");
+
         SlimefunItem sfItem = SlimefunItem.getByItem(item);
         if (sfItem != null) {
-            return new TradeItem("SLIMEFUN", sfItem.getId(), item.getAmount());
+            return new TradeItem("SLIMEFUN", sfItem.getId(), amount);
         } else {
-            return new TradeItem("VANILLA", item.getType().name(), item.getAmount());
+            return new TradeItem("VANILLA", item.getType().name(), amount);
         }
     }
 
@@ -181,7 +198,7 @@ public final class TradeItem {
 
     @Nonnull
     public String toShortString() {
-        if (type == TraderItemType.NONE) {
+        if (type == TradeItemType.NONE) {
             return "NONE";
         } else {
             return type.toString() + ", " + id + " x" + amount;
@@ -191,7 +208,7 @@ public final class TradeItem {
     /**
      * Represents the type of item.
      */
-    public enum TraderItemType {
+    public enum TradeItemType {
         /**
          * The item is a vanilla item.
          */

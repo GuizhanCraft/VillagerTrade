@@ -11,7 +11,6 @@ import org.bukkit.command.CommandSender;
 import net.guizhanss.villagertrade.VillagerTrade;
 
 import lombok.Getter;
-import lombok.Setter;
 import lombok.experimental.Accessors;
 
 public abstract class SubCommand {
@@ -22,18 +21,18 @@ public abstract class SubCommand {
     @Accessors(fluent = true)
     private final boolean isHidden;
 
-    @Getter
-    @Setter
-    private String description;
-
     public SubCommand(@Nonnull String name, boolean hidden) {
         this.name = name;
         this.isHidden = hidden;
-        this.description = VillagerTrade.getLocalization().getCommandDescription(name);
     }
 
     public boolean isSubCommand(@Nonnull String cmd) {
         return name.equalsIgnoreCase(cmd);
+    }
+
+    @Nonnull
+    public String getDescription() {
+        return VillagerTrade.getLocalization().getCommandDescription(name);
     }
 
     @ParametersAreNonnullByDefault

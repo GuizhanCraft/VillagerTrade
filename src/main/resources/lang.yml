@@ -2,12 +2,13 @@ messages:
   prefix: "&b[&aVillagerTrade&b]&7 "
   no-console: "&cOnly players can use this command!"
   no-permission: "&cYou don't have permission to do that!"
-  usage: "&eUsage: &7{0}"
+  usage: "&eUsage: &7%usage%"
   commands:
     list:
       description: "Open a menu that lists all loaded trades."
     edit:
       description: "Open the menu to edit a trade directly by its key."
+      not-found: "&cCannot find trade %tradeId%."
     reload:
       description: "Reload the configuration file."
       success: "&aReloading configuration..."
@@ -34,3 +35,44 @@ menu:
     exp-villager: "&eVillager experience: &7{0}"
     price-multiplier: "&ePrice multiplier: &7{0}"
     click-info: "&eClick to edit this trade."
+  trade:
+    title: "&d&lVillagerTrade &8- &0Edit"
+    back:
+      lore:
+        - "&eClick to go back to trade list."
+        - "&cAll unsaved changes will be discarded!"
+    info:
+      name: "&eCurrent trade: &b%tradeId%"
+      lore:
+        - "&7You can edit the trade in this menu."
+        - ""
+        - "&7Changes will not be applied until"
+        - "&7you click on the save button."
+    amount:
+      name: "&eAmount: &7%amount%"
+      lore:
+        - "&eLeft click &7to increase by 1."
+        - "&eRight click &7to decrease by 1."
+        - "&eShift + click &7to specify the amount."
+    input1:
+      name: "&eIngredient 1"
+      lore:
+        - "&7Put the item at right to set the item."
+        - "&7Remove item to make this trade item &7&lNONE&7."
+        -
+        - "&cIngredient 1 cannot be empty!"
+        - ""
+        - "&eItem type: &7%itemType%"
+        - "&eItem id: &7%itemId%"
+        - "&eItem amount: &7%itemAmount%"
+    input2:
+      name: "&eIngredient 2"
+      lore:
+        - "&7Put the item at right to set the item."
+        - "&7Remove item to make this trade item &7&lNONE&7."
+        -
+        - "&cIngredient 1 cannot be empty!"
+        - ""
+        - "&eItem type: &7%itemType%"
+        - "&eItem id: &7%itemId%"
+        - "&eItem amount: &7%itemAmount%"

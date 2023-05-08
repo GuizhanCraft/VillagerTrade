@@ -23,6 +23,7 @@ public final class LocalizationService {
 
     public LocalizationService(VillagerTrade plugin) {
         languages = new AddonConfig(plugin, FILENAME_LANGUAGE);
+        languages.reload();
 
         afterReload();
     }
@@ -34,29 +35,29 @@ public final class LocalizationService {
     }
 
     private void afterReload() {
-        prefix = getLang("prefix", DEFAULT_PREFIX);
+        prefix = getString("prefix", DEFAULT_PREFIX);
     }
 
     @Nonnull
-    public String getLang(@Nonnull String key) {
-        return getLang(key, "");
+    public String getString(@Nonnull String key) {
+        return getString(key, "");
     }
 
     @Nonnull
     @ParametersAreNonnullByDefault
-    public String getLang(String key, String def) {
+    public String getString(String key, String def) {
         return languages.getString(key, def);
     }
 
 
     @Nonnull
-    public List<String> getLangList(@Nonnull String key) {
+    public List<String> getStringList(@Nonnull String key) {
         return languages.getStringList(key);
     }
 
     @Nonnull
     public String getCommandDescription(@Nonnull String command) {
-        return getLang("messages.commands." + command + ".description", "");
+        return getString("messages.commands." + command + ".description", "");
     }
 
     @ParametersAreNonnullByDefault
@@ -71,6 +72,6 @@ public final class LocalizationService {
 
     @ParametersAreNonnullByDefault
     public void sendKeyedMessage(CommandSender sender, String key, UnaryOperator<String> function) {
-        sendMessage(sender, function.apply(getLang("messages." + key)));
+        sendMessage(sender, function.apply(getString("messages." + key)));
     }
 }

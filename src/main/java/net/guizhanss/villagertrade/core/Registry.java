@@ -1,8 +1,8 @@
 package net.guizhanss.villagertrade.core;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -14,15 +14,13 @@ import lombok.Getter;
 
 @Getter
 public final class Registry {
-    private final List<TradeConfiguration> tradeConfigurations = new ArrayList<>();
-    private final Map<String, TradeConfiguration> tradeConfigurationMap = new HashMap<>();
+    private final Map<String, TradeConfiguration> tradeConfigurations = new LinkedHashMap<>();
     private final List<TradeConfiguration> wanderingTraderConfigurations = new ArrayList<>();
     private final List<TradeConfiguration> villagerConfigurations = new ArrayList<>();
     private final Set<TradeItem> slimefunTradeInputs = new HashSet<>();
 
     public void reset() {
         tradeConfigurations.clear();
-        tradeConfigurationMap.clear();
         wanderingTraderConfigurations.clear();
         villagerConfigurations.clear();
         slimefunTradeInputs.clear();

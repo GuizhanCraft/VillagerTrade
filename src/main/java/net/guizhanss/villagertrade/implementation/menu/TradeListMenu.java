@@ -1,5 +1,7 @@
 package net.guizhanss.villagertrade.implementation.menu;
 
+import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +12,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import com.google.common.base.Preconditions;
 
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -19,16 +20,12 @@ import io.github.thebusybiscuit.slimefun4.utils.ChestMenuUtils;
 
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ChestMenu;
 
-import net.guizhanss.guizhanlib.minecraft.utils.ChatUtil;
 import net.guizhanss.villagertrade.VillagerTrade;
 import net.guizhanss.villagertrade.api.trades.TradeConfiguration;
-import net.guizhanss.villagertrade.utils.MenuUtils;
+import net.guizhanss.villagertrade.utils.SoundUtils;
 import net.guizhanss.villagertrade.utils.constants.Keys;
 
-import lombok.experimental.UtilityClass;
-
 @SuppressWarnings("deprecation")
-@UtilityClass
 public final class TradeListMenu {
     // slots
     private static final int[] HEADER = { 0, 1, 2, 3, 5, 6, 7, 8 };
@@ -38,17 +35,22 @@ public final class TradeListMenu {
     private static final int PAGE_PREVIOUS = 46;
     private static final int PAGE_NEXT = 52;
 
+    // TODO: refresh open menu when trade config is reloaded
     private static final Map<Player, Boolean> OPEN_MAP = new HashMap<>();
 
-    public static void show(@Nonnull Player p) {
-        final ChestMenu menu = new ChestMenu(VillagerTrade.getLocalization().getLang("menu.list.title"));
+    private TradeListMenu(@Nonnull Player p) {
+        final ChestMenu menu = new ChestMenu(VillagerTrade.getLocalization().getString("menu.list.title"));
         setupMenu(menu);
         displayList(p, menu, 1);
         menu.open(p);
     }
 
+    public static void open(@Nonnull Player p) {
+        new TradeListMenu(p);
+    }
+
     @ParametersAreNonnullByDefault
-    private static void setupMenu(ChestMenu menu) {
+    private void setupMenu(ChestMenu menu) {
         for (int slot : HEADER) {
             menu.addItem(slot, ChestMenuUtils.getBackground(), ChestMenuUtils.getEmptyClickHandler());
         }
@@ -57,10 +59,15 @@ public final class TradeListMenu {
         }
 
         menu.setEmptySlotsClickable(false);
+
+        menu.addMenuOpeningHandler(p -> OPEN_MAP.put(p, true));
+
+        menu.addMenuCloseHandler(OPEN_MAP::remove);
     }
 
-    private static void displayList(Player player, ChestMenu menu, int page) {
-        final List<TradeConfiguration> trades = VillagerTrade.getRegistry().getTradeConfigurations();
+    private void displayList(Player player, ChestMenu menu, int page) {
+        final List<TradeConfiguration> trades =
+            new ArrayList<>(VillagerTrade.getRegistry().getTradeConfigurations().values());
         final int total = trades.size();
         final int totalPages = (int) Math.ceil(total / (double) PAGE_SIZE);
         final int start = (page - 1) * PAGE_SIZE;
@@ -76,14 +83,17 @@ public final class TradeListMenu {
         setupFooter(player, menu, page, totalPages);
 
         // sound
-        player.playSound(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 1.0F, 1.0F);
+        SoundUtils.playOpenMenuSound(player);
 
         for (int i = 0; i < PAGE_SIZE; i++) {
             final int slot = i + 9;
             if (i + 1 <= subList.size()) {
                 final TradeConfiguration trade = subList.get(i);
                 menu.replaceExistingItem(slot, getTradeDisplayItem(trade));
-                menu.addMenuClickHandler(slot, ChestMenuUtils.getEmptyClickHandler());
+                menu.addMenuClickHandler(slot, (p, slot1, item, action) -> {
+                    TradeMenu.open(p, trade);
+                    return false;
+                });
             } else {
                 menu.replaceExistingItem(slot, null);
                 menu.addMenuClickHandler(slot, ChestMenuUtils.getEmptyClickHandler());
@@ -92,7 +102,7 @@ public final class TradeListMenu {
     }
 
     @ParametersAreNonnullByDefault
-    private static void setupFooter(Player player, ChestMenu menu, int page, int totalPages) {
+    private void setupFooter(Player player, ChestMenu menu, int page, int totalPages) {
         for (int slot : FOOTER) {
             menu.replaceExistingItem(slot, ChestMenuUtils.getBackground());
             menu.addMenuClickHandler(slot, ChestMenuUtils.getEmptyClickHandler());
@@ -118,7 +128,7 @@ public final class TradeListMenu {
     }
 
     @Nonnull
-    private static ItemStack getTradeDisplayItem(@Nonnull TradeConfiguration tradeConfig) {
+    private ItemStack getTradeDisplayItem(@Nonnull TradeConfiguration tradeConfig) {
         Preconditions.checkArgument(tradeConfig != null, "TradeConfiguration cannot be null");
 
         return new CustomItemStack(
@@ -131,21 +141,21 @@ public final class TradeListMenu {
             getLine(Keys.TRADES_EXP_VILLAGER, tradeConfig.getExpVillager()),
             getLine(Keys.TRADES_PRICE_MULTIPLIER, tradeConfig.getPriceMultiplier()),
             "",
-            VillagerTrade.getLocalization().getLang("click-info")
+            VillagerTrade.getLocalization().getString("menu.list.click-info")
         );
     }
 
     @Nonnull
-    private static ItemStack getInfoItem() {
+    private ItemStack getInfoItem() {
         return new CustomItemStack(
             Material.ENCHANTED_BOOK,
-            VillagerTrade.getLocalization().getLang("menu.list.info.name"),
-            VillagerTrade.getLocalization().getLangList("menu.list.info.lore")
+            VillagerTrade.getLocalization().getString("menu.list.info.name"),
+            VillagerTrade.getLocalization().getStringList("menu.list.info.lore")
         );
     }
 
     @Nonnull
-    private static String getLine(String key, Object value) {
-        return MenuUtils.format(VillagerTrade.getLocalization().getLang("menu.list." + key), value);
+    private String getLine(String key, Object value) {
+        return MessageFormat.format(VillagerTrade.getLocalization().getString("menu.list." + key), value);
     }
 }
