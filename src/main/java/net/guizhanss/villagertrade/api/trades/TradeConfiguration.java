@@ -24,9 +24,13 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * The mapping of a whole section.
+ * A {@link TradeConfiguration} represents the configuration of a {@link MerchantRecipe}.<br>
+ * It can be read from config file or created using the builder.
  *
  * @author ybw0014
+ *
+ * @see TraderTypes
+ * @see TradeItem
  */
 @Getter
 @EqualsAndHashCode
@@ -160,8 +164,10 @@ public final class TradeConfiguration {
      */
     @Nullable
     public MerchantRecipe getMerchantRecipe() {
-        Preconditions.checkArgument(state == RegistrationState.REGISTERED,
-            "TradeConfiguration should be registered before getting the MerchantRecipe");
+        if (state != RegistrationState.REGISTERED) {
+            return null;
+        }
+
         MerchantRecipe recipe = new MerchantRecipe(
             output.getItem(), 0, maxUses, expReward,
             expVillager, priceMultiplier

@@ -8,15 +8,12 @@ import com.google.common.base.Preconditions;
 
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 
-import io.github.thebusybiscuit.slimefun4.utils.ChatUtils;
-
 import lombok.AccessLevel;
 
 import lombok.Setter;
 
 import net.guizhanss.villagertrade.api.trades.TradeItem;
-import net.guizhanss.villagertrade.implementation.menu.objects.TempTradeItem;
-import net.guizhanss.villagertrade.utils.Debug;
+import net.guizhanss.villagertrade.implementation.menu.objects.MutableTradeItem;
 import net.guizhanss.villagertrade.utils.MenuUtils;
 import net.guizhanss.villagertrade.utils.SoundUtils;
 
@@ -69,9 +66,9 @@ public final class TradeMenu {
     private TradeConfiguration originalConfig;
 
     private TraderTypes traderTypes;
-    private TempTradeItem input1;
-    private TempTradeItem input2;
-    private TempTradeItem output;
+    private MutableTradeItem input1;
+    private MutableTradeItem input2;
+    private MutableTradeItem output;
     private int maxUses;
     private boolean expReward;
     private int expVillager;
@@ -85,9 +82,9 @@ public final class TradeMenu {
 
         // cache the values
         traderTypes = trade.getTraderTypes();
-        input1 = new TempTradeItem(trade.getInput1());
-        input2 = new TempTradeItem(trade.getInput2());
-        output = new TempTradeItem(trade.getOutput());
+        input1 = new MutableTradeItem(trade.getInput1());
+        input2 = new MutableTradeItem(trade.getInput2());
+        output = new MutableTradeItem(trade.getOutput());
         maxUses = trade.getMaxUses();
         expReward = trade.isExpReward();
         expVillager = trade.getExpVillager();
@@ -134,7 +131,7 @@ public final class TradeMenu {
     }
 
     private void addTradeItemSlots(ChestMenu menu, int infoSlot, int itemSlot, int amountSlot,
-                                   Material infoMaterial, String key, TempTradeItem tradeItem) {
+                                   Material infoMaterial, String key, MutableTradeItem tradeItem) {
         menu.addItem(infoSlot, getItemInfoButton(infoMaterial, key, tradeItem), ChestMenuUtils.getEmptyClickHandler());
         menu.addItem(itemSlot, tradeItem.getItem(), (player, slot, item, action) -> {
             tradeItem.setItem(menu.getItemInSlot(slot));
@@ -161,7 +158,7 @@ public final class TradeMenu {
     }
 
     private void refreshTradeItemSlots(ChestMenu menu, int infoSlot, int itemSlot, int amountSlot,
-                                       Material infoMaterial, String key, TempTradeItem tradeItem) {
+                                       Material infoMaterial, String key, MutableTradeItem tradeItem) {
         menu.replaceExistingItem(infoSlot, getItemInfoButton(infoMaterial, key, tradeItem));
         menu.replaceExistingItem(itemSlot, tradeItem.getItem());
         menu.replaceExistingItem(amountSlot, getItemAmountButton(tradeItem));
@@ -191,7 +188,7 @@ public final class TradeMenu {
 
     @Nonnull
     @ParametersAreNonnullByDefault
-    private ItemStack getItemInfoButton(Material material, String key, TempTradeItem item) {
+    private ItemStack getItemInfoButton(Material material, String key, MutableTradeItem item) {
         return MenuUtils.parseVariables(
             new CustomItemStack(
                 material,
@@ -207,7 +204,7 @@ public final class TradeMenu {
     }
 
     @Nonnull
-    private ItemStack getItemAmountButton(TempTradeItem item) {
+    private ItemStack getItemAmountButton(MutableTradeItem item) {
         return MenuUtils.parseVariables(
                 new CustomItemStack(
                 Material.NAME_TAG,

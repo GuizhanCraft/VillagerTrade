@@ -20,13 +20,13 @@ import lombok.Getter;
  * @see TradeItem
  */
 @Getter
-public final class TempTradeItem {
+public final class MutableTradeItem {
     private ItemStack item;
     private TradeItem.TradeItemType type;
     private String id;
     private int amount;
 
-    public TempTradeItem(@Nonnull TradeItem tradeItem) {
+    public MutableTradeItem(@Nonnull TradeItem tradeItem) {
         Preconditions.checkArgument(tradeItem != null, "tradeItem cannot be null");
 
         item = tradeItem.getItem();
