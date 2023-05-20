@@ -13,7 +13,7 @@ import lombok.AccessLevel;
 import lombok.Setter;
 
 import net.guizhanss.villagertrade.api.trades.TradeItem;
-import net.guizhanss.villagertrade.implementation.menu.objects.MutableTradeItem;
+import net.guizhanss.villagertrade.api.trades.MutableTradeItem;
 import net.guizhanss.villagertrade.utils.MenuUtils;
 import net.guizhanss.villagertrade.utils.SoundUtils;
 

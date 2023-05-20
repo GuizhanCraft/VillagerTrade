@@ -1,4 +1,4 @@
-package net.guizhanss.villagertrade.implementation.menu.objects;
+package net.guizhanss.villagertrade.api.trades;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -9,12 +9,10 @@ import org.bukkit.inventory.ItemStack;
 
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 
-import net.guizhanss.villagertrade.api.trades.TradeItem;
-
 import lombok.Getter;
 
 /**
- * This class is a wrapper of {@link TradeItem} for menu use ONLY.
+ * This class is a wrapper of {@link TradeItem} that allows you to change the item.
  *
  * @author ybw0014
  * @see TradeItem
@@ -57,7 +55,7 @@ public final class MutableTradeItem {
     }
 
     /**
-     * Set the amount of item.<br>
+     * Set the amount of item.
      * If the amount is invalid, it will be set to the nearest valid value, and return false.
      *
      * @param amount
@@ -81,6 +79,11 @@ public final class MutableTradeItem {
         return isValid;
     }
 
+    /**
+     * Get the maximum stack size of this item.
+     *
+     * @return the maximum stack size of this item, 1 when the item is invalid.
+     */
     public int getMaxStackSize() {
         if (item != null && !item.getType().isAir()) {
             return item.getMaxStackSize();
@@ -89,6 +92,11 @@ public final class MutableTradeItem {
         }
     }
 
+    /**
+     * Make a {@link TradeItem} copy of this.
+     *
+     * @return A new {@link TradeItem} instance.
+     */
     public TradeItem toTradeItem() {
         return new TradeItem(type.toString(), id, amount);
     }

@@ -20,9 +20,10 @@ import net.guizhanss.villagertrade.VillagerTrade;
 import lombok.Getter;
 
 /**
- * Represents a trade item.
+ * Represents a immutable trade item.
  *
  * @author ybw0014
+ * @see MutableTradeItem
  */
 @Getter
 @SuppressWarnings("ConstantConditions")

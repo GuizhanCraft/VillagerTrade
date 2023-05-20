@@ -92,9 +92,9 @@
         </dependency>
 
         <dependency>
-            <groupId>io.github.Slimefun</groupId>
+            <groupId>com.github.ybw0014</groupId>
             <artifactId>Slimefun4</artifactId>
-            <version>RC-33</version>
+            <version>8f3374255b</version>
             <scope>provided</scope>
             <exclusions>
                 <exclusion>

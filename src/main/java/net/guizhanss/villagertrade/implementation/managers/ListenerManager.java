@@ -16,7 +16,7 @@ public final class ListenerManager {
     public ListenerManager(@Nonnull VillagerTrade plugin) {
         this.plugin = plugin;
 
-        register(new TradeInventoryListener());
+        // register(new TradeInventoryListener());
         register(new VillagerListener());
         register(new WanderingTraderListener());
     }

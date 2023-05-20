@@ -12,6 +12,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.MerchantRecipe;
 
 import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
+import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 
 import net.guizhanss.villagertrade.VillagerTrade;
 import net.guizhanss.villagertrade.core.Registry;
@@ -28,7 +29,6 @@ import lombok.Setter;
  * It can be read from config file or created using the builder.
  *
  * @author ybw0014
- *
  * @see TraderTypes
  * @see TradeItem
  */
@@ -150,11 +150,29 @@ public final class TradeConfiguration {
 
         // slimefun input items
         if (input1.getType() == TradeItem.TradeItemType.SLIMEFUN) {
-            registry.getSlimefunTradeInputs().add(input1);
+            registerSlimefunItemTrade(input1);
         }
         if (input2.getType() == TradeItem.TradeItemType.SLIMEFUN) {
-            registry.getSlimefunTradeInputs().add(input2);
+            registerSlimefunItemTrade(input2);
         }
+    }
+
+    /**
+     * This method marks the related {@link SlimefunItem} of {@link TradeItem} as tradable.
+     *
+     * @param tradeItem
+     *     The {@link TradeItem} to register.
+     */
+    private void registerSlimefunItemTrade(@Nonnull TradeItem tradeItem) {
+        Preconditions.checkArgument(tradeItem != null, "TradeItem should not be null");
+
+        SlimefunItem sfItem = SlimefunItem.getById(tradeItem.getId());
+        if (sfItem == null) {
+            return;
+        }
+
+        sfItem.setTradable(true);
+        VillagerTrade.getRegistry().getSlimefunTradeInputs().add(input2);
     }
 
     /**
