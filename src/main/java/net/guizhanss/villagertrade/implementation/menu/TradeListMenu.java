@@ -91,7 +91,9 @@ public final class TradeListMenu {
                 final TradeConfiguration trade = subList.get(i);
                 menu.replaceExistingItem(slot, getTradeDisplayItem(trade));
                 menu.addMenuClickHandler(slot, (p, slot1, item, action) -> {
-                    TradeMenu.open(p, trade);
+                    if (!trade.isExternalConfig()) {
+                        TradeMenu.open(p, trade);
+                    }
                     return false;
                 });
             } else {
@@ -141,7 +143,8 @@ public final class TradeListMenu {
             getLine(Keys.TRADES_EXP_VILLAGER, tradeConfig.getExpVillager()),
             getLine(Keys.TRADES_PRICE_MULTIPLIER, tradeConfig.getPriceMultiplier()),
             "",
-            VillagerTrade.getLocalization().getString("menu.list.click-info")
+            VillagerTrade.getLocalization().getString(tradeConfig.isExternalConfig() ? "menu.list.not-editable" :
+                "menu.list.click-info")
         );
     }
 

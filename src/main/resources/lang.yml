@@ -12,11 +12,17 @@ messages:
     reload:
       description: "Reload the configuration file."
       success: "&aReloading configuration..."
+  not-number: "&cInvalid input: not a number!"
   menu:
     trade:
       amount:
         input: "&eEnter the amount of item (%itemInfo%, current: %itemAmount%), \"cancel\" to cancel:"
-        not-number: "&cInvalid amount: not a number!"
+      max-uses:
+        input: "&eEnter the max uses of this trade (current: %value%), \"cancel\" to cancel:"
+      exp-villager:
+        input: "&eEnter the villager experience reward (current: %value%), \"cancel\" to cancel:"
+      price-multiplier:
+        input: "&eEnter the price multiplier (current: %value%), \"cancel\" to cancel:"
 menu:
   list:
     title: "&d&lVillagerTrade &8- &0List"
@@ -40,6 +46,7 @@ menu:
     exp-villager: "&eVillager experience: &7{0}"
     price-multiplier: "&ePrice multiplier: &7{0}"
     click-info: "&eClick to edit this trade."
+    not-editable: "&cThis trade is added by other addons and cannot be edited in-game."
   trade:
     title: "&d&lVillagerTrade &8- &0Edit"
     back:
@@ -96,10 +103,40 @@ menu:
       name: "&eEdit trader types"
       lore:
         - "&7Click on this item to edit trader types."
-        -
+        - ""
         - "&eCurrent trader types:"
         - "&7Wandering trader: %wanderingTrader%"
         - "&7Villagers: %villagers%"
+    max-uses:
+      name: "&eMax uses: &7%value%"
+      lore:
+        - "&7How many times this trade can be used."
+        - ""
+        - "&7Click to input new value."
+    exp-reward:
+      name: "&eExp reward: &7%value%"
+      lore:
+        - "&7Whether players get experience from this trade."
+        - ""
+        - "&7Click to toggle."
+    exp-villager:
+      name: "&eVillager experience: &7%value%"
+      lore:
+        - "&7How much experience the trader gets from this trade."
+        - ""
+        - "&7Click to input new value."
+    price-multiplier:
+      name: "&ePrice multiplier: &7%value%"
+      lore:
+        - "&7The price multiplier when calculating the price of this trade."
+        - ""
+        - "&7Click to input new value."
+    save:
+      name: "&a&lSave"
+      lore:
+        - "&7Click to save changes."
+        - ""
+        - "&7Changes will be applied to trade configuration."
   trader_types:
     title: "&d&lVillagerTrade &8- &0Edit &8- &0Trader types"
     confirm:
@@ -115,4 +152,4 @@ menu:
         - "&7Click to cancel changes."
         - ""
         - "&7Changes will be discarded."
-        - "&7Close this menu also discard changes."
+        - "&7Closing this menu also discard changes."

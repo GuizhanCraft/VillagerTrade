@@ -3,6 +3,9 @@ package net.guizhanss.villagertrade.implementation.managers;
 import java.util.logging.Level;
 
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
+import org.bukkit.configuration.ConfigurationSection;
 
 import net.guizhanss.guizhanlib.slimefun.addon.AddonConfig;
 import net.guizhanss.villagertrade.VillagerTrade;
@@ -38,6 +41,15 @@ public final class ConfigManager {
         config.reload();
         trades.reload();
         afterReload();
+    }
+
+    @ParametersAreNonnullByDefault
+    public void saveTrade(TradeConfiguration tradeConfig) {
+        ConfigurationSection section = trades.getConfigurationSection(tradeConfig.getKey());
+        if (section == null) {
+            section = trades.createSection(tradeConfig.getKey());
+        }
+        tradeConfig.saveToConfig(section);
     }
 
     private void afterReload() {

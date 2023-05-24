@@ -9,3 +9,7 @@ debug: false
 # This option only works for the trades in "trades.yml",
 # trades added from API still works regardless of this option.
 enable-trades: false
+
+# Whether the player will be redirected
+# to the trade list after saving a trade.
+return-to-list-after-save: true

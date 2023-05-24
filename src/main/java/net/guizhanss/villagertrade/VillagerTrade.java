@@ -6,8 +6,6 @@ import java.util.logging.Level;
 
 import javax.annotation.Nonnull;
 
-import net.guizhanss.villagertrade.implementation.managers.TaskManager;
-
 import org.bukkit.plugin.Plugin;
 
 import io.github.thebusybiscuit.slimefun4.libraries.dough.updater.GitHubBuildsUpdater;
@@ -19,6 +17,7 @@ import net.guizhanss.villagertrade.core.services.LocalizationService;
 import net.guizhanss.villagertrade.implementation.managers.CommandManager;
 import net.guizhanss.villagertrade.implementation.managers.ConfigManager;
 import net.guizhanss.villagertrade.implementation.managers.ListenerManager;
+import net.guizhanss.villagertrade.implementation.managers.TaskManager;
 
 import org.bstats.bukkit.Metrics;
 

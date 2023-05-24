@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
@@ -28,6 +29,8 @@ import net.guizhanss.villagertrade.api.trades.TraderTypes;
 import net.guizhanss.villagertrade.api.trades.mutables.MutableTradeItem;
 import net.guizhanss.villagertrade.utils.MenuUtils;
 import net.guizhanss.villagertrade.utils.SoundUtils;
+import net.guizhanss.villagertrade.utils.Validators;
+import net.guizhanss.villagertrade.utils.constants.Keys;
 import net.guizhanss.villagertrade.utils.constants.Strings;
 
 import lombok.AccessLevel;
@@ -68,7 +71,7 @@ public final class TradeMenu {
 
     private final ChestMenu menu;
     private final Player player;
-    // ticking handlers, the only argument is slot
+    // ticking handlers, the only argument is slot.
     private final Map<Integer, Consumer<Integer>> tickingHandlers = new HashMap<>();
 
     private TradeConfiguration originalConfig;
@@ -167,7 +170,96 @@ public final class TradeMenu {
             return false;
         });
 
+        // max uses
+        menu.addItem(
+            MAX_USES_SLOT,
+            getNumberSettingButton(Keys.TRADES_MAX_USES, String.valueOf(maxUses)),
+            (player, slot, item, action) -> {
+                inputNumber(
+                    Keys.TRADES_MAX_USES,
+                    String.valueOf(maxUses),
+                    Validators::isInteger,
+                    (input) -> {
+                        openMenu();
+                        if (input.isPresent()) {
+                            maxUses = Integer.parseInt(input.get());
+                            menu.replaceExistingItem(MAX_USES_SLOT, getNumberSettingButton(Keys.TRADES_MAX_USES, input.get()));
+                        }
+                    }
+                );
+                return false;
+            }
+        );
 
+        // exp reward
+        menu.addItem(
+            EXP_REWARD_SLOT,
+            getBooleanSettingButton(Keys.TRADES_EXP_REWARD, expReward),
+            (player, slot, item, action) -> {
+                expReward = !expReward;
+                menu.replaceExistingItem(EXP_REWARD_SLOT, getBooleanSettingButton(Keys.TRADES_EXP_REWARD, expReward));
+                return false;
+            }
+        );
+
+        // exp villager
+        menu.addItem(
+            EXP_VILLAGER_SLOT,
+            getNumberSettingButton(Keys.TRADES_EXP_VILLAGER, String.valueOf(expVillager)),
+            (player, slot, item, action) -> {
+                inputNumber(
+                    Keys.TRADES_EXP_VILLAGER,
+                    String.valueOf(expVillager),
+                    Validators::isInteger,
+                    (input) -> {
+                        openMenu();
+                        if (input.isPresent()) {
+                            expVillager = Integer.parseInt(input.get());
+                            menu.replaceExistingItem(EXP_VILLAGER_SLOT, getNumberSettingButton(Keys.TRADES_EXP_VILLAGER, input.get()));
+                        }
+                    }
+                );
+                return false;
+            }
+        );
+
+        // price multiplier
+        menu.addItem(
+            PRICE_MULTIPLIER_SLOT,
+            getNumberSettingButton(Keys.TRADES_PRICE_MULTIPLIER, String.valueOf(priceMultiplier)),
+            (player, slot, item, action) -> {
+                inputNumber(
+                    Keys.TRADES_PRICE_MULTIPLIER,
+                    String.valueOf(priceMultiplier),
+                    Validators::isDouble,
+                    (input) -> {
+                        openMenu();
+                        if (input.isPresent()) {
+                            priceMultiplier = Float.parseFloat(input.get());
+                            menu.replaceExistingItem(PRICE_MULTIPLIER_SLOT, getNumberSettingButton(Keys.TRADES_PRICE_MULTIPLIER, input.get()));
+                        }
+                    }
+                );
+                return false;
+            }
+        );
+
+        // save
+        menu.addItem(SAVE_SLOT, getSaveButton(), (player, slot, item, action) -> {
+            TradeConfiguration newConfig = TradeConfiguration.builder()
+                .input1(input1.toTradeItem())
+                .input2(input2.toTradeItem())
+                .output(output.toTradeItem())
+                .traderTypes(traderTypes)
+                .maxUses(maxUses)
+                .expReward(expReward)
+                .expVillager(expVillager)
+                .priceMultiplier(priceMultiplier)
+                .build();
+            VillagerTrade.getRegistry().replace(originalConfig, newConfig);
+            VillagerTrade.getConfigManager().saveTrade(newConfig);
+            return false;
+        });
     }
 
     void tick() {
@@ -250,7 +342,7 @@ public final class TradeMenu {
                 .replace("%itemAmount%", String.valueOf(tradeItem.getAmount()))
         );
         MenuUtils.awaitInput(player, (playerInput) -> {
-            if (playerInput.equalsIgnoreCase("cancel")) {
+            if (playerInput.equalsIgnoreCase(Strings.CANCEL)) {
                 callback.accept(Optional.empty());
                 return;
             }
@@ -259,8 +351,29 @@ public final class TradeMenu {
                 amount = Integer.parseInt(playerInput);
                 callback.accept(Optional.of(amount));
             } catch (NumberFormatException e) {
-                VillagerTrade.getLocalization().sendKeyedMessage(player, "menu.trade.amount.not-number");
+                VillagerTrade.getLocalization().sendKeyedMessage(player, "not-number");
                 inputAmount(tradeItem, callback);
+            }
+        });
+    }
+
+    @ParametersAreNonnullByDefault
+    private void inputNumber(String key, String value, Function<String, Boolean> validator,
+                             Consumer<Optional<String>> callback) {
+        player.closeInventory();
+        VillagerTrade.getLocalization().sendKeyedMessage(player, "menu.trade." + key + ".input",
+            msg -> msg.replace("%value%", value)
+        );
+        MenuUtils.awaitInput(player, (playerInput) -> {
+            if (playerInput.equalsIgnoreCase(Strings.CANCEL)) {
+                callback.accept(Optional.empty());
+                return;
+            }
+            if (validator.apply(playerInput)) {
+                callback.accept(Optional.of(playerInput));
+            } else {
+                VillagerTrade.getLocalization().sendKeyedMessage(player, "not-number");
+                inputNumber(key, value, validator, callback);
             }
         });
     }
@@ -277,7 +390,7 @@ public final class TradeMenu {
     private ItemStack getInfoButton() {
         return MenuUtils.parseVariables(
             new CustomItemStack(
-                Material.NAME_TAG,
+                Material.BOOK,
                 VillagerTrade.getLocalization().getString("menu.trade.info.name"),
                 VillagerTrade.getLocalization().getStringList("menu.trade.info.lore")
             ),
@@ -305,10 +418,10 @@ public final class TradeMenu {
     }
 
     @Nonnull
-    private ItemStack getItemAmountButton(MutableTradeItem item) {
+    private ItemStack getItemAmountButton(@Nonnull MutableTradeItem item) {
         return MenuUtils.parseVariables(
             new CustomItemStack(
-                Material.BOOK,
+                Material.NAME_TAG,
                 VillagerTrade.getLocalization().getString("menu.trade.amount.name"),
                 VillagerTrade.getLocalization().getStringList("menu.trade.amount.lore")
             ),
@@ -332,6 +445,45 @@ public final class TradeMenu {
                     .map(profession -> ChatUtils.humanize(profession.toString()))
                     .collect(Collectors.joining(", "))
             )
+        );
+    }
+
+    @Nonnull
+    @ParametersAreNonnullByDefault
+    private ItemStack getNumberSettingButton(String key, String current) {
+        return MenuUtils.parseVariables(
+            new CustomItemStack(
+                Material.BOOK,
+                VillagerTrade.getLocalization().getString("menu.trade." + key + ".name"),
+                VillagerTrade.getLocalization().getStringList("menu.trade." + key + ".lore")
+            ),
+            Map.of(
+                "%value%", current
+            )
+        );
+    }
+
+    @Nonnull
+    @ParametersAreNonnullByDefault
+    private ItemStack getBooleanSettingButton(String key, boolean current) {
+        return MenuUtils.parseVariables(
+            new CustomItemStack(
+                Material.BOOK,
+                VillagerTrade.getLocalization().getString("menu.trade." + key + ".name"),
+                VillagerTrade.getLocalization().getStringList("menu.trade." + key + ".lore")
+            ),
+            Map.of(
+                "%value%", current ? Strings.CHECK : Strings.CROSS
+            )
+        );
+    }
+
+    @Nonnull
+    private ItemStack getSaveButton() {
+        return new CustomItemStack(
+            Material.EMERALD,
+            VillagerTrade.getLocalization().getString("menu.trade.save.name"),
+            VillagerTrade.getLocalization().getStringList("menu.trade.save.lore")
         );
     }
 }

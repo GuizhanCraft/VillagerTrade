@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 
 import net.guizhanss.villagertrade.api.trades.TradeConfiguration;
@@ -34,5 +36,29 @@ public final class Registry {
             }
         }
         slimefunTradeInputs.clear();
+    }
+
+    /**
+     * Replace the trade configuration with the new one.
+     * DO NOT call this method. It is only for internal use.
+     */
+    @ParametersAreNonnullByDefault
+    public void replace(TradeConfiguration oldConfig, TradeConfiguration newConfig) {
+        tradeConfigurations.put(newConfig.getKey(), newConfig);
+        if (wanderingTraderConfigurations.contains(oldConfig)) {
+            if (newConfig.getTraderTypes().hasWanderingTrader()) {
+                wanderingTraderConfigurations.set(wanderingTraderConfigurations.indexOf(oldConfig), newConfig);
+            } else {
+                wanderingTraderConfigurations.remove(oldConfig);
+            }
+        }
+        if (villagerConfigurations.contains(oldConfig)) {
+            if (newConfig.getTraderTypes().hasVillager()) {
+                villagerConfigurations.set(villagerConfigurations.indexOf(oldConfig), newConfig);
+            } else {
+                villagerConfigurations.remove(oldConfig);
+            }
+        }
+
     }
 }

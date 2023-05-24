@@ -1,7 +1,8 @@
 package net.guizhanss.villagertrade.core.commands.subcommands;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -51,9 +52,18 @@ public final class EditCommand extends SubCommand {
     @ParametersAreNonnullByDefault
     public List<String> onTabComplete(CommandSender sender, String[] args) {
         if (args.length == 2) {
-            return VillagerTrade.getRegistry().getTradeConfigurations().keySet().stream()
-                .filter(tradeId -> tradeId.startsWith(args[1]))
-                .collect(Collectors.toList());
+            List<String> result = new ArrayList<>();
+            for (Map.Entry<String, TradeConfiguration> entry : VillagerTrade.getRegistry().getTradeConfigurations().entrySet()) {
+                final String key = entry.getKey();
+                final TradeConfiguration config = entry.getValue();
+                if (config.isExternalConfig()) {
+                    continue;
+                }
+                if (key.startsWith(args[1])) {
+                    result.add(key);
+                }
+            }
+            return result;
         } else {
             return List.of();
         }

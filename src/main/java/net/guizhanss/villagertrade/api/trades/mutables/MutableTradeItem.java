@@ -5,12 +5,11 @@ import javax.annotation.Nullable;
 
 import com.google.common.base.Preconditions;
 
-import net.guizhanss.villagertrade.api.trades.TradeItem;
-
 import org.bukkit.inventory.ItemStack;
 
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 
+import net.guizhanss.villagertrade.api.trades.TradeItem;
 import net.guizhanss.villagertrade.implementation.menu.TradeMenu;
 
 import lombok.Getter;

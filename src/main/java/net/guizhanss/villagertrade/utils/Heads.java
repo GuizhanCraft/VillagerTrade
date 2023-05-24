@@ -1,10 +1,10 @@
 package net.guizhanss.villagertrade.utils;
 
-import io.github.thebusybiscuit.slimefun4.utils.SlimefunUtils;
+import javax.annotation.Nonnull;
 
 import org.bukkit.inventory.ItemStack;
 
-import javax.annotation.Nonnull;
+import io.github.thebusybiscuit.slimefun4.utils.SlimefunUtils;
 
 public enum Heads {
     // https://minecraft-heads.com/custom-heads/humanoid/41283-wandering-trader

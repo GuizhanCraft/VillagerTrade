@@ -197,6 +197,18 @@ public final class TradeConfiguration {
         return recipe;
     }
 
+    /**
+     * Whether this {@link TradeConfiguration} is registered by other addons.
+     *
+     * @return true if this {@link TradeConfiguration} is registered by other addons.
+     */
+    public boolean isExternalConfig() {
+        if (state != RegistrationState.REGISTERED) {
+            return false;
+        }
+        return addon.getName().equals(VillagerTrade.getInstance().getName());
+    }
+
     @Nonnull
     @Override
     public String toString() {

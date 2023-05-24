@@ -191,7 +191,7 @@ public final class TraderTypesMenu {
     @Nonnull
     private ItemStack getCancelItem() {
         return new CustomItemStack(
-            Material.GREEN_STAINED_GLASS_PANE,
+            Material.RED_STAINED_GLASS_PANE,
             VillagerTrade.getLocalization().getString("menu.trader_types.cancel.name"),
             VillagerTrade.getLocalization().getStringList("menu.trader_types.cancel.lore")
         );

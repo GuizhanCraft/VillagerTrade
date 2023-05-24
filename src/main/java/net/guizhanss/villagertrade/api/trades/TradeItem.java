@@ -8,8 +8,6 @@ import javax.annotation.Nullable;
 
 import com.google.common.base.Preconditions;
 
-import net.guizhanss.villagertrade.api.trades.mutables.MutableTradeItem;
-
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
@@ -18,6 +16,7 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 
 import net.guizhanss.villagertrade.VillagerTrade;
+import net.guizhanss.villagertrade.api.trades.mutables.MutableTradeItem;
 
 import lombok.Getter;
 
