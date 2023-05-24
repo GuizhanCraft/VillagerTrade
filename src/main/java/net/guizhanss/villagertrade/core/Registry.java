@@ -32,7 +32,8 @@ public final class Registry {
         for (TradeItem item : slimefunTradeInputs) {
             SlimefunItem sfItem = SlimefunItem.getById(item.getId());
             if (sfItem != null) {
-                sfItem.setTradable(false);
+                // TODO: wait for PR to Slimefun
+                // sfItem.setTradable(false);
             }
         }
         slimefunTradeInputs.clear();

@@ -171,7 +171,8 @@ public final class TradeConfiguration {
             return;
         }
 
-        sfItem.setTradable(true);
+        // TODO: wait for PR to Slimefun
+        // sfItem.setTradable(true);
         VillagerTrade.getRegistry().getSlimefunTradeInputs().add(input2);
     }
 
