@@ -245,8 +245,12 @@ public final class TradeMenu {
         );
 
         // save
-        menu.addItem(SAVE_SLOT, getSaveButton(), (player, slot, item, action) -> {
+        menu.addItem(SAVE_SLOT, getSaveButton(false), (player, slot, item, action) -> {
+            if (!isValid()) {
+                return false;
+            }
             TradeConfiguration newConfig = TradeConfiguration.builder()
+                .key(originalConfig.getKey())
                 .input1(input1.toTradeItem())
                 .input2(input2.toTradeItem())
                 .output(output.toTradeItem())
@@ -256,9 +260,14 @@ public final class TradeMenu {
                 .expVillager(expVillager)
                 .priceMultiplier(priceMultiplier)
                 .build();
-            VillagerTrade.getRegistry().replace(originalConfig, newConfig);
+            VillagerTrade.getRegistry().clear(originalConfig);
+            newConfig.register(VillagerTrade.getInstance());
             VillagerTrade.getConfigManager().saveTrade(newConfig);
             return false;
+        });
+        tickingHandlers.put(SAVE_SLOT, (slot) -> {
+            // TODO improve performance
+            menu.replaceExistingItem(SAVE_SLOT, getSaveButton(isValid()));
         });
     }
 
@@ -378,6 +387,28 @@ public final class TradeMenu {
         });
     }
 
+    private boolean isValid() {
+        if (input1.getType() == TradeItem.TradeItemType.NONE) {
+            return false;
+        }
+        if (output.getType() == TradeItem.TradeItemType.NONE) {
+            return false;
+        }
+        if (traderTypes.isEmpty()) {
+            return false;
+        }
+        if (maxUses <= 0) {
+            return false;
+        }
+        if (expVillager < 0) {
+            return false;
+        }
+        if (priceMultiplier < 0) {
+            return false;
+        }
+        return true;
+    }
+
     @Nonnull
     private ItemStack getBackButton(@Nonnull Player p) {
         return ChestMenuUtils.getBackButton(
@@ -479,11 +510,19 @@ public final class TradeMenu {
     }
 
     @Nonnull
-    private ItemStack getSaveButton() {
-        return new CustomItemStack(
-            Material.EMERALD,
-            VillagerTrade.getLocalization().getString("menu.trade.save.name"),
-            VillagerTrade.getLocalization().getStringList("menu.trade.save.lore")
-        );
+    private ItemStack getSaveButton(boolean valid) {
+        if (valid) {
+            return new CustomItemStack(
+                Material.EMERALD,
+                VillagerTrade.getLocalization().getString("menu.trade.save.name"),
+                VillagerTrade.getLocalization().getStringList("menu.trade.save.lore")
+            );
+        } else {
+            return new CustomItemStack(
+                Material.BARRIER,
+                VillagerTrade.getLocalization().getString("menu.trade.save_invalid.name"),
+                VillagerTrade.getLocalization().getStringList("menu.trade.save_invalid.lore")
+            );
+        }
     }
 }

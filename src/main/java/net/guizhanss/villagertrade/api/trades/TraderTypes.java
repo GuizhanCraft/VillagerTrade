@@ -97,6 +97,10 @@ public final class TraderTypes {
             + ")";
     }
 
+    public boolean isEmpty() {
+        return !hasWanderingTrader && hasVillager();
+    }
+
     public boolean hasVillager() {
         return !villagerProfessions.isEmpty();
     }
@@ -115,7 +119,7 @@ public final class TraderTypes {
         if (hasWanderingTrader && entity instanceof WanderingTrader) {
             return true;
         } else if (entity instanceof Villager villager) {
-            return isValid(villager.getProfession());
+            return hasProfession(villager.getProfession());
         }
 
         return false;
@@ -129,7 +133,7 @@ public final class TraderTypes {
      *
      * @return Whether the given {@link Villager.Profession} is a valid trader profession.
      */
-    public boolean isValid(@Nonnull Villager.Profession profession) {
+    public boolean hasProfession(@Nonnull Villager.Profession profession) {
         Preconditions.checkArgument(profession != null, "The profession cannot be null");
 
         return villagerProfessions.contains(profession);

@@ -39,26 +39,13 @@ public final class Registry {
     }
 
     /**
-     * Replace the trade configuration with the new one.
+     * Clear the specified {@link TradeConfiguration}.<br>
      * DO NOT call this method. It is only for internal use.
      */
     @ParametersAreNonnullByDefault
-    public void replace(TradeConfiguration oldConfig, TradeConfiguration newConfig) {
-        tradeConfigurations.put(newConfig.getKey(), newConfig);
-        if (wanderingTraderConfigurations.contains(oldConfig)) {
-            if (newConfig.getTraderTypes().hasWanderingTrader()) {
-                wanderingTraderConfigurations.set(wanderingTraderConfigurations.indexOf(oldConfig), newConfig);
-            } else {
-                wanderingTraderConfigurations.remove(oldConfig);
-            }
-        }
-        if (villagerConfigurations.contains(oldConfig)) {
-            if (newConfig.getTraderTypes().hasVillager()) {
-                villagerConfigurations.set(villagerConfigurations.indexOf(oldConfig), newConfig);
-            } else {
-                villagerConfigurations.remove(oldConfig);
-            }
-        }
-
+    public void clear(TradeConfiguration tradeConfig) {
+        tradeConfigurations.remove(tradeConfig.getKey());
+        wanderingTraderConfigurations.remove(tradeConfig);
+        villagerConfigurations.remove(tradeConfig);
     }
 }

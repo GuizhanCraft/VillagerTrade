@@ -23,7 +23,7 @@ public final class VillagerListener implements Listener {
         VillagerTrade.getScheduler().run(() -> {
             List<MerchantRecipe> recipes = new ArrayList<>(trader.getRecipes());
             for (TradeConfiguration tradeConfig : VillagerTrade.getRegistry().getVillagerConfigurations()) {
-                if (tradeConfig.getTraderTypes().isValid(e.getProfession())) {
+                if (tradeConfig.getTraderTypes().hasProfession(e.getProfession())) {
                     recipes.add(tradeConfig.getMerchantRecipe());
                     Debug.log("Added MerchantRecipe to Villager: " + tradeConfig.getKey());
                 }

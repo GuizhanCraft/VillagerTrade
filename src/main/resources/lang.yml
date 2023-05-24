@@ -116,19 +116,22 @@ menu:
     exp-reward:
       name: "&eExp reward: &7%value%"
       lore:
-        - "&7Whether players get experience from this trade."
+        - "&7Whether players get experience"
+        - "&7from this trade."
         - ""
         - "&7Click to toggle."
     exp-villager:
       name: "&eVillager experience: &7%value%"
       lore:
-        - "&7How much experience the trader gets from this trade."
+        - "&7How much experience the trader"
+        - "&7gets from this trade."
         - ""
         - "&7Click to input new value."
     price-multiplier:
       name: "&ePrice multiplier: &7%value%"
       lore:
-        - "&7The price multiplier when calculating the price of this trade."
+        - "&7The price multiplier when"
+        - "&7calculating the price of this trade."
         - ""
         - "&7Click to input new value."
     save:
@@ -137,6 +140,12 @@ menu:
         - "&7Click to save changes."
         - ""
         - "&7Changes will be applied to trade configuration."
+    save_invalid:
+      name: "&a&lSave"
+      lore:
+        - "&cYou cannot save this trade."
+        - ""
+        - "&7There are invalid options."
   trader_types:
     title: "&d&lVillagerTrade &8- &0Edit &8- &0Trader types"
     confirm:

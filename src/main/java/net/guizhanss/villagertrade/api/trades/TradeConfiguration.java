@@ -206,7 +206,7 @@ public final class TradeConfiguration {
         if (state != RegistrationState.REGISTERED) {
             return false;
         }
-        return addon.getName().equals(VillagerTrade.getInstance().getName());
+        return !addon.getName().equals(VillagerTrade.getInstance().getName());
     }
 
     @Nonnull

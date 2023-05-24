@@ -50,6 +50,7 @@ public final class ConfigManager {
             section = trades.createSection(tradeConfig.getKey());
         }
         tradeConfig.saveToConfig(section);
+        trades.save();
     }
 
     private void afterReload() {
