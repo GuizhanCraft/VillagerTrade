@@ -3,7 +3,7 @@ example_trade:
     - FARMER
   output:
     type: SLIMEFUN
-    id: ZIN_INGOT
+    id: ZINC_INGOT
     amount: 32
   input:
     1:
