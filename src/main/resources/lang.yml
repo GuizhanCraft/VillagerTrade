@@ -12,6 +12,11 @@ messages:
     reload:
       description: "Reload the configuration file."
       success: "&aReloading configuration..."
+  menu:
+    trade:
+      amount:
+        input: "&eEnter the amount of item (%itemInfo%, current: %itemAmount%), \"cancel\" to cancel:"
+        not-number: "&cInvalid amount: not a number!"
 menu:
   list:
     title: "&d&lVillagerTrade &8- &0List"
@@ -71,8 +76,43 @@ menu:
         - "&7Put the item at right to set the item."
         - "&7Remove item to make this trade item &7&lNONE&7."
         -
-        - "&cIngredient 1 cannot be empty!"
+        - "&6Ingredient 2 can be empty!"
         - ""
         - "&eItem type: &7%itemType%"
         - "&eItem id: &7%itemId%"
         - "&eItem amount: &7%itemAmount%"
+    output:
+      name: "&eResult"
+      lore:
+        - "&7Put the item at right to set the item."
+        - "&7Remove item to make this trade item &7&lNONE&7."
+        -
+        - "&cResult cannot be empty!"
+        - ""
+        - "&eItem type: &7%itemType%"
+        - "&eItem id: &7%itemId%"
+        - "&eItem amount: &7%itemAmount%"
+    trader_types:
+      name: "&eEdit trader types"
+      lore:
+        - "&7Click on this item to edit trader types."
+        -
+        - "&eCurrent trader types:"
+        - "&7Wandering trader: %wanderingTrader%"
+        - "&7Villagers: %villagers%"
+  trader_types:
+    title: "&d&lVillagerTrade &8- &0Edit &8- &0Trader types"
+    confirm:
+      name: "&a&lConfirm"
+      lore:
+        - "&7Click to confirm changes."
+        - ""
+        - "&7Changes will be applied to the edit menu,"
+        - "&7but will not be saved."
+    cancel:
+      name: "&c&lCancel"
+      lore:
+        - "&7Click to cancel changes."
+        - ""
+        - "&7Changes will be discarded."
+        - "&7Close this menu also discard changes."

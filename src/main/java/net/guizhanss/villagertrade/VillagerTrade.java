@@ -6,6 +6,8 @@ import java.util.logging.Level;
 
 import javax.annotation.Nonnull;
 
+import net.guizhanss.villagertrade.implementation.managers.TaskManager;
+
 import org.bukkit.plugin.Plugin;
 
 import io.github.thebusybiscuit.slimefun4.libraries.dough.updater.GitHubBuildsUpdater;
@@ -23,10 +25,11 @@ import org.bstats.bukkit.Metrics;
 public final class VillagerTrade extends AbstractAddon {
 
     private ConfigManager configManager;
+    private LocalizationService localizationService;
     private Registry registry;
     private CommandManager commandManager;
     private ListenerManager listenerManager;
-    private LocalizationService localizationService;
+    private TaskManager taskManager;
 
     public VillagerTrade() {
         super("ybw0014", "VillagerTrade", "master", "auto-update");
@@ -53,6 +56,11 @@ public final class VillagerTrade extends AbstractAddon {
     }
 
     @Nonnull
+    public static TaskManager getTaskManager() {
+        return inst().taskManager;
+    }
+
+    @Nonnull
     public static LocalizationService getLocalization() {
         return inst().localizationService;
     }
@@ -74,6 +82,7 @@ public final class VillagerTrade extends AbstractAddon {
         configManager = new ConfigManager(this);
         commandManager = new CommandManager(this);
         listenerManager = new ListenerManager(this);
+        taskManager = new TaskManager();
 
         setupMetrics();
     }

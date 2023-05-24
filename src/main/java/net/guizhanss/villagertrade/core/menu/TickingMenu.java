@@ -1,12 +1,13 @@
 package net.guizhanss.villagertrade.core.menu;
 
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ChestMenu;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import java.util.List;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+
+import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ChestMenu;
 
 /**
  * This is a modified {@link ChestMenu} that adds ticking method.
@@ -14,7 +15,7 @@ import java.util.List;
  * @author ybw0014
  */
 public class TickingMenu {
-    private String title;
+    private final String title;
     private Inventory inventory;
     private List<ItemStack> items;
 

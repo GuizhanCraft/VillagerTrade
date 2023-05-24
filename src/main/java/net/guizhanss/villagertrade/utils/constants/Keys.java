@@ -4,6 +4,7 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class Keys {
+    // config keys in trades.yml
     public static final String TRADES_KEY = "key";
     public static final String TRADES_TRADER_TYPES = "traders";
     public static final String TRADES_OUTPUT = "output";

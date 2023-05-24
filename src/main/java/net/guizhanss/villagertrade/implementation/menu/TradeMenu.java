@@ -1,38 +1,43 @@
 package net.guizhanss.villagertrade.implementation.menu;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.google.common.base.Preconditions;
 
-import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
-
-import lombok.AccessLevel;
-
-import lombok.Setter;
-
-import net.guizhanss.villagertrade.api.trades.TradeItem;
-import net.guizhanss.villagertrade.api.trades.MutableTradeItem;
-import net.guizhanss.villagertrade.utils.MenuUtils;
-import net.guizhanss.villagertrade.utils.SoundUtils;
-
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
+import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
+import io.github.thebusybiscuit.slimefun4.utils.ChatUtils;
 import io.github.thebusybiscuit.slimefun4.utils.ChestMenuUtils;
 
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ChestMenu;
 
 import net.guizhanss.villagertrade.VillagerTrade;
 import net.guizhanss.villagertrade.api.trades.TradeConfiguration;
+import net.guizhanss.villagertrade.api.trades.TradeItem;
 import net.guizhanss.villagertrade.api.trades.TraderTypes;
+import net.guizhanss.villagertrade.api.trades.mutables.MutableTradeItem;
+import net.guizhanss.villagertrade.utils.MenuUtils;
+import net.guizhanss.villagertrade.utils.SoundUtils;
+import net.guizhanss.villagertrade.utils.constants.Strings;
 
-import org.bukkit.inventory.ItemStack;
+import lombok.AccessLevel;
+import lombok.Setter;
 
-import java.util.HashMap;
-import java.util.Map;
-
+/**
+ * The menu to edit a {@link TradeConfiguration}.
+ *
+ * @author ybw0014
+ */
 @Setter(AccessLevel.PRIVATE)
 @SuppressWarnings("deprecation")
 public final class TradeMenu {
@@ -61,7 +66,10 @@ public final class TradeMenu {
     private static final int EXP_VILLAGER_SLOT = 32;
     private static final int PRICE_MULTIPLIER_SLOT = 33;
 
-    private static final Map<Player, Boolean> OPEN_MAP = new HashMap<>();
+    private final ChestMenu menu;
+    private final Player player;
+    // ticking handlers, the only argument is slot
+    private final Map<Integer, Consumer<Integer>> tickingHandlers = new HashMap<>();
 
     private TradeConfiguration originalConfig;
 
@@ -76,8 +84,10 @@ public final class TradeMenu {
 
     @ParametersAreNonnullByDefault
     private TradeMenu(Player player, TradeConfiguration trade) {
+        Preconditions.checkArgument(player != null, "Player cannot be null");
         Preconditions.checkArgument(trade != null, "TradeConfiguration cannot be null");
 
+        this.player = player;
         originalConfig = trade;
 
         // cache the values
@@ -91,18 +101,28 @@ public final class TradeMenu {
         priceMultiplier = trade.getPriceMultiplier();
 
         // prepare menu
-        final ChestMenu menu = new ChestMenu(VillagerTrade.getLocalization().getString("menu.trade.title"));
-        setupMenu(menu, player);
-        menu.open(player);
+        menu = new ChestMenu(VillagerTrade.getLocalization().getString("menu.trade.title"));
+        setupMenu();
+        openMenu();
+    }
+
+    /**
+     * Open the menu of the specified {@link TradeConfiguration} for {@link Player}.
+     *
+     * @param p
+     *     The {@link Player} to open menu for.
+     * @param trade
+     *     The {@link TradeConfiguration} to be edited.
+     *
+     * @return The {@link TradeMenu} instance.
+     */
+    @ParametersAreNonnullByDefault
+    public static TradeMenu open(Player p, TradeConfiguration trade) {
+        return new TradeMenu(p, trade);
     }
 
     @ParametersAreNonnullByDefault
-    public static void open(Player p, TradeConfiguration trade) {
-        new TradeMenu(p, trade);
-    }
-
-    @ParametersAreNonnullByDefault
-    private void setupMenu(ChestMenu menu, Player p) {
+    private void setupMenu() {
         for (int slot : BACKGROUND) {
             menu.addItem(slot, ChestMenuUtils.getBackground(), ChestMenuUtils.getEmptyClickHandler());
         }
@@ -111,32 +131,74 @@ public final class TradeMenu {
         menu.setPlayerInventoryClickable(true);
 
         menu.addMenuOpeningHandler(player -> {
-            OPEN_MAP.put(player, true);
+            TradeMenuTask.addPlayer(player.getUniqueId(), this);
             SoundUtils.playOpenMenuSound(player);
         });
-        menu.addMenuCloseHandler(OPEN_MAP::remove);
+        menu.addMenuCloseHandler(player -> {
+            TradeMenuTask.removePlayer(player.getUniqueId());
+        });
 
         // back button
-        menu.addItem(BACK_SLOT, getBackButton(p), (player, slot, item, action) -> {
-            TradeListMenu.open(p);
+        menu.addItem(BACK_SLOT, getBackButton(player), (player, slot, item, action) -> {
+            TradeListMenu.open(player);
             return false;
         });
 
         // info button
         menu.addItem(INFO_SLOT, getInfoButton(), ChestMenuUtils.getEmptyClickHandler());
 
-        // input 1
-        addTradeItemSlots(menu, INPUT_1_INFO_SLOT, INPUT_1_ITEM_SLOT, INPUT_1_AMOUNT_SLOT,
+        // items
+        addTradeItemSlots(INPUT_1_INFO_SLOT, INPUT_1_ITEM_SLOT, INPUT_1_AMOUNT_SLOT,
             Material.CYAN_STAINED_GLASS_PANE, "input1", input1);
+        addTradeItemSlots(INPUT_2_INFO_SLOT, INPUT_2_ITEM_SLOT, INPUT_2_AMOUNT_SLOT,
+            Material.CYAN_STAINED_GLASS_PANE, "input2", input2);
+        addTradeItemSlots(OUTPUT_INFO_SLOT, OUTPUT_ITEM_SLOT, OUTPUT_AMOUNT_SLOT,
+            Material.ORANGE_STAINED_GLASS_PANE, "output", output);
+
+        // trader types
+        menu.addItem(TRADER_TYPES_SLOT, getTraderTypesButton(), (player, slot, item, action) -> {
+            TraderTypesMenu.open(player, traderTypes, (newTraderTypes) -> {
+                traderTypes = newTraderTypes;
+                menu.replaceExistingItem(TRADER_TYPES_SLOT, getTraderTypesButton());
+                openMenu();
+            }, () -> {
+                openMenu();
+            });
+            return false;
+        });
+
+
     }
 
-    private void addTradeItemSlots(ChestMenu menu, int infoSlot, int itemSlot, int amountSlot,
+    void tick() {
+        for (Map.Entry<Integer, Consumer<Integer>> entry : tickingHandlers.entrySet()) {
+            if (entry.getValue() == null) {
+                continue;
+            }
+            entry.getValue().accept(entry.getKey());
+        }
+    }
+
+    private void openMenu() {
+        menu.open(player);
+    }
+
+    private void addTradeItemSlots(int infoSlot, int itemSlot, int amountSlot,
                                    Material infoMaterial, String key, MutableTradeItem tradeItem) {
+        // add 3 items: info, item, amount
         menu.addItem(infoSlot, getItemInfoButton(infoMaterial, key, tradeItem), ChestMenuUtils.getEmptyClickHandler());
-        menu.addItem(itemSlot, tradeItem.getItem(), (player, slot, item, action) -> {
-            tradeItem.setItem(menu.getItemInSlot(slot));
-            refreshTradeItemSlots(menu, infoSlot, itemSlot, amountSlot, infoMaterial, key, tradeItem);
-            return true;
+        menu.addItem(itemSlot, tradeItem.getItem());
+        tickingHandlers.put(itemSlot, (slot) -> {
+            ItemStack item = menu.getItemInSlot(slot);
+            // we don't want to update the menu if the item is the same
+            if (tradeItem.isItem(item)) {
+                return;
+            }
+
+            // if item is updated, then update the menu
+            tradeItem.setItem(item);
+            refreshTradeItemSlots(infoSlot, itemSlot, amountSlot, infoMaterial, key, tradeItem);
+
         });
         menu.addItem(amountSlot, getItemAmountButton(tradeItem), (player, slot, item, action) -> {
             // left click +, right click -, shift = specify (input)
@@ -144,24 +206,63 @@ public final class TradeMenu {
                 return false;
             }
             if (action.isShiftClicked()) {
-
+                inputAmount(tradeItem, amount -> {
+                    openMenu();
+                    // we only update when the input is not cancelled
+                    if (amount.isPresent()) {
+                        tradeItem.setAmount(amount.get());
+                        refreshTradeItemSlots(infoSlot, itemSlot, amountSlot, infoMaterial, key, tradeItem);
+                    }
+                });
             } else {
                 if (action.isRightClicked()) {
                     tradeItem.setAmount(tradeItem.getAmount() - 1);
                 } else {
                     tradeItem.setAmount(tradeItem.getAmount() + 1);
                 }
-                refreshTradeItemSlots(menu, infoSlot, itemSlot, amountSlot, infoMaterial, key, tradeItem);
+                refreshTradeItemSlots(infoSlot, itemSlot, amountSlot, infoMaterial, key, tradeItem);
             }
             return false;
         });
     }
 
-    private void refreshTradeItemSlots(ChestMenu menu, int infoSlot, int itemSlot, int amountSlot,
+    private void refreshTradeItemSlots(int infoSlot, int itemSlot, int amountSlot,
                                        Material infoMaterial, String key, MutableTradeItem tradeItem) {
         menu.replaceExistingItem(infoSlot, getItemInfoButton(infoMaterial, key, tradeItem));
         menu.replaceExistingItem(itemSlot, tradeItem.getItem());
         menu.replaceExistingItem(amountSlot, getItemAmountButton(tradeItem));
+    }
+
+    /**
+     * This method ask player to input amount of item. It is not guarenteed that the amount is valid.
+     *
+     * @param tradeItem
+     *     The trade item to be updated.
+     * @param callback
+     *     The callback to be called when the amount is inputted.
+     *     The {@link Optional} is empty when the player cancels the input.
+     */
+    @ParametersAreNonnullByDefault
+    private void inputAmount(MutableTradeItem tradeItem, Consumer<Optional<Integer>> callback) {
+        player.closeInventory();
+        VillagerTrade.getLocalization().sendKeyedMessage(player, "menu.trade.amount.input",
+            msg -> msg.replace("%itemInfo%", tradeItem.toShortString(false))
+                .replace("%itemAmount%", String.valueOf(tradeItem.getAmount()))
+        );
+        MenuUtils.awaitInput(player, (playerInput) -> {
+            if (playerInput.equalsIgnoreCase("cancel")) {
+                callback.accept(Optional.empty());
+                return;
+            }
+            int amount;
+            try {
+                amount = Integer.parseInt(playerInput);
+                callback.accept(Optional.of(amount));
+            } catch (NumberFormatException e) {
+                VillagerTrade.getLocalization().sendKeyedMessage(player, "menu.trade.amount.not-number");
+                inputAmount(tradeItem, callback);
+            }
+        });
     }
 
     @Nonnull
@@ -197,7 +298,7 @@ public final class TradeMenu {
             ),
             Map.of(
                 "%itemType%", item.getType().toString(),
-                "%itemId%", item.getId() != null ? item.getId() : "null",
+                "%itemId%", item.getId() != null ? item.getId() : "N/A",
                 "%itemAmount%", String.valueOf(item.getAmount())
             )
         );
@@ -206,13 +307,30 @@ public final class TradeMenu {
     @Nonnull
     private ItemStack getItemAmountButton(MutableTradeItem item) {
         return MenuUtils.parseVariables(
-                new CustomItemStack(
-                Material.NAME_TAG,
+            new CustomItemStack(
+                Material.BOOK,
                 VillagerTrade.getLocalization().getString("menu.trade.amount.name"),
                 VillagerTrade.getLocalization().getStringList("menu.trade.amount.lore")
             ),
             Map.of(
                 "%amount%", String.valueOf(item.getAmount())
+            )
+        );
+    }
+
+    @Nonnull
+    private ItemStack getTraderTypesButton() {
+        return MenuUtils.parseVariables(
+            new CustomItemStack(
+                Material.NAME_TAG,
+                VillagerTrade.getLocalization().getString("menu.trade.trader_types.name"),
+                VillagerTrade.getLocalization().getStringList("menu.trade.trader_types.lore")
+            ),
+            Map.of(
+                "%wanderingTrader%", traderTypes.hasWanderingTrader() ? Strings.CHECK : Strings.CROSS,
+                "%villagers%", traderTypes.getVillagerProfessions().stream()
+                    .map(profession -> ChatUtils.humanize(profession.toString()))
+                    .collect(Collectors.joining(", "))
             )
         );
     }

@@ -8,6 +8,8 @@ import javax.annotation.Nullable;
 
 import com.google.common.base.Preconditions;
 
+import net.guizhanss.villagertrade.api.trades.mutables.MutableTradeItem;
+
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;

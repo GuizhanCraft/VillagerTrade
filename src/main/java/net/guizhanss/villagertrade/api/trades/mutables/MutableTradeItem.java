@@ -1,13 +1,17 @@
-package net.guizhanss.villagertrade.api.trades;
+package net.guizhanss.villagertrade.api.trades.mutables;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.google.common.base.Preconditions;
 
+import net.guizhanss.villagertrade.api.trades.TradeItem;
+
 import org.bukkit.inventory.ItemStack;
 
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
+
+import net.guizhanss.villagertrade.implementation.menu.TradeMenu;
 
 import lombok.Getter;
 
@@ -16,6 +20,7 @@ import lombok.Getter;
  *
  * @author ybw0014
  * @see TradeItem
+ * @see TradeMenu
  */
 @Getter
 public final class MutableTradeItem {
@@ -52,6 +57,21 @@ public final class MutableTradeItem {
             id = item.getType().name();
         }
         amount = item.getAmount();
+    }
+
+    public boolean isItem(@Nullable ItemStack item) {
+        if (item == null || item.getType().isAir()) {
+            return type == TradeItem.TradeItemType.NONE;
+        }
+        if (item.getAmount() != this.amount) {
+            return false;
+        }
+
+        return switch (type) {
+            case VANILLA -> this.item.getType() == item.getType();
+            case SLIMEFUN -> SlimefunItem.getById(id).isItem(item);
+            default -> false;
+        };
     }
 
     /**
@@ -99,5 +119,36 @@ public final class MutableTradeItem {
      */
     public TradeItem toTradeItem() {
         return new TradeItem(type.toString(), id, amount);
+    }
+
+    @Nonnull
+    @Override
+    public String toString() {
+        return "MutableTradeItem(type=" + type
+            + ", id=" + id
+            + ", amount=" + amount
+            + ")";
+    }
+
+    /**
+     * Get the short "type:id:amount" string of this item.
+     * The ":id:amount" part will not show if the type is NONE.
+     * The ":amount" part will not show if the amount is 1.
+     *
+     * @param displayAmount
+     *     Whether to display the amount. (set this to false will always not show the amount)
+     *
+     * @return The "type:id" string of this item.
+     */
+    @Nonnull
+    public String toShortString(boolean displayAmount) {
+        StringBuilder builder = new StringBuilder(type.toString());
+        if (type != TradeItem.TradeItemType.NONE) {
+            builder.append(':').append(id);
+            if (displayAmount && amount != 1) {
+                builder.append(':').append(amount);
+            }
+        }
+        return builder.toString();
     }
 }

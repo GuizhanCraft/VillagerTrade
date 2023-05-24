@@ -6,7 +6,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 
 import net.guizhanss.villagertrade.VillagerTrade;
-import net.guizhanss.villagertrade.implementation.listeners.TradeInventoryListener;
 import net.guizhanss.villagertrade.implementation.listeners.VillagerListener;
 import net.guizhanss.villagertrade.implementation.listeners.WanderingTraderListener;
 
