@@ -4,8 +4,11 @@ import java.util.logging.Level;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import lombok.experimental.UtilityClass;
+
 import net.guizhanss.villagertrade.VillagerTrade;
 
+@UtilityClass
 @SuppressWarnings("ConstantConditions")
 public final class Debug {
 

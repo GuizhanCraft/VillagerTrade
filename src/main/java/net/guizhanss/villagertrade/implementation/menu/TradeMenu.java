@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
@@ -69,6 +69,10 @@ public final class TradeMenu {
     private static final int EXP_VILLAGER_SLOT = 32;
     private static final int PRICE_MULTIPLIER_SLOT = 33;
 
+    // strings
+    private static final String LANG_MENU = "menu.trade.";
+    private static final String VALUE = "%value%";
+
     private final ChestMenu menu;
     private final Player player;
     // ticking handlers, the only argument is slot.
@@ -104,7 +108,7 @@ public final class TradeMenu {
         priceMultiplier = trade.getPriceMultiplier();
 
         // prepare menu
-        menu = new ChestMenu(VillagerTrade.getLocalization().getString("menu.trade.title"));
+        menu = new ChestMenu(VillagerTrade.getLocalization().getString(LANG_MENU + "title"));
         setupMenu();
         openMenu();
     }
@@ -367,10 +371,10 @@ public final class TradeMenu {
     }
 
     @ParametersAreNonnullByDefault
-    private void inputNumber(String key, String value, Function<String, Boolean> validator,
+    private void inputNumber(String key, String value, Predicate<String> validator,
                              Consumer<Optional<String>> callback) {
         player.closeInventory();
-        VillagerTrade.getLocalization().sendKeyedMessage(player, "menu.trade." + key + ".input",
+        VillagerTrade.getLocalization().sendKeyedMessage(player, LANG_MENU + key + ".input",
             msg -> msg.replace("%value%", value)
         );
         MenuUtils.awaitInput(player, (playerInput) -> {
@@ -378,7 +382,7 @@ public final class TradeMenu {
                 callback.accept(Optional.empty());
                 return;
             }
-            if (validator.apply(playerInput)) {
+            if (validator.test(playerInput)) {
                 callback.accept(Optional.of(playerInput));
             } else {
                 VillagerTrade.getLocalization().sendKeyedMessage(player, "not-number");
@@ -413,18 +417,14 @@ public final class TradeMenu {
     private ItemStack getBackButton(@Nonnull Player p) {
         return ChestMenuUtils.getBackButton(
             p,
-            VillagerTrade.getLocalization().getStringList("menu.trade.back.lore").toArray(new String[0])
+            VillagerTrade.getLocalization().getStringList(LANG_MENU + "back.lore").toArray(new String[0])
         );
     }
 
     @Nonnull
     private ItemStack getInfoButton() {
         return MenuUtils.parseVariables(
-            new CustomItemStack(
-                Material.BOOK,
-                VillagerTrade.getLocalization().getString("menu.trade.info.name"),
-                VillagerTrade.getLocalization().getStringList("menu.trade.info.lore")
-            ),
+            getItem(Material.BOOK, "info"),
             Map.of(
                 "%tradeId%", originalConfig.getKey()
             )
@@ -435,11 +435,7 @@ public final class TradeMenu {
     @ParametersAreNonnullByDefault
     private ItemStack getItemInfoButton(Material material, String key, MutableTradeItem item) {
         return MenuUtils.parseVariables(
-            new CustomItemStack(
-                material,
-                VillagerTrade.getLocalization().getString("menu.trade." + key + ".name"),
-                VillagerTrade.getLocalization().getStringList("menu.trade." + key + ".lore")
-            ),
+            getItem(material, key),
             Map.of(
                 "%itemType%", item.getType().toString(),
                 "%itemId%", item.getId() != null ? item.getId() : "N/A",
@@ -451,11 +447,7 @@ public final class TradeMenu {
     @Nonnull
     private ItemStack getItemAmountButton(@Nonnull MutableTradeItem item) {
         return MenuUtils.parseVariables(
-            new CustomItemStack(
-                Material.NAME_TAG,
-                VillagerTrade.getLocalization().getString("menu.trade.amount.name"),
-                VillagerTrade.getLocalization().getStringList("menu.trade.amount.lore")
-            ),
+            getItem(Material.NAME_TAG, "amount"),
             Map.of(
                 "%amount%", String.valueOf(item.getAmount())
             )
@@ -465,11 +457,7 @@ public final class TradeMenu {
     @Nonnull
     private ItemStack getTraderTypesButton() {
         return MenuUtils.parseVariables(
-            new CustomItemStack(
-                Material.NAME_TAG,
-                VillagerTrade.getLocalization().getString("menu.trade.trader_types.name"),
-                VillagerTrade.getLocalization().getStringList("menu.trade.trader_types.lore")
-            ),
+            getItem(Material.NAME_TAG, "trader_types"),
             Map.of(
                 "%wanderingTrader%", traderTypes.hasWanderingTrader() ? Strings.CHECK : Strings.CROSS,
                 "%villagers%", traderTypes.getVillagerProfessions().stream()
@@ -483,13 +471,9 @@ public final class TradeMenu {
     @ParametersAreNonnullByDefault
     private ItemStack getNumberSettingButton(String key, String current) {
         return MenuUtils.parseVariables(
-            new CustomItemStack(
-                Material.BOOK,
-                VillagerTrade.getLocalization().getString("menu.trade." + key + ".name"),
-                VillagerTrade.getLocalization().getStringList("menu.trade." + key + ".lore")
-            ),
+            getItem(Material.BOOK, key),
             Map.of(
-                "%value%", current
+                VALUE, current
             )
         );
     }
@@ -498,13 +482,9 @@ public final class TradeMenu {
     @ParametersAreNonnullByDefault
     private ItemStack getBooleanSettingButton(String key, boolean current) {
         return MenuUtils.parseVariables(
-            new CustomItemStack(
-                Material.BOOK,
-                VillagerTrade.getLocalization().getString("menu.trade." + key + ".name"),
-                VillagerTrade.getLocalization().getStringList("menu.trade." + key + ".lore")
-            ),
+            getItem(Material.BOOK, key),
             Map.of(
-                "%value%", current ? Strings.CHECK : Strings.CROSS
+                VALUE, current ? Strings.CHECK : Strings.CROSS
             )
         );
     }
@@ -512,17 +492,19 @@ public final class TradeMenu {
     @Nonnull
     private ItemStack getSaveButton(boolean valid) {
         if (valid) {
-            return new CustomItemStack(
-                Material.EMERALD,
-                VillagerTrade.getLocalization().getString("menu.trade.save.name"),
-                VillagerTrade.getLocalization().getStringList("menu.trade.save.lore")
-            );
+            return getItem(Material.EMERALD, "save");
         } else {
-            return new CustomItemStack(
-                Material.BARRIER,
-                VillagerTrade.getLocalization().getString("menu.trade.save_invalid.name"),
-                VillagerTrade.getLocalization().getStringList("menu.trade.save_invalid.lore")
-            );
+            return getItem(Material.BARRIER, "save_invalid");
         }
+    }
+
+    @Nonnull
+    @ParametersAreNonnullByDefault
+    private ItemStack getItem(Material material, String key) {
+        return new CustomItemStack(
+            material,
+            VillagerTrade.getLocalization().getString(LANG_MENU + key + ".name"),
+            VillagerTrade.getLocalization().getStringList(LANG_MENU + key + ".lore")
+        );
     }
 }

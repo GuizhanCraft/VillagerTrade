@@ -21,7 +21,7 @@ public abstract class SubCommand {
     @Accessors(fluent = true)
     private final boolean isHidden;
 
-    public SubCommand(@Nonnull String name, boolean hidden) {
+    protected SubCommand(@Nonnull String name, boolean hidden) {
         this.name = name;
         this.isHidden = hidden;
     }
