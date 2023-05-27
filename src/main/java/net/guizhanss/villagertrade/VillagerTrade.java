@@ -13,6 +13,7 @@ import io.github.thebusybiscuit.slimefun4.libraries.dough.updater.GitHubBuildsUp
 import net.guizhanss.guizhanlib.slimefun.addon.AbstractAddon;
 import net.guizhanss.guizhanlib.updater.GuizhanBuildsUpdater;
 import net.guizhanss.villagertrade.core.Registry;
+import net.guizhanss.villagertrade.core.services.CustomItemService;
 import net.guizhanss.villagertrade.core.services.LocalizationService;
 import net.guizhanss.villagertrade.implementation.managers.CommandManager;
 import net.guizhanss.villagertrade.implementation.managers.ConfigManager;
@@ -26,6 +27,7 @@ public final class VillagerTrade extends AbstractAddon {
     private ConfigManager configManager;
     private LocalizationService localizationService;
     private Registry registry;
+    private CustomItemService customItemService;
     private CommandManager commandManager;
     private ListenerManager listenerManager;
     private TaskManager taskManager;
@@ -65,6 +67,11 @@ public final class VillagerTrade extends AbstractAddon {
     }
 
     @Nonnull
+    public static CustomItemService getCustomItemService() {
+        return inst().customItemService;
+    }
+
+    @Nonnull
     private static VillagerTrade inst() {
         return getInstance();
     }
@@ -78,6 +85,7 @@ public final class VillagerTrade extends AbstractAddon {
 
         registry = new Registry();
         localizationService = new LocalizationService(this);
+        customItemService = new CustomItemService(this);
         configManager = new ConfigManager(this);
         commandManager = new CommandManager(this);
         listenerManager = new ListenerManager(this);

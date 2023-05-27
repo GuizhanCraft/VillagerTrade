@@ -6,6 +6,19 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public final class Validators {
+
+    public static boolean alwaysTrue(@Nonnull String str) {
+        return true;
+    }
+
+    public static boolean alwaysFalse(@Nonnull String str) {
+        return false;
+    }
+
+    public static boolean notEmpty(@Nonnull String str) {
+        return !str.isEmpty();
+    }
+
     public static boolean isInteger(@Nonnull String str) {
         try {
             Integer.parseInt(str);

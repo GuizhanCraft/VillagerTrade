@@ -45,11 +45,7 @@ public final class ConfigManager {
 
     @ParametersAreNonnullByDefault
     public void saveTrade(TradeConfiguration tradeConfig) {
-        ConfigurationSection section = trades.getConfigurationSection(tradeConfig.getKey());
-        if (section == null) {
-            section = trades.createSection(tradeConfig.getKey());
-        }
-        tradeConfig.saveToConfig(section);
+        tradeConfig.saveToConfig(ConfigUtils.getOrCreateSection(trades, tradeConfig.getKey()));
         trades.save();
     }
 

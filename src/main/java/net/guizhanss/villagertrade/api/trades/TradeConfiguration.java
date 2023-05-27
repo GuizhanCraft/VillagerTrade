@@ -8,6 +8,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.google.common.base.Preconditions;
 
+import net.guizhanss.villagertrade.utils.ConfigUtils;
+
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.MerchantRecipe;
 
@@ -95,9 +97,9 @@ public final class TradeConfiguration {
         Preconditions.checkArgument(section != null, "ConfigurationSection should not be null");
 
         section.set(Keys.TRADES_TRADER_TYPES, traderTypes.toStringList());
-        output.saveToConfig(section.getConfigurationSection(Keys.TRADES_OUTPUT));
-        input1.saveToConfig(section.getConfigurationSection(Keys.TRADES_INPUT_1));
-        input2.saveToConfig(section.getConfigurationSection(Keys.TRADES_INPUT_2));
+        output.saveToConfig(ConfigUtils.getOrCreateSection(section, Keys.TRADES_OUTPUT));
+        input1.saveToConfig(ConfigUtils.getOrCreateSection(section, Keys.TRADES_INPUT_1));
+        input2.saveToConfig(ConfigUtils.getOrCreateSection(section, Keys.TRADES_INPUT_2));
         section.set(Keys.TRADES_MAX_USES, maxUses);
         section.set(Keys.TRADES_EXP_REWARD, expReward);
         section.set(Keys.TRADES_EXP_VILLAGER, expVillager);

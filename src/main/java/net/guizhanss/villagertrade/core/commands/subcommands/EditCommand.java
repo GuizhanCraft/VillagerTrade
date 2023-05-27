@@ -41,7 +41,7 @@ public final class EditCommand extends SubCommand {
         String tradeId = args[1];
         TradeConfiguration tradeConfig = VillagerTrade.getRegistry().getTradeConfigurations().get(tradeId);
         if (tradeConfig != null) {
-            TradeMenu.open(player, tradeConfig);
+            new TradeMenu(player, tradeConfig);
         } else {
             VillagerTrade.getLocalization().sendKeyedMessage(sender, "commands.edit.not-found",
                 msg -> msg.replace("%tradeId%", tradeId));

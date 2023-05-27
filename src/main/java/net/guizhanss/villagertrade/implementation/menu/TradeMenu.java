@@ -1,6 +1,7 @@
 package net.guizhanss.villagertrade.implementation.menu;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -8,6 +9,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.google.common.base.Preconditions;
@@ -80,6 +82,7 @@ public final class TradeMenu {
 
     private TradeConfiguration originalConfig;
 
+    private String key;
     private TraderTypes traderTypes;
     private MutableTradeItem input1;
     private MutableTradeItem input2;
@@ -89,8 +92,48 @@ public final class TradeMenu {
     private int expVillager;
     private float priceMultiplier;
 
+    /**
+     * Open menu for {@link Player} to create a new {@link TradeConfiguration}.
+     *
+     * @param player
+     *     The {@link Player} to open menu for.
+     * @param key
+     *     The key player provided.
+     */
     @ParametersAreNonnullByDefault
-    private TradeMenu(Player player, TradeConfiguration trade) {
+    public TradeMenu(Player player, String key) {
+        Preconditions.checkArgument(player != null, "Player cannot be null");
+        Preconditions.checkArgument(key != null, "Key cannot be null");
+
+        this.player = player;
+
+        // set initial values
+        this.key = key;
+        traderTypes = new TraderTypes(true, null);
+        input1 = new MutableTradeItem();
+        input2 = new MutableTradeItem();
+        output = new MutableTradeItem();
+        maxUses = 1;
+        expReward = true;
+        expVillager = 0;
+        priceMultiplier = 0.0F;
+
+        // prepare menu
+        menu = new ChestMenu(VillagerTrade.getLocalization().getString(LANG_MENU + "title"));
+        setupMenu();
+        openMenu();
+    }
+
+    /**
+     * Open menu for {@link Player} to edit the existing {@link TradeConfiguration}.
+     *
+     * @param player
+     *     The {@link Player} to open menu for.
+     * @param trade
+     *     The {@link TradeConfiguration} to be edited.
+     */
+    @ParametersAreNonnullByDefault
+    public TradeMenu(Player player, TradeConfiguration trade) {
         Preconditions.checkArgument(player != null, "Player cannot be null");
         Preconditions.checkArgument(trade != null, "TradeConfiguration cannot be null");
 
@@ -98,6 +141,7 @@ public final class TradeMenu {
         originalConfig = trade;
 
         // cache the values
+        this.key = trade.getKey();
         traderTypes = trade.getTraderTypes();
         input1 = new MutableTradeItem(trade.getInput1());
         input2 = new MutableTradeItem(trade.getInput2());
@@ -111,21 +155,6 @@ public final class TradeMenu {
         menu = new ChestMenu(VillagerTrade.getLocalization().getString(LANG_MENU + "title"));
         setupMenu();
         openMenu();
-    }
-
-    /**
-     * Open the menu of the specified {@link TradeConfiguration} for {@link Player}.
-     *
-     * @param p
-     *     The {@link Player} to open menu for.
-     * @param trade
-     *     The {@link TradeConfiguration} to be edited.
-     *
-     * @return The {@link TradeMenu} instance.
-     */
-    @ParametersAreNonnullByDefault
-    public static TradeMenu open(Player p, TradeConfiguration trade) {
-        return new TradeMenu(p, trade);
     }
 
     @ParametersAreNonnullByDefault
@@ -156,11 +185,11 @@ public final class TradeMenu {
 
         // items
         addTradeItemSlots(INPUT_1_INFO_SLOT, INPUT_1_ITEM_SLOT, INPUT_1_AMOUNT_SLOT,
-            Material.CYAN_STAINED_GLASS_PANE, "input1", input1);
+            Material.CYAN_STAINED_GLASS_PANE, Keys.TRADES_INPUT_1, input1);
         addTradeItemSlots(INPUT_2_INFO_SLOT, INPUT_2_ITEM_SLOT, INPUT_2_AMOUNT_SLOT,
-            Material.CYAN_STAINED_GLASS_PANE, "input2", input2);
+            Material.CYAN_STAINED_GLASS_PANE, Keys.TRADES_INPUT_2, input2);
         addTradeItemSlots(OUTPUT_INFO_SLOT, OUTPUT_ITEM_SLOT, OUTPUT_AMOUNT_SLOT,
-            Material.ORANGE_STAINED_GLASS_PANE, "output", output);
+            Material.ORANGE_STAINED_GLASS_PANE, Keys.TRADES_OUTPUT, output);
 
         // trader types
         menu.addItem(TRADER_TYPES_SLOT, getTraderTypesButton(), (player, slot, item, action) -> {
@@ -182,7 +211,7 @@ public final class TradeMenu {
                 inputNumber(
                     Keys.TRADES_MAX_USES,
                     String.valueOf(maxUses),
-                    Validators::isInteger,
+                    Validators::isPositiveInteger,
                     (input) -> {
                         openMenu();
                         if (input.isPresent()) {
@@ -249,12 +278,12 @@ public final class TradeMenu {
         );
 
         // save
-        menu.addItem(SAVE_SLOT, getSaveButton(false), (player, slot, item, action) -> {
-            if (!isValid()) {
+        menu.addItem(SAVE_SLOT, getSaveButton(null), (player, slot, item, action) -> {
+            if (getInvalidReason() != null) {
                 return false;
             }
             TradeConfiguration newConfig = TradeConfiguration.builder()
-                .key(originalConfig.getKey())
+                .key(key)
                 .input1(input1.toTradeItem())
                 .input2(input2.toTradeItem())
                 .output(output.toTradeItem())
@@ -264,14 +293,16 @@ public final class TradeMenu {
                 .expVillager(expVillager)
                 .priceMultiplier(priceMultiplier)
                 .build();
-            VillagerTrade.getRegistry().clear(originalConfig);
+            if (originalConfig != null) {
+                VillagerTrade.getRegistry().clear(originalConfig);
+            }
             newConfig.register(VillagerTrade.getInstance());
             VillagerTrade.getConfigManager().saveTrade(newConfig);
             return false;
         });
         tickingHandlers.put(SAVE_SLOT, (slot) -> {
             // TODO improve performance
-            menu.replaceExistingItem(SAVE_SLOT, getSaveButton(isValid()));
+            menu.replaceExistingItem(SAVE_SLOT, getSaveButton(getInvalidReason()));
         });
     }
 
@@ -391,33 +422,40 @@ public final class TradeMenu {
         });
     }
 
-    private boolean isValid() {
+    /**
+     * Get the invalid reason of the trade.
+     *
+     * @return the invalid reason, or null if the trade is valid.
+     */
+    @Nullable
+    private String getInvalidReason() {
+        String langKey = LANG_MENU + "invalid-reason.";
         if (input1.getType() == TradeItem.TradeItemType.NONE) {
-            return false;
+            return VillagerTrade.getLocalization().getString(langKey + Keys.TRADES_INPUT_1);
         }
         if (output.getType() == TradeItem.TradeItemType.NONE) {
-            return false;
+            return VillagerTrade.getLocalization().getString(langKey + Keys.TRADES_OUTPUT);
         }
         if (traderTypes.isEmpty()) {
-            return false;
+            return VillagerTrade.getLocalization().getString(langKey + Keys.TRADES_TRADER_TYPES);
         }
         if (maxUses <= 0) {
-            return false;
+            return VillagerTrade.getLocalization().getString(langKey + Keys.TRADES_MAX_USES);
         }
         if (expVillager < 0) {
-            return false;
+            return VillagerTrade.getLocalization().getString(langKey + Keys.TRADES_EXP_VILLAGER);
         }
         if (priceMultiplier < 0) {
-            return false;
+            return VillagerTrade.getLocalization().getString(langKey + Keys.TRADES_PRICE_MULTIPLIER);
         }
-        return true;
+        return null;
     }
 
     @Nonnull
     private ItemStack getBackButton(@Nonnull Player p) {
         return ChestMenuUtils.getBackButton(
             p,
-            VillagerTrade.getLocalization().getStringList(LANG_MENU + "back.lore").toArray(new String[0])
+            VillagerTrade.getLocalization().getStringList(LANG_MENU + "back." + Keys.ITEM_LORE).toArray(new String[0])
         );
     }
 
@@ -426,7 +464,7 @@ public final class TradeMenu {
         return MenuUtils.parseVariables(
             getItem(Material.BOOK, "info"),
             Map.of(
-                "%tradeId%", originalConfig.getKey()
+                "%tradeId%", key
             )
         );
     }
@@ -457,7 +495,7 @@ public final class TradeMenu {
     @Nonnull
     private ItemStack getTraderTypesButton() {
         return MenuUtils.parseVariables(
-            getItem(Material.NAME_TAG, "trader_types"),
+            getItem(Material.NAME_TAG, Keys.TRADES_TRADER_TYPES),
             Map.of(
                 "%wanderingTrader%", traderTypes.hasWanderingTrader() ? Strings.CHECK : Strings.CROSS,
                 "%villagers%", traderTypes.getVillagerProfessions().stream()
@@ -490,11 +528,16 @@ public final class TradeMenu {
     }
 
     @Nonnull
-    private ItemStack getSaveButton(boolean valid) {
-        if (valid) {
-            return getItem(Material.EMERALD, "save");
+    private ItemStack getSaveButton(@Nullable String invalidReason) {
+        if (invalidReason == null) {
+            return getItem(Material.EMERALD, Keys.LANG_SAVE);
         } else {
-            return getItem(Material.BARRIER, "save_invalid");
+            return MenuUtils.addLore(
+                getItem(Material.BARRIER, Keys.LANG_SAVE_INVALID),
+                List.of(
+                    invalidReason
+                )
+            );
         }
     }
 
@@ -503,8 +546,8 @@ public final class TradeMenu {
     private ItemStack getItem(Material material, String key) {
         return new CustomItemStack(
             material,
-            VillagerTrade.getLocalization().getString(LANG_MENU + key + ".name"),
-            VillagerTrade.getLocalization().getStringList(LANG_MENU + key + ".lore")
+            VillagerTrade.getLocalization().getString(LANG_MENU + key + "." + Keys.ITEM_NAME),
+            VillagerTrade.getLocalization().getStringList(LANG_MENU + key + "." + Keys.ITEM_LORE)
         );
     }
 }

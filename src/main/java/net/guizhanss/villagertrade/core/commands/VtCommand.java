@@ -12,6 +12,7 @@ import org.bukkit.command.CommandSender;
 
 import net.guizhanss.guizhanlib.minecraft.utils.ChatUtil;
 import net.guizhanss.villagertrade.VillagerTrade;
+import net.guizhanss.villagertrade.core.commands.subcommands.AddCommand;
 import net.guizhanss.villagertrade.core.commands.subcommands.EditCommand;
 import net.guizhanss.villagertrade.core.commands.subcommands.ListCommand;
 import net.guizhanss.villagertrade.core.commands.subcommands.ReloadCommand;
@@ -25,6 +26,7 @@ public final class VtCommand implements CommandExecutor {
 
     public VtCommand() {
         subCommands.add(new ListCommand());
+        subCommands.add(new AddCommand());
         subCommands.add(new EditCommand());
         subCommands.add(new ReloadCommand());
     }

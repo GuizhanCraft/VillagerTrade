@@ -11,6 +11,10 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.google.common.base.Preconditions;
 
+import net.guizhanss.villagertrade.utils.MenuUtils;
+
+import net.guizhanss.villagertrade.utils.Validators;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -28,12 +32,15 @@ import net.guizhanss.villagertrade.utils.constants.Keys;
 @SuppressWarnings("deprecation")
 public final class TradeListMenu {
     // slots
-    private static final int[] HEADER = { 0, 1, 2, 3, 5, 6, 7, 8 };
+    private static final int[] HEADER = { 0, 1, 2, 3, 4, 5, 6, 8 };
     private static final int[] FOOTER = { 45, 47, 48, 49, 50, 51, 53 };
-    private static final int INFO_SLOT = 4;
+    private static final int INFO_SLOT = 1;
+    private static final int ADD_SLOT = 7;
     private static final int PAGE_SIZE = 36;
     private static final int PAGE_PREVIOUS = 46;
     private static final int PAGE_NEXT = 52;
+
+    private static final String LANG_MENU = "menu.list.";
 
     // TODO: refresh open menu when trade config is reloaded
     private static final Map<Player, Boolean> OPEN_MAP = new HashMap<>();
@@ -63,6 +70,12 @@ public final class TradeListMenu {
         menu.addMenuOpeningHandler(p -> OPEN_MAP.put(p, true));
 
         menu.addMenuCloseHandler(OPEN_MAP::remove);
+
+        // info
+        menu.addItem(INFO_SLOT, getInfoItem(), ChestMenuUtils.getEmptyClickHandler());
+
+        // add
+        menu.addItem(ADD_SLOT, getAddItem(), ChestMenuUtils.getEmptyClickHandler());
     }
 
     private void displayList(Player player, ChestMenu menu, int page) {
@@ -75,9 +88,16 @@ public final class TradeListMenu {
 
         final List<TradeConfiguration> subList = trades.subList(start, end);
 
-        // info
-        menu.replaceExistingItem(INFO_SLOT, getInfoItem());
-        menu.addMenuClickHandler(INFO_SLOT, ChestMenuUtils.getEmptyClickHandler());
+        // header
+        // add
+        menu.addMenuClickHandler(ADD_SLOT, (p, slot, item, action) -> {
+            p.closeInventory();
+            VillagerTrade.getLocalization().sendKeyedMessage(p, LANG_MENU + "add");
+            MenuUtils.awaitInput(p, Validators::notEmpty, (input) -> {
+                new TradeMenu(p, input);
+            });
+            return false;
+        });
 
         // footer
         setupFooter(player, menu, page, totalPages);
@@ -92,7 +112,7 @@ public final class TradeListMenu {
                 menu.replaceExistingItem(slot, getTradeDisplayItem(trade));
                 menu.addMenuClickHandler(slot, (p, slot1, item, action) -> {
                     if (!trade.isExternalConfig()) {
-                        TradeMenu.open(p, trade);
+                        new TradeMenu(p, trade);
                     }
                     return false;
                 });
@@ -133,32 +153,48 @@ public final class TradeListMenu {
     private ItemStack getTradeDisplayItem(@Nonnull TradeConfiguration tradeConfig) {
         Preconditions.checkArgument(tradeConfig != null, "TradeConfiguration cannot be null");
 
-        return new CustomItemStack(
-            Material.PAPER,
-            getLine(Keys.TRADES_KEY, tradeConfig.getKey()),
-            getLine(Keys.TRADES_OUTPUT, tradeConfig.getOutput().toShortString()),
-            getLine(Keys.TRADES_INPUT_1, tradeConfig.getInput1().toShortString()),
-            getLine(Keys.TRADES_INPUT_2, tradeConfig.getInput2().toShortString()),
-            getLine(Keys.TRADES_EXP_REWARD, tradeConfig.isExpReward()),
-            getLine(Keys.TRADES_EXP_VILLAGER, tradeConfig.getExpVillager()),
-            getLine(Keys.TRADES_PRICE_MULTIPLIER, tradeConfig.getPriceMultiplier()),
-            "",
-            VillagerTrade.getLocalization().getString(tradeConfig.isExternalConfig() ? "menu.list.not-editable" :
-                "menu.list.click-info")
+        ItemStack item = MenuUtils.parseVariables(
+            getItem(Material.PAPER, "trade"),
+            Map.of(
+                "%tradeId%", tradeConfig.getKey(),
+                // TODO finish trader types display
+                "%traderTypes%", "N/A",
+                "%input1%", tradeConfig.getInput1().toShortString(),
+                "%input2%", tradeConfig.getInput2().toShortString(),
+                "%output%", tradeConfig.getOutput().toShortString(),
+                "%maxUses%", String.valueOf(tradeConfig.getMaxUses()),
+                "%expReward%", String.valueOf(tradeConfig.isExpReward()),
+                "%expVillager%", String.valueOf(tradeConfig.getExpVillager()),
+                "%priceMultiplier%", String.valueOf(tradeConfig.getPriceMultiplier())
+            )
+        );
+
+        String pathPrefix = LANG_MENU + "trade.lore-extra.";
+        return MenuUtils.addLore(
+            item,
+            VillagerTrade.getLocalization().getStringList(
+                tradeConfig.isExternalConfig() ? pathPrefix + "not-editable" : pathPrefix + "editable"
+            )
         );
     }
 
     @Nonnull
     private ItemStack getInfoItem() {
-        return new CustomItemStack(
-            Material.ENCHANTED_BOOK,
-            VillagerTrade.getLocalization().getString("menu.list.info.name"),
-            VillagerTrade.getLocalization().getStringList("menu.list.info.lore")
-        );
+        return getItem(Material.ENCHANTED_BOOK, "info");
     }
 
     @Nonnull
-    private String getLine(String key, Object value) {
-        return MessageFormat.format(VillagerTrade.getLocalization().getString("menu.list." + key), value);
+    private ItemStack getAddItem() {
+        return getItem(Material.WRITABLE_BOOK, "add");
+    }
+
+    @Nonnull
+    @ParametersAreNonnullByDefault
+    private ItemStack getItem(Material material, String key) {
+        return new CustomItemStack(
+            material,
+            VillagerTrade.getLocalization().getString(LANG_MENU + key + "." + Keys.ITEM_NAME),
+            VillagerTrade.getLocalization().getStringList(LANG_MENU + key + "." + Keys.ITEM_LORE)
+        );
     }
 }

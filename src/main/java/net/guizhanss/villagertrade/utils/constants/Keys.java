@@ -14,4 +14,10 @@ public class Keys {
     public static final String TRADES_EXP_REWARD = "exp-reward";
     public static final String TRADES_EXP_VILLAGER = "exp-villager";
     public static final String TRADES_PRICE_MULTIPLIER = "price-multiplier";
+
+    // other keys in language
+    public static final String LANG_SAVE = "save";
+    public static final String LANG_SAVE_INVALID = "save-invalid";
+    public static final String ITEM_NAME = "name";
+    public static final String ITEM_LORE = "lore";
 }

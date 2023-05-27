@@ -98,7 +98,7 @@ public final class TraderTypes {
     }
 
     public boolean isEmpty() {
-        return !hasWanderingTrader && hasVillager();
+        return !hasWanderingTrader && !hasVillager();
     }
 
     public boolean hasVillager() {

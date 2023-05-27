@@ -28,6 +28,13 @@ public final class MutableTradeItem {
     private String id;
     private int amount;
 
+    public MutableTradeItem() {
+        item = null;
+        type = TradeItem.TradeItemType.NONE;
+        id = null;
+        amount = 1;
+    }
+
     public MutableTradeItem(@Nonnull TradeItem tradeItem) {
         Preconditions.checkArgument(tradeItem != null, "tradeItem cannot be null");
 

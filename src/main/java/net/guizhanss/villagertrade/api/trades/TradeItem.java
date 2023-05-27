@@ -88,6 +88,9 @@ public final class TradeItem {
                     VillagerTrade.log(Level.SEVERE, "The id " + id + " is not a valid Slimefun item");
                 }
             }
+            case "CUSTOM" -> {
+                // TODO: custom item support
+            }
             case "NONE" -> {
             }
             default -> VillagerTrade.log(Level.SEVERE, "The type " + type + " is not a valid item type, setting to " +
@@ -212,7 +215,7 @@ public final class TradeItem {
      */
     public enum TradeItemType {
         /**
-         * The item is a vanilla item.
+         * The item is a vanilla item (the items get from creative mode inventory).
          */
         VANILLA,
 
@@ -220,6 +223,11 @@ public final class TradeItem {
          * The item is a Slimefun item.
          */
         SLIMEFUN,
+
+        /**
+         * This item is a modified vanilla item, but not a Slimefun item.
+         */
+        CUSTOM,
 
         /**
          * This item is null.
