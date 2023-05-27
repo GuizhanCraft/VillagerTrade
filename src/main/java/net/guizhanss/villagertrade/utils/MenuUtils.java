@@ -11,8 +11,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.google.common.base.Preconditions;
 
-import net.guizhanss.guizhanlib.minecraft.utils.ChatUtil;
-
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
@@ -21,6 +19,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import io.github.thebusybiscuit.slimefun4.libraries.dough.chat.ChatInput;
 
+import net.guizhanss.guizhanlib.minecraft.utils.ChatUtil;
 import net.guizhanss.villagertrade.VillagerTrade;
 
 import lombok.experimental.UtilityClass;
@@ -67,7 +66,8 @@ public final class MenuUtils {
 
     @ParametersAreNonnullByDefault
     public void awaitInput(Player p, Predicate<String> validator, Consumer<String> successCallback) {
-        awaitInput(p, validator, successCallback, (str) -> {});
+        awaitInput(p, validator, successCallback, (str) -> {
+        });
     }
 
     @ParametersAreNonnullByDefault
@@ -82,7 +82,6 @@ public final class MenuUtils {
             }
         });
     }
-
 
 
     @Nonnull

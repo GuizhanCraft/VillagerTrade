@@ -1,6 +1,5 @@
 package net.guizhanss.villagertrade.implementation.menu;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,10 +9,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.google.common.base.Preconditions;
-
-import net.guizhanss.villagertrade.utils.MenuUtils;
-
-import net.guizhanss.villagertrade.utils.Validators;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -26,7 +21,9 @@ import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ChestMenu;
 
 import net.guizhanss.villagertrade.VillagerTrade;
 import net.guizhanss.villagertrade.api.trades.TradeConfiguration;
+import net.guizhanss.villagertrade.utils.MenuUtils;
 import net.guizhanss.villagertrade.utils.SoundUtils;
+import net.guizhanss.villagertrade.utils.Validators;
 import net.guizhanss.villagertrade.utils.constants.Keys;
 
 @SuppressWarnings("deprecation")
@@ -157,8 +154,7 @@ public final class TradeListMenu {
             getItem(Material.PAPER, "trade"),
             Map.of(
                 "%tradeId%", tradeConfig.getKey(),
-                // TODO finish trader types display
-                "%traderTypes%", "N/A",
+                "%traderTypes%", tradeConfig.getTraderTypes().toHumanizedString(),
                 "%input1%", tradeConfig.getInput1().toShortString(),
                 "%input2%", tradeConfig.getInput2().toShortString(),
                 "%output%", tradeConfig.getOutput().toShortString(),

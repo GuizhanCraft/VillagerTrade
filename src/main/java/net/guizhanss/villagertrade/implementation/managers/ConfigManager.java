@@ -5,8 +5,6 @@ import java.util.logging.Level;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import org.bukkit.configuration.ConfigurationSection;
-
 import net.guizhanss.guizhanlib.slimefun.addon.AddonConfig;
 import net.guizhanss.villagertrade.VillagerTrade;
 import net.guizhanss.villagertrade.api.trades.TradeConfiguration;

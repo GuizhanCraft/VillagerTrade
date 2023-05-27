@@ -15,6 +15,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.WanderingTrader;
 
+import io.github.thebusybiscuit.slimefun4.utils.ChatUtils;
+
 import net.guizhanss.villagertrade.VillagerTrade;
 
 import lombok.Getter;
@@ -86,6 +88,11 @@ public final class TraderTypes {
             traderTypes.add(profession.toString());
         }
         return traderTypes;
+    }
+
+    @Nonnull
+    public String toHumanizedString() {
+        return toStringList().stream().map(ChatUtils::humanize).collect(Collectors.joining(", "));
     }
 
     @Nonnull

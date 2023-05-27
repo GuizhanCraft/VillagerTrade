@@ -8,8 +8,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.google.common.base.Preconditions;
 
-import net.guizhanss.villagertrade.utils.ConfigUtils;
-
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.MerchantRecipe;
 
@@ -18,6 +16,7 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 
 import net.guizhanss.villagertrade.VillagerTrade;
 import net.guizhanss.villagertrade.core.Registry;
+import net.guizhanss.villagertrade.utils.ConfigUtils;
 import net.guizhanss.villagertrade.utils.constants.Keys;
 
 import lombok.AccessLevel;

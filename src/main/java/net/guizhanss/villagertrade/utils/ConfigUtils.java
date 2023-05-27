@@ -6,12 +6,11 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import com.google.common.base.Preconditions;
 
 import org.bukkit.configuration.Configuration;
+import org.bukkit.configuration.ConfigurationSection;
 
 import net.guizhanss.guizhanlib.slimefun.addon.AddonConfig;
 
 import lombok.experimental.UtilityClass;
-
-import org.bukkit.configuration.ConfigurationSection;
 
 @UtilityClass
 public final class ConfigUtils {
