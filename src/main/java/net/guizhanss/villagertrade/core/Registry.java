@@ -46,7 +46,7 @@ public final class Registry {
     @ParametersAreNonnullByDefault
     public void clear(TradeConfiguration tradeConfig) {
         tradeConfigurations.remove(tradeConfig.getKey());
-        wanderingTraderConfigurations.remove(tradeConfig);
-        villagerConfigurations.remove(tradeConfig);
+        wanderingTraderConfigurations.removeIf(trade -> trade.getKey().equals(tradeConfig.getKey()));
+        villagerConfigurations.removeIf(trade -> trade.getKey().equals(tradeConfig.getKey()));
     }
 }

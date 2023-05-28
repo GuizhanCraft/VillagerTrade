@@ -116,9 +116,14 @@ public final class TradeConfiguration {
             VillagerTrade.log(Level.SEVERE, "This TradeConfiguration is already registered!");
             return;
         }
+        final Registry registry = VillagerTrade.getRegistry();
         state = RegistrationState.INVALID;
 
         // check if the trade is valid
+        if (registry.getTradeConfigurations().containsKey(key)) {
+            VillagerTrade.log(Level.SEVERE, "TradeConfiguration with same ID (" + key + ") is already registered!");
+            return;
+        }
         if (this.addon != null) {
             VillagerTrade.log(Level.SEVERE, "This TradeConfiguration is already registered! "
                 + "Make sure you do not set 'addon' before registering it.");
@@ -138,7 +143,6 @@ public final class TradeConfiguration {
         }
 
         // registration
-        final Registry registry = VillagerTrade.getRegistry();
         state = RegistrationState.REGISTERED;
         this.addon = addon;
         registry.getTradeConfigurations().put(key, this);
@@ -214,15 +218,15 @@ public final class TradeConfiguration {
     @Nonnull
     @Override
     public String toString() {
-        return "TradeConfiguration(id = " + this.getKey()
-            + ", traderTypes = " + this.getTraderTypes().toString()
-            + ", output = " + this.getOutput().toString()
-            + ", input1 = " + this.getInput1().toString()
-            + ", input2 = " + this.getInput2().toString()
-            + ", maxUses = " + this.getMaxUses()
-            + ", expReward = " + this.isExpReward()
-            + ", expVillager = " + this.getExpVillager()
-            + ", priceMultiplier = " + this.getPriceMultiplier()
+        return "TradeConfiguration(id = " + key
+            + ", traderTypes = " + traderTypes.toString()
+            + ", output = " + output.toString()
+            + ", input1 = " + input1.toString()
+            + ", input2 = " + input2.toString()
+            + ", maxUses = " + maxUses
+            + ", expReward = " + expReward
+            + ", expVillager = " + expVillager
+            + ", priceMultiplier = " + priceMultiplier
             + ")";
     }
 
