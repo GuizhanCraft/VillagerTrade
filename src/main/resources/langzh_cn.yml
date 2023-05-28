@@ -1,0 +1,184 @@
+messages:
+  prefix: "&b[&a村民交易&b]&7 "
+  no-console: "&c只有玩家可以使用这个命令！"
+  no-permission: "&c你没有权限这样做！"
+  usage: "&e使用方法: &7%usage%"
+  commands:
+    list:
+      description: "打开显示所有已加载交易的菜单。"
+    edit:
+      description: "直接通过键值打开菜单以编辑交易。"
+      not-found: "&c找不到交易 %tradeId%。"
+    reload:
+      description: "重新加载配置文件。"
+      success: "&a正在重新加载配置..."
+    add:
+      description: "添加新交易。"
+      input-key: "&e输入交易 ID（键）&7（小写，数字和下划线）："
+  not-number: "&c无效输入：不是数字！"
+  menu:
+    list:
+      add: "&e输入交易 ID（键）："
+    trade:
+      amount:
+        input: "&e输入物品数量（%itemInfo%，当前：%itemAmount%），“取消”取消操作："
+      max-uses:
+        input: "&e输入最大使用次数（当前：%value%），“取消”取消操作："
+      exp-villager:
+        input: "&e输入村民经验奖励（当前：%value%），“取消”取消操作："
+      price-multiplier:
+        input: "&e输入价格倍数（当前：%value%），“取消”取消操作："
+menu:
+  list:
+    title: "&d&l村民交易 &8- &0列表"
+    info:
+      name: "&e交易列表"
+      lore:
+        - "&7此页面列出所有已加载的交易。"
+        - "&7单击交易以编辑它。"
+        - ""
+        - "&7这些交易仅在村民更改专业或流浪商人生成时添加。"
+    add:
+      name: "&a&l添加新交易"
+      lore:
+        - "&e单击以添加新交易。"
+        - ""
+        - "&7您还可以使用&e /sfvt add <trade_id>&7来添加新交易。"
+    trade:
+      name: "&b%tradeId%"
+      lore:
+        - "&e交易类型：&7%traderTypes%"
+        - "&e配方原材料 1：&7%input1%"
+        - "&e配方原材料 2：&7%input2%"
+        - "&e交易结果：&7%output%"
+        - "&e最大使用次数：&7%maxUses%"
+        - "&e经验奖励：&7%expReward%"
+        - "&e村民经验：&7%expVillager%"
+        - "&e价格倍数：&7%priceMultiplier%"
+        - ""
+      lore-extra:
+        editable:
+          - "&e单击以编辑此交易。"
+        not-editable:
+          - "&c此交易由其他插件添加，不可在游戏中编辑。"
+  trade:
+    title: "&d&l村民交易 &8- &0编辑"
+    back:
+      lore:
+        - ""
+        - "&b单击返回交易列表。"
+        - "&c所有未保存的更改都将被丢弃！"
+    info:
+      name: "&b当前交易：&a%tradeId%"
+      lore:
+        - "&7您可以在此菜单中编辑交易。"
+        - ""
+        - "&7更改将在单击保存按钮后应用。"
+    amount:
+      name: "&b数量：&a%amount%"
+      lore:
+        - "&e左键单击&7递增 1。"
+        - "&e右键单击&7递减 1。"
+        - "&eShift键+左键单击&7指定数量。"
+    input:
+      1:
+        name: "&b配方原材料 1"
+        lore:
+          - "&7将物品放在右侧以设置物品。"
+          - "&7删除物品可将此交易物品设置为&7&l无&7。"
+          - ""
+          - "&c原材料 1 不能为空！"
+          - ""
+          - "&e物品类型：&7%itemType%"
+          - "&e物品 ID：&7%itemId%"
+          - "&e物品数量：&7%itemAmount%"
+      2:
+        name: "&b配方原材料 2"
+        lore:
+          - "&7将物品放在右侧以设置物品。"
+          - "&7删除物品可将此交易物品设置为&7&l无&7。"
+          - ""
+          - "&6原材料 2 可以为空！"
+          - ""
+          - "&e物品类型：&7%itemType%"
+          - "&e物品 ID：&7%itemId%"
+          - "&e物品数量：&7%itemAmount%"
+    output:
+      name: "&b交易结果"
+      lore:
+        - "&7将物品放在右侧以设置物品。"
+        - "&7删除物品可将此交易物品设置为&7&l无&7。"
+        - ""
+        - "&c交易结果不能为空！"
+        - ""
+        - "&e物品类型：&7%itemType%"
+        - "&e物品 ID：&7%itemId%"
+        - "&e物品数量：&7%itemAmount%"
+    traders:
+      name: "&b编辑商人类型"
+      lore:
+        - "&e单击以编辑商人类型。"
+        - ""
+        - "&b当前商人类型："
+        - "&e流浪商人：&7%wanderingTrader%"
+        - "&e村民：&7%villagers%"
+    max-uses:
+      name: "&b最大使用次数：&a%value%"
+      lore:
+        - "&7此交易可使用的次数。"
+        - ""
+        - "&e单击以指定新值。"
+    exp-reward:
+      name: "&b经验奖励：&a%value%"
+      lore:
+        - "&7玩家是否从此交易中获得经验。"
+        - ""
+        - "&e单击以切换。"
+    exp-villager:
+      name: "&b村民经验：&a%value%"
+      lore:
+        - "&7交易者从此交易中获得的经验。"
+        - ""
+        - "&e单击以指定新值。"
+    price-multiplier:
+      name: "&b价格倍数：&a%value%"
+      lore:
+        - "&7计算此交易价格时的价格倍数。"
+        - ""
+        - "&e单击以指定新值。"
+    save:
+      name: "&a&l保存"
+      lore:
+        - "&e单击以保存更改。"
+        - ""
+        - "&7更改将应用于交易配置。"
+    save-invalid:
+      name: "&a&l保存"
+      lore:
+        - "&c您无法保存此交易。"
+        - ""
+        - "&7原因："
+    invalid-reason:
+      input:
+        1: "&c原材料 1 不能为空！"
+      output: "&c交易结果不能为空！"
+      traders: "&c您必须选择至少一种商人类型！"
+      max-uses: "&c最大使用次数必须是正整数！"
+      exp-villager: "&c村民经验必须是非负整数！"
+      price-multiplier: "&c价格倍数必须是非负数！"
+  trader_types:
+    title: "&d&l村民交易 &8- &0编辑 &8- &0商人类型"
+    confirm:
+      name: "&a&l确认"
+      lore:
+        - "&e单击以确认更改。"
+        - ""
+        - "&7更改将适用于编辑菜单，"
+        - "&7但不会保存。"
+    cancel:
+      name: "&c&l取消"
+      lore:
+        - "&e单击以取消更改。"
+        - ""
+        - "&7更改将被丢弃。"
+        - "&7关闭此菜单也会丢弃更改。"
