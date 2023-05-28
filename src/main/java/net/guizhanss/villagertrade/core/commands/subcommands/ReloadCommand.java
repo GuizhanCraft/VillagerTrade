@@ -23,6 +23,7 @@ public final class ReloadCommand extends SubCommand {
         }
         VillagerTrade.getRegistry().reset();
         VillagerTrade.getLocalization().reloadAll();
+        VillagerTrade.getCustomItemService().reload();
         VillagerTrade.getConfigManager().reloadAll();
         VillagerTrade.getLocalization().sendKeyedMessage(sender, "commands.reload.success");
     }

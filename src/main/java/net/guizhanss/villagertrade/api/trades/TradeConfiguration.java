@@ -214,7 +214,8 @@ public final class TradeConfiguration {
     @Nonnull
     @Override
     public String toString() {
-        return "TradeConfiguration(traderTypes = " + this.getTraderTypes().toString()
+        return "TradeConfiguration(id = " + this.getKey()
+            + ", traderTypes = " + this.getTraderTypes().toString()
             + ", output = " + this.getOutput().toString()
             + ", input1 = " + this.getInput1().toString()
             + ", input2 = " + this.getInput2().toString()

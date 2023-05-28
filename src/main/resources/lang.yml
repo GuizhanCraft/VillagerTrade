@@ -15,6 +15,13 @@ messages:
     add:
       description: "Add a new trade."
       input-key: "&eEnter the id (key) of the trade &7(lowercase, numbers, and underscores):"
+    savecustom:
+      description: "Save the custom item."
+      no-item: "&cYou must hold an item in your hand!"
+      vanilla-item: "&cYou cannot save vanilla items!"
+      id-exists: "&cItem id (%itemId%) already exists!"
+      item-exists: "&cThis item is already a registered custom item, id: %itemId%!"
+      success: "&aSuccessfully saved custom item &e%itemId%&a!"
   not-number: "&cInvalid input: not a number!"
   menu:
     list:
