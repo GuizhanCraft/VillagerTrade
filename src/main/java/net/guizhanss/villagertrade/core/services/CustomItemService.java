@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -61,8 +62,8 @@ public final class CustomItemService {
 
         // load item ids
         final List<String> customItemIds;
-        try {
-            customItemIds = Files.list(itemsFolder.toPath())
+        try (Stream<Path> fileStream = Files.list(itemsFolder.toPath())) {
+            customItemIds = fileStream
                 .map(Path::toFile)
                 .filter(File::isFile) // check if it is a file
                 .map(File::getName)
