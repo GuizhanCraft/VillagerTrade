@@ -17,7 +17,7 @@ import lombok.experimental.Accessors;
 @Getter
 public final class ConfigManager {
 
-    private static final String FILENAME_TRADES = "trades.yml";
+    private static final String FILE_TRADES = "trades.yml";
 
     private final VillagerTrade plugin;
     private final AddonConfig config;
@@ -30,7 +30,7 @@ public final class ConfigManager {
         this.plugin = plugin;
 
         config = (AddonConfig) plugin.getConfig();
-        trades = new AddonConfig(plugin, FILENAME_TRADES);
+        trades = new AddonConfig(plugin, FILE_TRADES);
 
         afterReload();
     }

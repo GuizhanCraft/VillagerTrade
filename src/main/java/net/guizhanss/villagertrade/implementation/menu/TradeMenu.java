@@ -14,6 +14,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.google.common.base.Preconditions;
 
+import net.guizhanss.villagertrade.utils.ItemUtils;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -532,7 +534,7 @@ public final class TradeMenu {
         if (invalidReason == null) {
             return getItem(Material.EMERALD, Keys.LANG_SAVE);
         } else {
-            return MenuUtils.addLore(
+            return ItemUtils.addLore(
                 getItem(Material.BARRIER, Keys.LANG_SAVE_INVALID),
                 List.of(
                     invalidReason

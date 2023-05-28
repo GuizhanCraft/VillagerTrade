@@ -13,11 +13,7 @@ import lombok.experimental.UtilityClass;
 public final class Debug {
 
     public static boolean isEnabled() {
-        if (VillagerTrade.getConfigManager() == null) {
-            return VillagerTrade.getInstance().getConfig().getBoolean("debug");
-        } else {
-            return VillagerTrade.getConfigManager().isDebug();
-        }
+        return VillagerTrade.getConfigManager().isDebug();
     }
 
     @ParametersAreNonnullByDefault

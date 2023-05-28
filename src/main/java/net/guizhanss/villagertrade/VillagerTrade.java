@@ -24,10 +24,10 @@ import org.bstats.bukkit.Metrics;
 
 public final class VillagerTrade extends AbstractAddon {
 
-    private ConfigManager configManager;
     private LocalizationService localizationService;
-    private Registry registry;
     private CustomItemService customItemService;
+    private Registry registry;
+    private ConfigManager configManager;
     private CommandManager commandManager;
     private ListenerManager listenerManager;
     private TaskManager taskManager;
@@ -37,13 +37,13 @@ public final class VillagerTrade extends AbstractAddon {
     }
 
     @Nonnull
-    public static ConfigManager getConfigManager() {
-        return inst().configManager;
+    public static Registry getRegistry() {
+        return inst().registry;
     }
 
     @Nonnull
-    public static Registry getRegistry() {
-        return inst().registry;
+    public static ConfigManager getConfigManager() {
+        return inst().configManager;
     }
 
     @Nonnull

@@ -10,6 +10,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.google.common.base.Preconditions;
 
+import net.guizhanss.villagertrade.utils.ItemUtils;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -166,7 +168,7 @@ public final class TradeListMenu {
         );
 
         String pathPrefix = LANG_MENU + "trade.lore-extra.";
-        return MenuUtils.addLore(
+        return ItemUtils.addLore(
             item,
             VillagerTrade.getLocalization().getStringList(
                 tradeConfig.isExternalConfig() ? pathPrefix + "not-editable" : pathPrefix + "editable"

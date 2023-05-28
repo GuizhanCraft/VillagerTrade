@@ -89,7 +89,12 @@ public final class TradeItem {
                 }
             }
             case "CUSTOM" -> {
-                // TODO: custom item support
+                try {
+                    tempItem = new CustomItemStack(VillagerTrade.getCustomItemService().getItem(id), amount);
+                    tempType = TradeItemType.CUSTOM;
+                } catch (Exception ex) {
+                    VillagerTrade.log(Level.SEVERE, "The id " + id + " is not a valid custom item");
+                }
             }
             case "NONE" -> {
             }
@@ -159,6 +164,8 @@ public final class TradeItem {
         SlimefunItem sfItem = SlimefunItem.getByItem(item);
         if (sfItem != null) {
             return new TradeItem("SLIMEFUN", sfItem.getId(), amount);
+        } else if (item.hasItemMeta()) {
+            return new TradeItem("CUSTOM", VillagerTrade.getCustomItemService().getId(item), amount);
         } else {
             return new TradeItem("VANILLA", item.getType().name(), amount);
         }

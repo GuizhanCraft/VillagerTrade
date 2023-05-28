@@ -5,6 +5,10 @@ import javax.annotation.Nullable;
 
 import com.google.common.base.Preconditions;
 
+import net.guizhanss.villagertrade.VillagerTrade;
+
+import net.guizhanss.villagertrade.utils.ItemUtils;
+
 import org.bukkit.inventory.ItemStack;
 
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
@@ -44,6 +48,10 @@ public final class MutableTradeItem {
         amount = tradeItem.getAmount();
     }
 
+    /**
+     * This method accept an {@link ItemStack} from menu.
+     * @param item The item from menu.
+     */
     public void setItem(@Nullable ItemStack item) {
         this.item = item;
 
@@ -58,6 +66,14 @@ public final class MutableTradeItem {
         if (sfItem != null) {
             type = TradeItem.TradeItemType.SLIMEFUN;
             id = sfItem.getId();
+        } else if (item.hasItemMeta()) {
+            type = TradeItem.TradeItemType.CUSTOM;
+            id = VillagerTrade.getCustomItemService().getId(item);
+
+            // we need to create a new custom item, if the item does not match any registered custom item.
+            if (id == null) {
+                id = VillagerTrade.getCustomItemService().addItem(item);
+            }
         } else {
             type = TradeItem.TradeItemType.VANILLA;
             id = item.getType().name();
@@ -76,6 +92,7 @@ public final class MutableTradeItem {
         return switch (type) {
             case VANILLA -> this.item.getType() == item.getType();
             case SLIMEFUN -> SlimefunItem.getById(id).isItem(item);
+            case CUSTOM -> ItemUtils.canStack(this.item, item);
             default -> false;
         };
     }
