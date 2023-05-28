@@ -35,7 +35,7 @@ public final class SaveCustomCommand extends SubCommand {
         }
 
         ItemStack item = player.getInventory().getItemInMainHand();
-        if (item == null || item.getType().isAir()) {
+        if (item.getType().isAir()) {
             VillagerTrade.getLocalization().sendKeyedMessage(sender, "commands.savecustom.no-item");
             return;
         }
@@ -52,9 +52,10 @@ public final class SaveCustomCommand extends SubCommand {
                 msg -> msg.replace("%itemId%", itemId));
             return;
         }
-        if (VillagerTrade.getCustomItemService().getId(item) != null) {
+        String existingId = VillagerTrade.getCustomItemService().getId(item);
+        if (existingId != null) {
             VillagerTrade.getLocalization().sendKeyedMessage(sender, "commands.savecustom.item-exists",
-                msg -> msg.replace("%itemId%", itemId));
+                msg -> msg.replace("%itemId%", existingId));
             return;
         }
 
