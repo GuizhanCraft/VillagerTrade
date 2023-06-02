@@ -13,9 +13,11 @@ import org.bukkit.command.CommandSender;
 import net.guizhanss.guizhanlib.minecraft.utils.ChatUtil;
 import net.guizhanss.villagertrade.VillagerTrade;
 import net.guizhanss.villagertrade.core.commands.subcommands.AddCommand;
+import net.guizhanss.villagertrade.core.commands.subcommands.ConfirmCommand;
 import net.guizhanss.villagertrade.core.commands.subcommands.EditCommand;
 import net.guizhanss.villagertrade.core.commands.subcommands.ListCommand;
 import net.guizhanss.villagertrade.core.commands.subcommands.ReloadCommand;
+import net.guizhanss.villagertrade.core.commands.subcommands.RemoveCommand;
 import net.guizhanss.villagertrade.core.commands.subcommands.SaveCustomCommand;
 
 import lombok.Getter;
@@ -29,7 +31,9 @@ public final class VtCommand implements CommandExecutor {
         subCommands.add(new ListCommand());
         subCommands.add(new AddCommand());
         subCommands.add(new EditCommand());
+        subCommands.add(new RemoveCommand());
         subCommands.add(new ReloadCommand());
+        subCommands.add(new ConfirmCommand());
         subCommands.add(new SaveCustomCommand());
     }
 

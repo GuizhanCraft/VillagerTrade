@@ -57,6 +57,8 @@ public final class TradeConfiguration {
     /**
      * Loads the config options from the {@link ConfigurationSection} into a {@link TradeConfiguration}.
      *
+     * @param key
+     *     The key of the {@link TradeConfiguration}.
      * @param section
      *     The {@link ConfigurationSection} to load from.
      *
@@ -84,6 +86,21 @@ public final class TradeConfiguration {
             VillagerTrade.log(Level.SEVERE, ex, "An error has occurred while loading trade configuration");
             return null;
         }
+    }
+
+    /**
+     * Find the  {@link ConfigurationSection} with the specified key.
+     *
+     * @param key
+     *     The key of the {@link ConfigurationSection}.
+     *
+     * @return The {@link TradeConfiguration}, or null if not found.
+     */
+    @Nullable
+    public static TradeConfiguration getByKey(@Nonnull String key) {
+        Preconditions.checkArgument(key != null, "key should not be null");
+
+        return VillagerTrade.getRegistry().getTradeConfigurations().get(key);
     }
 
     /**
@@ -121,7 +138,7 @@ public final class TradeConfiguration {
 
         // check if the trade is valid
         if (registry.getTradeConfigurations().containsKey(key)) {
-            VillagerTrade.log(Level.SEVERE, "TradeConfiguration with same ID (" + key + ") is already registered!");
+            VillagerTrade.log(Level.SEVERE, "TradeConfiguration with same key (" + key + ") is already registered!");
             return;
         }
         if (this.addon != null) {
@@ -218,7 +235,7 @@ public final class TradeConfiguration {
     @Nonnull
     @Override
     public String toString() {
-        return "TradeConfiguration(id = " + key
+        return "TradeConfiguration(key = " + key
             + ", traderTypes = " + traderTypes.toString()
             + ", output = " + output.toString()
             + ", input1 = " + input1.toString()

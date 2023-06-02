@@ -12,13 +12,14 @@ import org.bukkit.entity.Player;
 import net.guizhanss.villagertrade.VillagerTrade;
 import net.guizhanss.villagertrade.api.trades.TradeConfiguration;
 import net.guizhanss.villagertrade.core.commands.SubCommand;
-import net.guizhanss.villagertrade.implementation.menu.TradeMenu;
+import net.guizhanss.villagertrade.core.tasks.ConfirmationTask;
+import net.guizhanss.villagertrade.implementation.menu.TradeListMenu;
 import net.guizhanss.villagertrade.utils.constants.Permissions;
 
-public final class EditCommand extends SubCommand {
+public final class RemoveCommand extends SubCommand {
 
-    public EditCommand() {
-        super("edit", false);
+    public RemoveCommand() {
+        super("remove", false);
     }
 
     @ParametersAreNonnullByDefault
@@ -34,18 +35,27 @@ public final class EditCommand extends SubCommand {
         }
         if (args.length != 2) {
             VillagerTrade.getLocalization().sendKeyedMessage(sender, "usage",
-                msg -> msg.replace("%usage%", "/sfvt edit <tradeKey>"));
+                msg -> msg.replace("%usage%", "/sfvt remove <tradeKey>"));
             return;
         }
 
         String tradeKey = args[1];
         TradeConfiguration tradeConfig = VillagerTrade.getRegistry().getTradeConfigurations().get(tradeKey);
-        if (tradeConfig != null) {
-            new TradeMenu(player, tradeConfig);
-        } else {
-            VillagerTrade.getLocalization().sendKeyedMessage(sender, "commands.edit.not-found",
+        if (tradeConfig == null) {
+            VillagerTrade.getLocalization().sendKeyedMessage(sender, "commands.remove.not-found",
                 msg -> msg.replace("%tradeKey%", tradeKey));
+            return;
         }
+
+        VillagerTrade.getLocalization().sendKeyedMessage(sender, "commands.remove.await-confirm",
+            msg -> msg.replace("%tradeKey%", tradeKey));
+        ConfirmationTask.create(player.getUniqueId(), 30 * 1000L, () -> {
+            VillagerTrade.getRegistry().clear(tradeConfig);
+            VillagerTrade.getLocalization().sendKeyedMessage(sender, "commands.remove.success",
+                msg -> msg.replace("%tradeKey%", tradeKey));
+            // we need to close all open list
+            TradeListMenu.closeAll();
+        });
     }
 
     @Override

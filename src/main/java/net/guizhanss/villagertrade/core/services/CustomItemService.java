@@ -132,7 +132,10 @@ public final class CustomItemService {
 
     /**
      * Add a custom item, save to file. The id will be "Material_Number", the number starts from 1.
-     * @param item The custom item.
+     *
+     * @param item
+     *     The custom item.
+     *
      * @return The generated id of the custom item.
      */
     @Nonnull
@@ -153,8 +156,11 @@ public final class CustomItemService {
 
     /**
      * Add a custom item, save to file. If the item already exists, this will not be executed.
-     * @param id The id of the custom item.
-     * @param item The custom item.
+     *
+     * @param id
+     *     The id of the custom item.
+     * @param item
+     *     The custom item.
      */
     @ParametersAreNonnullByDefault
     public void addItem(String id, ItemStack item) {

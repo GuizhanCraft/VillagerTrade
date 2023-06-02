@@ -5,16 +5,14 @@ import javax.annotation.Nullable;
 
 import com.google.common.base.Preconditions;
 
-import net.guizhanss.villagertrade.VillagerTrade;
-
-import net.guizhanss.villagertrade.utils.ItemUtils;
-
 import org.bukkit.inventory.ItemStack;
 
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 
+import net.guizhanss.villagertrade.VillagerTrade;
 import net.guizhanss.villagertrade.api.trades.TradeItem;
 import net.guizhanss.villagertrade.implementation.menu.TradeMenu;
+import net.guizhanss.villagertrade.utils.ItemUtils;
 
 import lombok.Getter;
 
@@ -50,7 +48,9 @@ public final class MutableTradeItem {
 
     /**
      * This method accept an {@link ItemStack} from menu.
-     * @param item The item from menu.
+     *
+     * @param item
+     *     The item from menu.
      */
     public void setItem(@Nullable ItemStack item) {
         this.item = item;

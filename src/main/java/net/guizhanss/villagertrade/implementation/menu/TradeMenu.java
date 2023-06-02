@@ -14,8 +14,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.google.common.base.Preconditions;
 
-import net.guizhanss.villagertrade.utils.ItemUtils;
-
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -31,6 +29,7 @@ import net.guizhanss.villagertrade.api.trades.TradeConfiguration;
 import net.guizhanss.villagertrade.api.trades.TradeItem;
 import net.guizhanss.villagertrade.api.trades.TraderTypes;
 import net.guizhanss.villagertrade.api.trades.mutables.MutableTradeItem;
+import net.guizhanss.villagertrade.utils.ItemUtils;
 import net.guizhanss.villagertrade.utils.MenuUtils;
 import net.guizhanss.villagertrade.utils.SoundUtils;
 import net.guizhanss.villagertrade.utils.Validators;
@@ -178,7 +177,7 @@ public final class TradeMenu {
 
         // back button
         menu.addItem(BACK_SLOT, getBackButton(player), (player, slot, item, action) -> {
-            TradeListMenu.open(player);
+            new TradeListMenu(player);
             return false;
         });
 
@@ -466,7 +465,7 @@ public final class TradeMenu {
         return MenuUtils.parseVariables(
             getItem(Material.BOOK, "info"),
             Map.of(
-                "%tradeId%", key
+                "%tradeKey%", key
             )
         );
     }

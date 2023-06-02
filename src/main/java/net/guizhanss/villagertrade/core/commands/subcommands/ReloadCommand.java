@@ -2,6 +2,8 @@ package net.guizhanss.villagertrade.core.commands.subcommands;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import net.guizhanss.villagertrade.implementation.menu.TradeListMenu;
+
 import org.bukkit.command.CommandSender;
 
 import net.guizhanss.villagertrade.VillagerTrade;
@@ -25,6 +27,7 @@ public final class ReloadCommand extends SubCommand {
         VillagerTrade.getLocalization().reloadAll();
         VillagerTrade.getCustomItemService().reload();
         VillagerTrade.getConfigManager().reloadAll();
+        TradeListMenu.closeAll();
         VillagerTrade.getLocalization().sendKeyedMessage(sender, "commands.reload.success");
     }
 }

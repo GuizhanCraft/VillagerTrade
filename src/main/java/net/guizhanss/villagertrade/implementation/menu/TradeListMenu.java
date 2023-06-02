@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.google.common.base.Preconditions;
 
-import net.guizhanss.villagertrade.utils.ItemUtils;
-
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -23,6 +23,7 @@ import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ChestMenu;
 
 import net.guizhanss.villagertrade.VillagerTrade;
 import net.guizhanss.villagertrade.api.trades.TradeConfiguration;
+import net.guizhanss.villagertrade.utils.ItemUtils;
 import net.guizhanss.villagertrade.utils.MenuUtils;
 import net.guizhanss.villagertrade.utils.SoundUtils;
 import net.guizhanss.villagertrade.utils.Validators;
@@ -41,22 +42,30 @@ public final class TradeListMenu {
 
     private static final String LANG_MENU = "menu.list.";
 
-    // TODO: refresh open menu when trade config is reloaded
-    private static final Map<Player, Boolean> OPEN_MAP = new HashMap<>();
+    private static final Map<UUID, Boolean> OPEN_MAP = new HashMap<>();
 
-    private TradeListMenu(@Nonnull Player p) {
-        final ChestMenu menu = new ChestMenu(VillagerTrade.getLocalization().getString("menu.list.title"));
-        setupMenu(menu);
-        displayList(p, menu, 1);
-        menu.open(p);
+    private final Player player;
+    private final ChestMenu menu;
+
+    public TradeListMenu(@Nonnull Player player) {
+        this.player = player;
+        menu = new ChestMenu(VillagerTrade.getLocalization().getString("menu.list.title"));
+        setupMenu();
+        displayPage(1);
+        menu.open(player);
     }
 
-    public static void open(@Nonnull Player p) {
-        new TradeListMenu(p);
+    public static void closeAll() {
+        for (UUID uuid : OPEN_MAP.keySet()) {
+            final Player p = Bukkit.getPlayer(uuid);
+            if (p != null) {
+                p.closeInventory();
+            }
+            OPEN_MAP.remove(uuid);
+        }
     }
 
-    @ParametersAreNonnullByDefault
-    private void setupMenu(ChestMenu menu) {
+    private void setupMenu() {
         for (int slot : HEADER) {
             menu.addItem(slot, ChestMenuUtils.getBackground(), ChestMenuUtils.getEmptyClickHandler());
         }
@@ -66,9 +75,9 @@ public final class TradeListMenu {
 
         menu.setEmptySlotsClickable(false);
 
-        menu.addMenuOpeningHandler(p -> OPEN_MAP.put(p, true));
+        menu.addMenuOpeningHandler(p -> OPEN_MAP.put(p.getUniqueId(), true));
 
-        menu.addMenuCloseHandler(OPEN_MAP::remove);
+        menu.addMenuCloseHandler(p -> OPEN_MAP.remove(p.getUniqueId()));
 
         // info
         menu.addItem(INFO_SLOT, getInfoItem(), ChestMenuUtils.getEmptyClickHandler());
@@ -77,7 +86,7 @@ public final class TradeListMenu {
         menu.addItem(ADD_SLOT, getAddItem(), ChestMenuUtils.getEmptyClickHandler());
     }
 
-    private void displayList(Player player, ChestMenu menu, int page) {
+    private void displayPage(int page) {
         final List<TradeConfiguration> trades =
             new ArrayList<>(VillagerTrade.getRegistry().getTradeConfigurations().values());
         final int total = trades.size();
@@ -99,7 +108,7 @@ public final class TradeListMenu {
         });
 
         // footer
-        setupFooter(player, menu, page, totalPages);
+        setupFooter(page, totalPages);
 
         // sound
         SoundUtils.playOpenMenuSound(player);
@@ -123,7 +132,7 @@ public final class TradeListMenu {
     }
 
     @ParametersAreNonnullByDefault
-    private void setupFooter(Player player, ChestMenu menu, int page, int totalPages) {
+    private void setupFooter(int page, int totalPages) {
         for (int slot : FOOTER) {
             menu.replaceExistingItem(slot, ChestMenuUtils.getBackground());
             menu.addMenuClickHandler(slot, ChestMenuUtils.getEmptyClickHandler());
@@ -133,7 +142,7 @@ public final class TradeListMenu {
         menu.addMenuClickHandler(PAGE_PREVIOUS, (p, slot, itemStack, clickAction) -> {
             final int previousPage = page - 1;
             if (previousPage >= 1) {
-                displayList(p, menu, previousPage);
+                displayPage(previousPage);
             }
             return false;
         });
@@ -142,7 +151,7 @@ public final class TradeListMenu {
         menu.addMenuClickHandler(PAGE_NEXT, (p, slot, itemStack, clickAction) -> {
             final int nextPage = page + 1;
             if (nextPage <= totalPages) {
-                displayList(p, menu, nextPage);
+                displayPage(nextPage);
             }
             return false;
         });
@@ -155,7 +164,7 @@ public final class TradeListMenu {
         ItemStack item = MenuUtils.parseVariables(
             getItem(Material.PAPER, "trade"),
             Map.of(
-                "%tradeId%", tradeConfig.getKey(),
+                "%tradeKey%", tradeConfig.getKey(),
                 "%traderTypes%", tradeConfig.getTraderTypes().toHumanizedString(),
                 "%input1%", tradeConfig.getInput1().toShortString(),
                 "%input2%", tradeConfig.getInput2().toShortString(),

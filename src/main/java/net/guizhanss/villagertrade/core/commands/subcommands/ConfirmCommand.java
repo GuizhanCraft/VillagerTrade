@@ -7,13 +7,13 @@ import org.bukkit.entity.Player;
 
 import net.guizhanss.villagertrade.VillagerTrade;
 import net.guizhanss.villagertrade.core.commands.SubCommand;
-import net.guizhanss.villagertrade.implementation.menu.TradeMenu;
+import net.guizhanss.villagertrade.core.tasks.ConfirmationTask;
 import net.guizhanss.villagertrade.utils.constants.Permissions;
 
-public final class AddCommand extends SubCommand {
+public final class ConfirmCommand extends SubCommand {
 
-    public AddCommand() {
-        super("add", false);
+    public ConfirmCommand() {
+        super("confirm", false);
     }
 
     @ParametersAreNonnullByDefault
@@ -27,13 +27,15 @@ public final class AddCommand extends SubCommand {
             VillagerTrade.getLocalization().sendKeyedMessage(sender, "no-permission");
             return;
         }
-        if (args.length != 2) {
+        if (args.length != 1) {
             VillagerTrade.getLocalization().sendKeyedMessage(sender, "usage",
-                msg -> msg.replace("%usage%", "/sfvt add <tradeKey>"));
-            return;
+                msg -> msg.replace("%usage%", "/sfvt confirm"));
         }
 
-        String tradeKey = args[1];
-        new TradeMenu(player, tradeKey);
+        final ConfirmationTask task = VillagerTrade.getRegistry().getConfirmationTasks().get(player.getUniqueId());
+
+        if (task == null || !task.execute()) {
+            VillagerTrade.getLocalization().sendKeyedMessage(sender, "commands.confirm.no-active");
+        }
     }
 }

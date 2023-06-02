@@ -8,13 +8,17 @@ messages:
       description: "Open a menu that lists all loaded trades."
     edit:
       description: "Open the menu to edit a trade directly by its key."
-      not-found: "&cCannot find trade %tradeId%."
+      not-found: "&cCannot find trade %tradeKey%."
     reload:
       description: "Reload the configuration file."
       success: "&aReloading configuration..."
     add:
       description: "Add a new trade."
-      input-key: "&eEnter the id (key) of the trade &7(lowercase, numbers, and underscores):"
+    remove:
+      description: "Remove a trade."
+      not-found: "&cCannot find trade %tradeKey%."
+      await-confirm: "&eYou are removing trade &a%tradeKey%&e. This action cannot be undone. Type &a/sfvt confirm&e to confirm."
+      success: "&aSuccessfully removed trade &e%tradeKey%&a!"
     savecustom:
       description: "Save the custom item."
       no-item: "&cYou must hold an item in your hand!"
@@ -22,6 +26,9 @@ messages:
       id-exists: "&cItem id (%itemId%) already exists!"
       item-exists: "&cThis item is already a registered custom item, id: %itemId%!"
       success: "&aSuccessfully saved custom item &e%itemId%&a!"
+    confirm:
+      description: "Confirm an action."
+      no-active: "&cThere is no active action to confirm!"
   not-number: "&cInvalid input: not a number!"
   menu:
     list:
@@ -52,10 +59,10 @@ menu:
       lore:
         - "&eClick to add a new trade."
         - ""
-        - "&7You can also use &e/sfvt add <trade_id>"
+        - "&7You can also use &e/sfvt add <tradeKey>"
         - "&7to add a new trade."
     trade:
-      name: "&b%tradeId%"
+      name: "&b%tradeKey%"
       lore:
         - "&eTrader types: &7%traderTypes%"
         - "&eIngredient 1: &7%input1%"
@@ -80,7 +87,7 @@ menu:
         - "&bClick to go back to trade list."
         - "&cAll unsaved changes will be discarded!"
     info:
-      name: "&bCurrent trade: &a%tradeId%"
+      name: "&bCurrent trade: &a%tradeKey%"
       lore:
         - "&7You can edit the trade in this menu."
         - ""

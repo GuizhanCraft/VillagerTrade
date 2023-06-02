@@ -33,6 +33,6 @@ public final class ListCommand extends SubCommand {
             return;
         }
 
-        TradeListMenu.open(player);
+        new TradeListMenu(player);
     }
 }

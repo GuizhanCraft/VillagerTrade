@@ -1,11 +1,13 @@
 package net.guizhanss.villagertrade.core;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -13,15 +15,20 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 
 import net.guizhanss.villagertrade.api.trades.TradeConfiguration;
 import net.guizhanss.villagertrade.api.trades.TradeItem;
+import net.guizhanss.villagertrade.core.tasks.ConfirmationTask;
 
 import lombok.Getter;
 
 @Getter
 public final class Registry {
+    // trades
     private final Map<String, TradeConfiguration> tradeConfigurations = new LinkedHashMap<>();
     private final List<TradeConfiguration> wanderingTraderConfigurations = new ArrayList<>();
     private final List<TradeConfiguration> villagerConfigurations = new ArrayList<>();
     private final Set<TradeItem> slimefunTradeInputs = new HashSet<>();
+
+    // confirmations
+    private final Map<UUID, ConfirmationTask> confirmationTasks = new HashMap<>();
 
     public void reset() {
         tradeConfigurations.clear();
