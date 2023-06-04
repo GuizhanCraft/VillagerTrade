@@ -181,6 +181,13 @@ menu:
         - "&cYou cannot save this trade."
         - ""
         - "&7Reason:"
+    remove:
+      name: "&c&lRemove"
+      lore:
+        - "&eClick &7to remove this trade."
+        - ""
+        - "&7Trade will not be removed until you confirm this action."
+        - "&7This action cannot be undone."
     invalid-reason:
       input:
         1: "&cIngredient 1 cannot be empty!"
