@@ -2,12 +2,11 @@ package net.guizhanss.villagertrade.core.commands.subcommands;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import net.guizhanss.villagertrade.implementation.menu.TradeListMenu;
-
 import org.bukkit.command.CommandSender;
 
 import net.guizhanss.villagertrade.VillagerTrade;
 import net.guizhanss.villagertrade.core.commands.SubCommand;
+import net.guizhanss.villagertrade.implementation.menu.TradeListMenu;
 import net.guizhanss.villagertrade.utils.constants.Permissions;
 
 public final class ReloadCommand extends SubCommand {

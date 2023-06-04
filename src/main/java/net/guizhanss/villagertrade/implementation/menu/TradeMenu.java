@@ -14,6 +14,10 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.google.common.base.Preconditions;
 
+import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ClickAction;
+
+import net.guizhanss.villagertrade.core.commands.subcommands.RemoveCommand;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -47,16 +51,19 @@ import lombok.Setter;
 @Setter(AccessLevel.PRIVATE)
 @SuppressWarnings("deprecation")
 public final class TradeMenu {
-    // slots
+    // functional slots
     private static final int[] BACKGROUND = {
         0, 2, 3, 4, 5, 6, 8,
         18, 19, 20, 21, 22, 23, 24, 25, 26,
         27, 28, 34, 35,
-        36, 37, 38, 39, 41, 42, 43, 44
+        36, 37, 38, 39, 41, 42, 43
     };
     private static final int BACK_SLOT = 1;
     private static final int INFO_SLOT = 7;
     private static final int SAVE_SLOT = 40;
+    private static final int REMOVE_SLOT = 44;
+
+    // trade slots
     private static final int INPUT_1_INFO_SLOT = 9;
     private static final int INPUT_1_ITEM_SLOT = 10;
     private static final int INPUT_1_AMOUNT_SLOT = 11;
@@ -299,12 +306,27 @@ public final class TradeMenu {
             }
             newConfig.register(VillagerTrade.getInstance());
             VillagerTrade.getConfigManager().saveTrade(newConfig);
+
+            // display remove button after the new config is saved
+            if (originalConfig == null) {
+                menu.replaceExistingItem(REMOVE_SLOT, getRemoveButton());
+                menu.addMenuClickHandler(REMOVE_SLOT, this::removeHandler);
+            }
             return false;
         });
         tickingHandlers.put(SAVE_SLOT, (slot) -> {
             // TODO improve performance
             menu.replaceExistingItem(SAVE_SLOT, getSaveButton(getInvalidReason()));
         });
+
+        // remove
+        // add remove button only to existing configs, make it blank for new configs
+        // remember to display remove button after the new config is saved
+        if (originalConfig != null) {
+            menu.addItem(REMOVE_SLOT, getRemoveButton(), this::removeHandler);
+        } else {
+            menu.addItem(REMOVE_SLOT, ChestMenuUtils.getBackground(), ChestMenuUtils.getEmptyClickHandler());
+        }
     }
 
     void tick() {
@@ -371,7 +393,7 @@ public final class TradeMenu {
     }
 
     /**
-     * This method ask player to input amount of item. It is not guarenteed that the amount is valid.
+     * This method ask player to input amount of item. It is not guaranteed that the amount is valid.
      *
      * @param tradeItem
      *     The trade item to be updated.
@@ -540,6 +562,25 @@ public final class TradeMenu {
                 )
             );
         }
+    }
+
+    @Nonnull
+    private ItemStack getRemoveButton() {
+        return MenuUtils.parseVariables(
+            getItem(Material.BOOK, Keys.LANG_REMOVE),
+            Map.of(
+                "%tradeKey%", key
+            )
+        );
+    }
+
+    @ParametersAreNonnullByDefault
+    private boolean removeHandler(Player player, int slot, ItemStack item, ClickAction action) {
+        player.closeInventory();
+        RemoveCommand.awaitRemoval(player, originalConfig, () -> {
+            new TradeListMenu(player);
+        });
+        return false;
     }
 
     @Nonnull
