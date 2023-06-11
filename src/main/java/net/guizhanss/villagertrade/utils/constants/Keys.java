@@ -19,6 +19,10 @@ public class Keys {
     public static final String LANG_SAVE = "save";
     public static final String LANG_SAVE_INVALID = "save-invalid";
     public static final String LANG_REMOVE = "remove";
-    public static final String ITEM_NAME = "name";
-    public static final String ITEM_LORE = "lore";
+    public static final String LANG_ITEM_NAME = "name";
+    public static final String LANG_ITEM_LORE = "lore";
+
+    // replaceable variables in language
+    public static final String VAR_USAGE = "%usage%";
+    public static final String VAR_TRADE_KEY = "%tradeKey%";
 }

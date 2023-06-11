@@ -2,6 +2,8 @@ package net.guizhanss.villagertrade.core.commands.subcommands;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import net.guizhanss.villagertrade.utils.constants.Keys;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -29,7 +31,7 @@ public final class EditCommand extends TradeKeyCompletionCommand {
         }
         if (args.length != 2) {
             VillagerTrade.getLocalization().sendKeyedMessage(sender, "usage",
-                msg -> msg.replace("%usage%", "/sfvt edit <tradeKey>"));
+                msg -> msg.replace(Keys.VAR_USAGE, "/sfvt edit <tradeKey>"));
             return;
         }
 
@@ -39,7 +41,7 @@ public final class EditCommand extends TradeKeyCompletionCommand {
             new TradeMenu(player, tradeConfig);
         } else {
             VillagerTrade.getLocalization().sendKeyedMessage(sender, "commands.edit.not-found",
-                msg -> msg.replace("%tradeKey%", tradeKey));
+                msg -> msg.replace(Keys.VAR_TRADE_KEY, tradeKey));
         }
     }
 }

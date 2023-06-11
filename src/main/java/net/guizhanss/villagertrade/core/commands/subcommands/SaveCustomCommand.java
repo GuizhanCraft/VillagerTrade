@@ -2,6 +2,8 @@ package net.guizhanss.villagertrade.core.commands.subcommands;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import net.guizhanss.villagertrade.utils.constants.Keys;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -29,7 +31,7 @@ public final class SaveCustomCommand extends SubCommand {
         }
         if (args.length != 2) {
             VillagerTrade.getLocalization().sendKeyedMessage(sender, "usage",
-                msg -> msg.replace("%usage%", "/sfvt savecustom <itemId>"));
+                msg -> msg.replace(Keys.VAR_USAGE, "/sfvt savecustom <itemId>"));
             return;
         }
 

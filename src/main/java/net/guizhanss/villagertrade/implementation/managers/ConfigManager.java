@@ -1,5 +1,7 @@
 package net.guizhanss.villagertrade.implementation.managers;
 
+import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 
 import javax.annotation.Nonnull;
@@ -66,8 +68,11 @@ public final class ConfigManager {
         VillagerTrade.log(Level.INFO, "Trades are enabled! Loading...");
 
         int count = 0;
-        for (String key : trades.getKeys(false)) {
-            Debug.log("Loading trade: " + key);
+        List<String> keys = trades.getKeys(false).stream().toList();
+        int keySize = keys.size();
+        for (int i = 0; i < keySize; i++) {
+            final String key = keys.get(i);
+            Debug.log("Loading trade (" + (i + 1) + "/" + keySize + "): " + key);
             try {
                 TradeConfiguration tradeConfig =
                     TradeConfiguration.loadFromConfig(key, trades.getConfigurationSection(key));

@@ -164,7 +164,7 @@ public final class TradeListMenu {
         ItemStack item = MenuUtils.parseVariables(
             getItem(Material.PAPER, "trade"),
             Map.of(
-                "%tradeKey%", tradeConfig.getKey(),
+                Keys.VAR_TRADE_KEY, tradeConfig.getKey(),
                 "%traderTypes%", tradeConfig.getTraderTypes().toHumanizedString(),
                 "%input1%", tradeConfig.getInput1().toShortString(),
                 "%input2%", tradeConfig.getInput2().toShortString(),
@@ -200,8 +200,8 @@ public final class TradeListMenu {
     private ItemStack getItem(Material material, String key) {
         return new CustomItemStack(
             material,
-            VillagerTrade.getLocalization().getString(LANG_MENU + key + "." + Keys.ITEM_NAME),
-            VillagerTrade.getLocalization().getStringList(LANG_MENU + key + "." + Keys.ITEM_LORE)
+            VillagerTrade.getLocalization().getString(LANG_MENU + key + "." + Keys.LANG_ITEM_NAME),
+            VillagerTrade.getLocalization().getStringList(LANG_MENU + key + "." + Keys.LANG_ITEM_LORE)
         );
     }
 }

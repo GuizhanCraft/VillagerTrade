@@ -4,6 +4,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.google.common.base.Preconditions;
 
+import net.guizhanss.villagertrade.utils.constants.Keys;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -26,11 +28,11 @@ public final class RemoveCommand extends TradeKeyCompletionCommand {
 
         final String tradeKey = tradeConfig.getKey();
         VillagerTrade.getLocalization().sendKeyedMessage(player, "commands.remove.await-confirm",
-            msg -> msg.replace("%tradeKey%", tradeKey));
+            msg -> msg.replace(Keys.VAR_TRADE_KEY, tradeKey));
         ConfirmationTask.create(player.getUniqueId(), 30 * 1000L, () -> {
             VillagerTrade.getRegistry().clear(tradeConfig);
             VillagerTrade.getLocalization().sendKeyedMessage(player, "commands.remove.success",
-                msg -> msg.replace("%tradeKey%", tradeKey));
+                msg -> msg.replace(Keys.VAR_TRADE_KEY, tradeKey));
             // we need to close all open list
             TradeListMenu.closeAll();
             callback.run();
@@ -50,7 +52,7 @@ public final class RemoveCommand extends TradeKeyCompletionCommand {
         }
         if (args.length != 2) {
             VillagerTrade.getLocalization().sendKeyedMessage(sender, "usage",
-                msg -> msg.replace("%usage%", "/sfvt remove <tradeKey>"));
+                msg -> msg.replace(Keys.VAR_USAGE, "/sfvt remove <tradeKey>"));
             return;
         }
 
@@ -58,7 +60,7 @@ public final class RemoveCommand extends TradeKeyCompletionCommand {
         TradeConfiguration tradeConfig = VillagerTrade.getRegistry().getTradeConfigurations().get(tradeKey);
         if (tradeConfig == null) {
             VillagerTrade.getLocalization().sendKeyedMessage(sender, "commands.remove.not-found",
-                msg -> msg.replace("%tradeKey%", tradeKey));
+                msg -> msg.replace(Keys.VAR_TRADE_KEY, tradeKey));
             return;
         }
         awaitRemoval(player, tradeConfig, () -> {

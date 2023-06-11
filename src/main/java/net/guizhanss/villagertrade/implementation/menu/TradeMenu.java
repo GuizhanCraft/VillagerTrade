@@ -478,7 +478,7 @@ public final class TradeMenu {
     private ItemStack getBackButton(@Nonnull Player p) {
         return ChestMenuUtils.getBackButton(
             p,
-            VillagerTrade.getLocalization().getStringList(LANG_MENU + "back." + Keys.ITEM_LORE).toArray(new String[0])
+            VillagerTrade.getLocalization().getStringList(LANG_MENU + "back." + Keys.LANG_ITEM_LORE).toArray(new String[0])
         );
     }
 
@@ -487,7 +487,7 @@ public final class TradeMenu {
         return MenuUtils.parseVariables(
             getItem(Material.BOOK, "info"),
             Map.of(
-                "%tradeKey%", key
+                Keys.VAR_TRADE_KEY, key
             )
         );
     }
@@ -567,9 +567,9 @@ public final class TradeMenu {
     @Nonnull
     private ItemStack getRemoveButton() {
         return MenuUtils.parseVariables(
-            getItem(Material.BOOK, Keys.LANG_REMOVE),
+            getItem(Material.LAVA_BUCKET, Keys.LANG_REMOVE),
             Map.of(
-                "%tradeKey%", key
+                Keys.VAR_TRADE_KEY, key
             )
         );
     }
@@ -588,8 +588,8 @@ public final class TradeMenu {
     private ItemStack getItem(Material material, String key) {
         return new CustomItemStack(
             material,
-            VillagerTrade.getLocalization().getString(LANG_MENU + key + "." + Keys.ITEM_NAME),
-            VillagerTrade.getLocalization().getStringList(LANG_MENU + key + "." + Keys.ITEM_LORE)
+            VillagerTrade.getLocalization().getString(LANG_MENU + key + "." + Keys.LANG_ITEM_NAME),
+            VillagerTrade.getLocalization().getStringList(LANG_MENU + key + "." + Keys.LANG_ITEM_LORE)
         );
     }
 }

@@ -2,6 +2,8 @@ package net.guizhanss.villagertrade.core.commands.subcommands;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import net.guizhanss.villagertrade.utils.constants.Keys;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -29,7 +31,7 @@ public final class ListCommand extends SubCommand {
         }
         if (args.length != 1) {
             VillagerTrade.getLocalization().sendKeyedMessage(sender, "usage",
-                msg -> msg.replace("%usage%", "/sfvt edit <trade_key>"));
+                msg -> msg.replace(Keys.VAR_USAGE, "/sfvt edit <trade_key>"));
             return;
         }
 
