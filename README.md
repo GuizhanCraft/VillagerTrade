@@ -47,17 +47,17 @@ example_trade:
 
 All the fields are explained in the table below:
 
-| Field              | Description                                                                                                       |
-|--------------------|-------------------------------------------------------------------------------------------------------------------|
-| example_trade      | The unique key of a trade. It doesn't need to be all uppercase or all lowercase, but do not use weird characters. |
-| `traders`          | The list of villager professions that the trade will be applied to.                                               |
-| `output`           | The result of the trade. See item section below.                                                                  |
-| `input.1`          | The ingredient 1 of the trade. See item section below.                                                            |
-| `input.2`          | The ingredient 2 of the trade. See item section below.                                                            |
-| `max-uses`         | The maximum uses of the trade.                                                                                    |
-| `exp-reward`       | Whether the trade will reward experiences to player.                                                              |
-| `exp-villager`     | The amount of experiences that the trade will reward to player.                                                   |
-| `price-multiplier` | The price multiplier of the trade.                                                                                |
+| Field              | Description                                                                                                        |
+|--------------------|--------------------------------------------------------------------------------------------------------------------|
+| example_trade      | The unique key of a trade. It doesn't need to be all uppercase or all lowercase, but do not use weird characters.  |
+| `traders`          | The list of villager professions that the trade will be applied to. For wandering traders, add `WANDERING_TRADER`. |
+| `output`           | The result of the trade. See item section below.                                                                   |
+| `input.1`          | The ingredient 1 of the trade. See item section below.                                                             |
+| `input.2`          | The ingredient 2 of the trade. See item section below.                                                             |
+| `max-uses`         | The maximum uses of the trade.                                                                                     |
+| `exp-reward`       | Whether the trade will reward experiences to player.                                                               |
+| `exp-villager`     | The amount of experiences that the trade will reward to player.                                                    |
+| `price-multiplier` | The price multiplier of the trade.                                                                                 |
 
 See the [Trading](https://minecraft.fandom.com/wiki/Trading) to learn what each field means.
 
@@ -77,7 +77,7 @@ To define a vanilla item, set the `type` field to `VANILLA` and set the `id` fie
 
 Custom items are non-Slimefun items that have custom name, lores, attributes, enchantments, nbt tags.
 
-To define a custom item, you have to save the custom item to VillagerTrade first. Use `/sfvt savecustom <ID>` to save a custom item, where `<ID>` is the unique ID of the custom item.
+To define a custom item, you have to save the custom item to VillagerTrade first. Use `/sfvt savecustom <ID>` to save a custom item, where `<ID>` is the unique ID of the custom item.  
 If you are using the in-game editor, you can just put a custom item in the item slot, VillagerTrade will save the item for you, and generate a self-increment ID for it.
 
 After saving the custom item, set the `type` field to `CUSTOM` and set the `id` field to the ID of the custom item.
