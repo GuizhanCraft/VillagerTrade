@@ -18,7 +18,7 @@ body:
       label: 检查项目
       description: 在汇报之前，你需要确认
       options:
-        - label: 你使用的是从构建站下载的版本 (https://builds.guizhanss.net)
+        - label: 你使用的是从构建站下载的版本 (https://thebusybiscuit.github.io/builds)
           required: true
         - label: 你已经检验过下载的文件的校验和，确认已完整下载文件 (暂未推出)
           required: false
@@ -104,6 +104,7 @@ body:
       label: Minecraft 版本
       description: 请选择你的 Minecraft 版本
       options:
+        - 1.20.x
         - 1.19.x
         - 1.18.x
         - 1.17.x
@@ -129,7 +130,7 @@ body:
       label: 插件版本
       description: |
         请填写插件版本
-        只需填写Build后面的数字版本即可
-        (`Build 7 zh-CN(ybw0014) (git 9ef7fee)`只需填写`7`即可)
+        只需填写DEV后面的数字版本即可
+        (`DEV 7 (git XXX)`只需填写`7`即可)
     validations:
       required: true
