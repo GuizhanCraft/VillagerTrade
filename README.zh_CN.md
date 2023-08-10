@@ -1,5 +1,7 @@
 # VillagerTrade 村民交易
 
+[English](README.md) | [中文](README.zh_CN.md)
+
 VillagerTrade 是一个 Slimefun 附属插件，允许 Slimefun 物品添加到村民交易（也包括流浪商人）中。
 
 ## 下载
@@ -12,10 +14,10 @@ VillagerTrade 是一个 Slimefun 附属插件，允许 Slimefun 物品添加到�
 
 ## Requirements
 
-Java 版本：16 及以上
-服务端：Spigot 或衍生服务端
-Minecraft 版本：1.16.5 及以上
-Slimefun 版本：DEV 1040 及以上
+Java 版本：16 及以上  
+服务端：Spigot 或衍生服务端  
+Minecraft 版本：1.16.5 及以上  
+Slimefun 版本：DEV 1040 及以上  
 
 ## 功能
 

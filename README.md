@@ -1,5 +1,7 @@
 # VillagerTrade
 
+[English](README.md) | [中文](README.zh_CN.md)
+
 VillagerTrade is a Slimefun addon that allows Slimefun items to be added to villager trades (also wandering traders).
 
 ## Download
