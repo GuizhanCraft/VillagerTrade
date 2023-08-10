@@ -22,6 +22,7 @@ public final class ReloadCommand extends SubCommand {
             VillagerTrade.getLocalization().sendKeyedMessage(sender, "no-permission");
             return;
         }
+
         VillagerTrade.getRegistry().reset();
         VillagerTrade.getLocalization().reloadAll();
         VillagerTrade.getCustomItemService().reload();

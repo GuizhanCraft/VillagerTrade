@@ -2,39 +2,24 @@ package net.guizhanss.villagertrade.core.commands.subcommands;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import net.guizhanss.villagertrade.utils.constants.Keys;
-
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.guizhanss.villagertrade.VillagerTrade;
-import net.guizhanss.villagertrade.core.commands.SubCommand;
 import net.guizhanss.villagertrade.implementation.menu.TradeListMenu;
-import net.guizhanss.villagertrade.utils.constants.Permissions;
 
-public final class ListCommand extends SubCommand {
+public final class ListCommand extends AdminPlayerCommand {
 
     public ListCommand() {
-        super("list", false);
+        super("list", false, "");
     }
 
     @ParametersAreNonnullByDefault
     @Override
     public void onCommand(CommandSender sender, String[] args) {
-        if (!(sender instanceof Player player)) {
-            VillagerTrade.getLocalization().sendKeyedMessage(sender, "no-console");
-            return;
-        }
-        if (!sender.hasPermission(Permissions.ADMIN)) {
-            VillagerTrade.getLocalization().sendKeyedMessage(sender, "no-permission");
-            return;
-        }
-        if (args.length != 1) {
-            VillagerTrade.getLocalization().sendKeyedMessage(sender, "usage",
-                msg -> msg.replace(Keys.VAR_USAGE, "/sfvt edit <trade_key>"));
+        if (!canExecute(sender, args)) {
             return;
         }
 
-        new TradeListMenu(player);
+        new TradeListMenu((Player) sender);
     }
 }

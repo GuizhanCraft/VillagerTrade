@@ -11,22 +11,12 @@ import org.bukkit.command.CommandSender;
 
 import net.guizhanss.villagertrade.VillagerTrade;
 import net.guizhanss.villagertrade.api.trades.TradeConfiguration;
-import net.guizhanss.villagertrade.core.commands.SubCommand;
 
-/**
- * A command that display trade keys as tab completion.
- *
- * @author ybw0014
- */
-abstract class TradeKeyCompletionCommand extends SubCommand {
-    protected TradeKeyCompletionCommand(@Nonnull String name, boolean hidden) {
-        super(name, hidden);
-    }
-
-    @Override
+interface TradeKeyCompletion {
+    @Nonnull
     @ParametersAreNonnullByDefault
-    public List<String> onTabComplete(CommandSender sender, String[] args) {
-        if (args.length == 2) {
+    default List<String> tabComplete(CommandSender sender, String[] args, int index) {
+        if (args.length == index + 1) {
             List<String> result = new ArrayList<>();
             for (Map.Entry<String, TradeConfiguration> entry : VillagerTrade.getRegistry().getTradeConfigurations().entrySet()) {
                 final String key = entry.getKey();
@@ -34,7 +24,7 @@ abstract class TradeKeyCompletionCommand extends SubCommand {
                 if (config.isExternalConfig()) {
                     continue;
                 }
-                if (key.startsWith(args[1])) {
+                if (key.startsWith(args[index])) {
                     result.add(key);
                 }
             }

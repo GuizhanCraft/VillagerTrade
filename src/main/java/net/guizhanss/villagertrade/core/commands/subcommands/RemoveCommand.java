@@ -1,10 +1,11 @@
 package net.guizhanss.villagertrade.core.commands.subcommands;
 
+import java.util.List;
+
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.google.common.base.Preconditions;
-
-import net.guizhanss.villagertrade.utils.constants.Keys;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -13,12 +14,12 @@ import net.guizhanss.villagertrade.VillagerTrade;
 import net.guizhanss.villagertrade.api.trades.TradeConfiguration;
 import net.guizhanss.villagertrade.core.tasks.ConfirmationTask;
 import net.guizhanss.villagertrade.implementation.menu.TradeListMenu;
-import net.guizhanss.villagertrade.utils.constants.Permissions;
+import net.guizhanss.villagertrade.utils.constants.Keys;
 
-public final class RemoveCommand extends TradeKeyCompletionCommand {
+public final class RemoveCommand extends AdminPlayerCommand implements TradeKeyCompletion {
 
     public RemoveCommand() {
-        super("remove", false);
+        super("remove", false, "<tradeKey>");
     }
 
     @ParametersAreNonnullByDefault
@@ -42,17 +43,7 @@ public final class RemoveCommand extends TradeKeyCompletionCommand {
     @ParametersAreNonnullByDefault
     @Override
     public void onCommand(CommandSender sender, String[] args) {
-        if (!(sender instanceof Player player)) {
-            VillagerTrade.getLocalization().sendKeyedMessage(sender, "no-console");
-            return;
-        }
-        if (!sender.hasPermission(Permissions.ADMIN)) {
-            VillagerTrade.getLocalization().sendKeyedMessage(sender, "no-permission");
-            return;
-        }
-        if (args.length != 2) {
-            VillagerTrade.getLocalization().sendKeyedMessage(sender, "usage",
-                msg -> msg.replace(Keys.VAR_USAGE, "/sfvt remove <tradeKey>"));
+        if (!canExecute(sender, args)) {
             return;
         }
 
@@ -63,7 +54,13 @@ public final class RemoveCommand extends TradeKeyCompletionCommand {
                 msg -> msg.replace(Keys.VAR_TRADE_KEY, tradeKey));
             return;
         }
-        awaitRemoval(player, tradeConfig, () -> {
-        });
+        awaitRemoval((Player) sender, tradeConfig, () -> {});
+    }
+
+    @Nonnull
+    @Override
+    @ParametersAreNonnullByDefault
+    public List<String> onTabComplete(CommandSender sender, String[] args) {
+        return tabComplete(sender, args, 1);
     }
 }

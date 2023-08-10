@@ -2,39 +2,26 @@ package net.guizhanss.villagertrade.core.commands.subcommands;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import net.guizhanss.villagertrade.utils.constants.Keys;
-
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import net.guizhanss.villagertrade.VillagerTrade;
-import net.guizhanss.villagertrade.core.commands.SubCommand;
-import net.guizhanss.villagertrade.utils.constants.Permissions;
 
-public final class SaveCustomCommand extends SubCommand {
+public final class SaveCustomCommand extends AdminPlayerCommand {
 
     public SaveCustomCommand() {
-        super("savecustom", false);
+        super("savecustom", false, "<itemId>");
     }
 
     @ParametersAreNonnullByDefault
     @Override
     public void onCommand(CommandSender sender, String[] args) {
-        if (!(sender instanceof Player player)) {
-            VillagerTrade.getLocalization().sendKeyedMessage(sender, "no-console");
-            return;
-        }
-        if (!sender.hasPermission(Permissions.ADMIN)) {
-            VillagerTrade.getLocalization().sendKeyedMessage(sender, "no-permission");
-            return;
-        }
-        if (args.length != 2) {
-            VillagerTrade.getLocalization().sendKeyedMessage(sender, "usage",
-                msg -> msg.replace(Keys.VAR_USAGE, "/sfvt savecustom <itemId>"));
+        if (!canExecute(sender, args)) {
             return;
         }
 
+        final Player player = (Player) sender;
         ItemStack item = player.getInventory().getItemInMainHand();
         if (item.getType().isAir()) {
             VillagerTrade.getLocalization().sendKeyedMessage(sender, "commands.savecustom.no-item");
