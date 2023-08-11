@@ -26,7 +26,7 @@ public final class Debug {
     @ParametersAreNonnullByDefault
     public static void logRaw(Object obj) {
         if (isEnabled()) {
-            VillagerTrade.getInstance().getLogger().log(Level.INFO, "[DEBUG] " + obj);
+            VillagerTrade.getInstance().getLogger().log(Level.INFO, "[DEBUG] {0}", obj);
         }
     }
 }

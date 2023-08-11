@@ -62,14 +62,14 @@ public final class MenuUtils {
 
     @ParametersAreNonnullByDefault
     public void awaitInput(Player p, Predicate<String> validator, Consumer<String> successCallback) {
-        awaitInput(p, validator, successCallback, (str) -> {
+        awaitInput(p, validator, successCallback, str -> {
         });
     }
 
     @ParametersAreNonnullByDefault
     public void awaitInput(Player p, Predicate<String> validator, Consumer<String> successCallback,
                            Consumer<String> failCallback) {
-        ChatInput.waitForPlayer(VillagerTrade.getInstance(), p, (input) -> {
+        ChatInput.waitForPlayer(VillagerTrade.getInstance(), p, input -> {
             if (validator.test(input)) {
                 successCallback.accept(input);
             } else {

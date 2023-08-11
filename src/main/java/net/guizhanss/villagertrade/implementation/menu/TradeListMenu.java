@@ -101,7 +101,7 @@ public final class TradeListMenu {
         menu.addMenuClickHandler(ADD_SLOT, (p, slot, item, action) -> {
             p.closeInventory();
             VillagerTrade.getLocalization().sendKeyedMessage(p, LANG_MENU + "add");
-            MenuUtils.awaitInput(p, Validators::notEmpty, (input) -> {
+            MenuUtils.awaitInput(p, Validators::notEmpty, input -> {
                 new TradeMenu(p, input);
             });
             return false;

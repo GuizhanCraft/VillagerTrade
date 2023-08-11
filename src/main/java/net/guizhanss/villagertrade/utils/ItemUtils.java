@@ -88,7 +88,7 @@ public final class ItemUtils {
                         return false;
                     }
 
-                    if (aMeta instanceof Damageable && ((Damageable) aMeta).getDamage() != ((Damageable) bMeta).getDamage()) {
+                    if (aMeta instanceof Damageable damageable && damageable.getDamage() != ((Damageable) bMeta).getDamage()) {
                         return false;
                     }
 
@@ -96,7 +96,7 @@ public final class ItemUtils {
                         return false;
                     }
 
-                    if (aMeta instanceof LeatherArmorMeta && !((LeatherArmorMeta) aMeta).getColor().equals(((LeatherArmorMeta) bMeta).getColor())) {
+                    if (aMeta instanceof LeatherArmorMeta leatherArmorMeta && !leatherArmorMeta.getColor().equals(((LeatherArmorMeta) bMeta).getColor())) {
                         return false;
                     }
 
