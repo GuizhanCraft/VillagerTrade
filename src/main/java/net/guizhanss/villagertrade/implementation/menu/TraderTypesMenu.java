@@ -104,12 +104,8 @@ public final class TraderTypesMenu {
         menu.setEmptySlotsClickable(false);
         menu.setPlayerInventoryClickable(false);
 
-        menu.addMenuOpeningHandler(player -> {
-            SoundUtils.playOpenMenuSound(player);
-        });
-        menu.addMenuCloseHandler(player -> {
-            cancelCallback.run();
-        });
+        menu.addMenuOpeningHandler(SoundUtils::playOpenMenuSound);
+        menu.addMenuCloseHandler(player -> cancelCallback.run());
 
         // wandering trader
         menu.addItem(0, getTraderItem(Heads.WANDERING_TRADER, "wandering_trader", wanderingTrader),

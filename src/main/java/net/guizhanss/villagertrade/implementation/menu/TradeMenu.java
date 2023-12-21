@@ -178,9 +178,7 @@ public final class TradeMenu {
             TradeMenuTask.addPlayer(player.getUniqueId(), this);
             SoundUtils.playOpenMenuSound(player);
         });
-        menu.addMenuCloseHandler(player -> {
-            TradeMenuTask.removePlayer(player.getUniqueId());
-        });
+        menu.addMenuCloseHandler(player -> TradeMenuTask.removePlayer(player.getUniqueId()));
 
         // back button
         menu.addItem(BACK_SLOT, getBackButton(player), (player, slot, item, action) -> {
@@ -201,13 +199,11 @@ public final class TradeMenu {
 
         // trader types
         menu.addItem(TRADER_TYPES_SLOT, getTraderTypesButton(), (player, slot, item, action) -> {
-            TraderTypesMenu.open(player, traderTypes, (newTraderTypes) -> {
+            TraderTypesMenu.open(player, traderTypes, newTraderTypes -> {
                 traderTypes = newTraderTypes;
                 menu.replaceExistingItem(TRADER_TYPES_SLOT, getTraderTypesButton());
                 openMenu();
-            }, () -> {
-                openMenu();
-            });
+            }, this::openMenu);
             return false;
         });
 
@@ -220,7 +216,7 @@ public final class TradeMenu {
                     Keys.TRADES_MAX_USES,
                     String.valueOf(maxUses),
                     Validators::isPositiveInteger,
-                    (input) -> {
+                    input -> {
                         openMenu();
                         if (input.isPresent()) {
                             maxUses = Integer.parseInt(input.get());
@@ -252,7 +248,7 @@ public final class TradeMenu {
                     Keys.TRADES_EXP_VILLAGER,
                     String.valueOf(expVillager),
                     Validators::isInteger,
-                    (input) -> {
+                    input -> {
                         openMenu();
                         if (input.isPresent()) {
                             expVillager = Integer.parseInt(input.get());
@@ -273,7 +269,7 @@ public final class TradeMenu {
                     Keys.TRADES_PRICE_MULTIPLIER,
                     String.valueOf(priceMultiplier),
                     Validators::isDouble,
-                    (input) -> {
+                    input -> {
                         openMenu();
                         if (input.isPresent()) {
                             priceMultiplier = Float.parseFloat(input.get());
@@ -314,7 +310,7 @@ public final class TradeMenu {
             }
             return false;
         });
-        tickingHandlers.put(SAVE_SLOT, (slot) -> {
+        tickingHandlers.put(SAVE_SLOT, slot -> {
             // TODO improve performance
             menu.replaceExistingItem(SAVE_SLOT, getSaveButton(getInvalidReason()));
         });
@@ -347,7 +343,7 @@ public final class TradeMenu {
         // add 3 items: info, item, amount
         menu.addItem(infoSlot, getItemInfoButton(infoMaterial, key, tradeItem), ChestMenuUtils.getEmptyClickHandler());
         menu.addItem(itemSlot, tradeItem.getItem());
-        tickingHandlers.put(itemSlot, (slot) -> {
+        tickingHandlers.put(itemSlot, slot -> {
             ItemStack item = menu.getItemInSlot(slot);
             // we don't want to update the menu if the item is the same
             if (tradeItem.isItem(item)) {
@@ -408,7 +404,7 @@ public final class TradeMenu {
             msg -> msg.replace("%itemInfo%", tradeItem.toShortString(false))
                 .replace("%itemAmount%", String.valueOf(tradeItem.getAmount()))
         );
-        MenuUtils.awaitInput(player, (playerInput) -> {
+        MenuUtils.awaitInput(player, playerInput -> {
             if (playerInput.equalsIgnoreCase(Strings.CANCEL)) {
                 callback.accept(Optional.empty());
                 return;
@@ -429,9 +425,9 @@ public final class TradeMenu {
                              Consumer<Optional<String>> callback) {
         player.closeInventory();
         VillagerTrade.getLocalization().sendKeyedMessage(player, LANG_MENU + key + ".input",
-            msg -> msg.replace("%value%", value)
+            msg -> msg.replace(VALUE, value)
         );
-        MenuUtils.awaitInput(player, (playerInput) -> {
+        MenuUtils.awaitInput(player, playerInput -> {
             if (playerInput.equalsIgnoreCase(Strings.CANCEL)) {
                 callback.accept(Optional.empty());
                 return;
@@ -577,9 +573,7 @@ public final class TradeMenu {
     @ParametersAreNonnullByDefault
     private boolean removeHandler(Player player, int slot, ItemStack item, ClickAction action) {
         player.closeInventory();
-        RemoveCommand.awaitRemoval(player, originalConfig, () -> {
-            new TradeListMenu(player);
-        });
+        RemoveCommand.awaitRemoval(player, originalConfig, () -> new TradeListMenu(player));
         return false;
     }
 
